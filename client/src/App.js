@@ -1,17 +1,17 @@
 import React from 'react'
 
-function App() {
+import Home from './Pages/Home/home'
+import Popular from './Pages/Home/Popular'
+import Footer from './components/Footer'
 
+const App = () => {
     return (
-        <div className="App">
-            <header>
-        
-            </header>
-        
-            <body>
-            </body>
-        </div>
-    );
-}
+        <>
+            <Home />
+            <Popular />
+            <Footer />
+        </>
+    )
+};
 
 export default App;
