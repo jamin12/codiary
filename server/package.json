@@ -8,7 +8,8 @@
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.19",
-    "winston": "^3.8.1"
+    "winston": "^3.8.1",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "scripts": {
     "strat": "nodemon ./bin/www.js",
