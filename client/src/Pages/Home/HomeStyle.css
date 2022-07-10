@@ -9,9 +9,9 @@
     background-color: #edeef1;
 }
 #home-search {
-    background-color: #dce3f5;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ),
-        url(../../IMG/coding-img.jpg);
+    background-color: #38393d;
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.0) ),
+        url(../../IMG/얼룩무늬.svg); */
     background-size: cover;
 }
 
