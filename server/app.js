@@ -22,9 +22,9 @@ app.use(cookieParser());
 
 // express session 설정
 app.use(session({
-    secret: process.env.COOKIE_SECRET,
-    resave: false,
-    saveUninitialized: true
+    secret: process.env.COOKIE_SECRET, // 세션을 암호화 해줌
+    resave: false, // 세션을 항상 저장할지 여부를 정하는 값(false 권장)
+    saveUninitialized: true // 초기화 되지 않은 채 스토어에 저장되는 세션
 }));
 
 // passport 설정 (위에서 설정하면 model에서 에러가 남.....)
@@ -37,16 +37,3 @@ app.use(passport.session());
 app.use("/",home); // use -> 미들웨어를 등록해주는 메서드.
 
 module.exports = app;
-
-
-// const http = require('http');
-// const app = http.createServer((req,res) => {
-//     res.writeHead(200,{"Content-Type": "text/html"});
-//     if(req.url === "/"){
-//         res.end("여기는 루트입니다.");
-//     }
-// });
-
-// app.listen(3001,()=>{
-//     console.log('Server listening on port 3001');
-// });

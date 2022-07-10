@@ -11,13 +11,14 @@ const output = {
         //     user_name: "1234",
         //     user_unique_id : "ttest"
         // })
-        // res.json({test:"hihi"});
+        res.json({test:"hihi"});
     },
     login: (req,res) => {
         let s_html = '<html>';
         s_html += '<head></head>';
         s_html += '<body>';
         s_html += '<a href="http://127.0.0.1:3000/oauth2">로그인</a>';
+        s_html += '</br><a href="http://127.0.0.1:3000/logout">로그아웃</a>';
         s_html += req.user;
         s_html += "</body>";
         s_html += "</html>";
@@ -25,6 +26,7 @@ const output = {
     },
     logout: (req,res) => {
         req.logout();
+        req.session.destroy();
         res.send("logout");
     },
     oauth2: passport.authenticate('google',{ scope: ['email', 'profile'] }),
