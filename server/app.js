@@ -27,7 +27,9 @@ const option = {
     user: process.env.SESSION_DB_USER,
     password: process.env.SESSION_DB_PASSWORD,
     database: process.env.SESSION_DB_DATABASE,
-    expiration: 1000 * 60 * 20,
+    expiration: 1000 * 60 * 60 * 2,
+    clearExpired: true,
+    checkExpirationInterval: 900000,
 };
 
 // express session 설정

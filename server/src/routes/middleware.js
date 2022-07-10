@@ -4,7 +4,7 @@ exports.isLoggedIn = (req,res,next) => {
     if(req.isAuthenticated()){
         next();
     }else{
-        // 로그인 필요 url 설정
+        // TODO: 로그인 필요 url 설정
         res.status(403).send("로그인 필요");
     }
 };

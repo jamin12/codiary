@@ -7,11 +7,8 @@ const passport = require("passport");
 
 const output = {
     index: (req,res) => {
-        // modle.users.create({
-        //     user_name: "1234",
-        //     user_unique_id : "ttest"
-        // })
-        res.json({test:"hihi"});
+        console.log(req.user);
+        res.json({test:"hihi", userid: req.user});
     },
     login: (req,res) => {  
         // TODO: 테스트 로그인 버튼 삭제
