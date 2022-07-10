@@ -23,12 +23,17 @@ const output = {
         s_html += "</html>";
         res.send(s_html);
     },
+    logout: (req,res) => {
+        req.logout();
+        res.send("logout");
+    },
     oauth2: passport.authenticate('google',{ scope: ['email', 'profile'] }),
     //콜백 테스트용
     oauth2callback: passport.authenticate('google',{
         successRedirect: "/login",
         failureRedirect: "/login"
     }),
+
 }
 
 module.exports = {
