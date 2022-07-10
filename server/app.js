@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const passport = require("passport");
 const session = require("express-session");
+const mysqlstore = require("express-mysql-session")(session);
 const logger = require('./src/config/logger');
 
 const app = express();
@@ -20,11 +21,24 @@ app.use(express.urlencoded({ extended: true })); // URL을 통해 전달되는 �
 app.use(morgan("tiny",{stream:logger.stream}))
 app.use(cookieParser());
 
+const option = {
+    host: process.env.SESSION_DB_HOST,
+    port: process.env.SESSION_DB_PORT,
+    user: process.env.SESSION_DB_USER,
+    password: process.env.SESSION_DB_PASSWORD,
+    database: process.env.SESSION_DB_DATABASE,
+    expiration: 1000 * 60 * 60 * 2,
+    clearExpired: true,
+    checkExpirationInterval: 900000,
+};
+
 // express session 설정
 app.use(session({
-    secret: process.env.COOKIE_SECRET,
-    resave: false,
-    saveUninitialized: true
+    secret: process.env.COOKIE_SECRET, // 세션을 암호화 해줌
+    name: "authentication", // 쿠키 이름 설정
+    resave: false, // 세션을 항상 저장할지 여부를 정하는 값(false 권장)
+    saveUninitialized: true, // 초기화 되지 않은 채 스토어에 저장되는 세션
+    store: new mysqlstore(option),
 }));
 
 // passport 설정 (위에서 설정하면 model에서 에러가 남.....)
@@ -37,16 +51,3 @@ app.use(passport.session());
 app.use("/",home); // use -> 미들웨어를 등록해주는 메서드.
 
 module.exports = app;
-
-
-// const http = require('http');
-// const app = http.createServer((req,res) => {
-//     res.writeHead(200,{"Content-Type": "text/html"});
-//     if(req.url === "/"){
-//         res.end("여기는 루트입니다.");
-//     }
-// });
-
-// app.listen(3001,()=>{
-//     console.log('Server listening on port 3001');
-// });
