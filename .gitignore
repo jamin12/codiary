@@ -105,4 +105,4 @@ dist
 
 
 # sequelize config file
-**/config.json
+**/database.json

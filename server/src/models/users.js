@@ -2,8 +2,7 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('users', {
     user_id: {
-      autoIncrement: true,
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING(255),
       allowNull: false,
       primaryKey: true
     },
@@ -40,6 +39,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+    },
+    user_picture:{
+        type : DataTypes.STRING(255),
+        allowNull: true
     }
   }, {
     sequelize,

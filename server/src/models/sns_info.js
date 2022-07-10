@@ -2,8 +2,7 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('sns_info', {
     user_id: {
-      autoIncrement: true,
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING(255),
       allowNull: false,
       primaryKey: true,
       references: {
@@ -20,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     sns_profile: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     create_at: {
