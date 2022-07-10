@@ -13,7 +13,8 @@ const output = {
         // })
         res.json({test:"hihi"});
     },
-    login: (req,res) => {
+    login: (req,res) => {  
+        // TODO: 테스트 로그인 버튼 삭제
         let s_html = '<html>';
         s_html += '<head></head>';
         s_html += '<body>';
@@ -25,17 +26,16 @@ const output = {
         res.send(s_html);
     },
     logout: (req,res) => {
-        req.logout();
         req.session.destroy();
+        // TODO: 로그아웃 url 지정
         res.send("logout");
     },
     oauth2: passport.authenticate('google',{ scope: ['email', 'profile'] }),
-    //콜백 테스트용
+    // TODO: 성공 실패 url 수정
     oauth2callback: passport.authenticate('google',{
         successRedirect: "/login",
         failureRedirect: "/login"
     }),
-
 }
 
 module.exports = {
