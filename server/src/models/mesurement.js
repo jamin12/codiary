@@ -9,15 +9,18 @@ module.exports = function(sequelize, DataTypes) {
     },
     contents_id: {
       type: DataTypes.BIGINT,
-      allowNull: false
+      allowNull: false,
+      unique: "contents_id"
     },
     today_visit_count: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     total_visit_count: {
       type: DataTypes.BIGINT,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     create_at: {
       type: DataTypes.DATE,
@@ -40,6 +43,14 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "mesurement_id" },
+        ]
+      },
+      {
+        name: "contents_id",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "contents_id" },
         ]
       },
     ]

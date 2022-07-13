@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     user_id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     comments_body: {
