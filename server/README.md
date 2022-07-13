@@ -3,6 +3,8 @@
 - ~~구글 OAuth2 적용~~
 - ~~세션 적용~~
 ## 공통
+- 에러 핸들러 만들기
+- ~~resultDTO 만들기~~
 - 검색 endpoint
 - codiary버튼 endpoint
 - 게시글 눌렀을 때 해당 게시글 endpoint
