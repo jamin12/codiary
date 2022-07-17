@@ -1,8 +1,8 @@
 "use strict";
 
 
-const custom_error = require("../util/Error/customError");
-const error_code = require("../util/Error/errorCode");
+const custom_error = require("../util/error/customError");
+const error_code = require("../util/error/errorCode");
 
 class PageInfo{
     // 디폴트 페이지 가져올 사이즈

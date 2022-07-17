@@ -1,9 +1,9 @@
 "use strict";
 
 
-const logger = require("../../config/logger");
+const logger = require("../config/logger");
 const passport = require("passport");
-const ContentsService = require("../../service/contentsService");
+const ContentsService = require("../service/contentsService");
 // const modle = require("../../models/index");
 
 
