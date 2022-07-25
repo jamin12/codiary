@@ -10,12 +10,12 @@ const passport = require("passport");
 const session = require("express-session");
 const mysqlstore = require("express-mysql-session")(session);
 const logger = require('./src/config/logger');
-const error_handler = require('./src/util/Error/errorHandler');
+const error_handler = require('./src/util/error/errorHandler');
 
 const app = express();
 dotenv.config();
 
-const home = require("./src/routes/home");
+const home = require("./src/routes");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // URL을 통해 전달되는 데이터에 한글, 공백 등과 같은 문자가 포함될 경우 제대로 인식되지 않는 문제 해결
@@ -43,7 +43,7 @@ app.use(session({
 }));
 
 // passport 설정 (위에서 설정하면 model에서 에러가 남.....)
-const passportConfig = require('./src/passport/index');
+const passportConfig = require('./src/config/passport/index');
 passportConfig();
 app.use(passport.initialize());
 app.use(passport.session());
