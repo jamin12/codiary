@@ -6,7 +6,7 @@ const Sequelize = require('sequelize');
 const logger = require('../config/logger');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/database.json')[env];
+const config = require(__dirname + '/../config/sequlize/database.json')[env];
 const db = {};
 
 config.logging = msg => logger.info(`${msg}\n`);

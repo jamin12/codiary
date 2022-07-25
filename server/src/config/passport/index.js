@@ -2,9 +2,11 @@
 
 const passport = require("passport");
 const google = require("./GoogleStrategy");
-const logger = require("../config/logger");
-const model = require("../models/index");
+const logger = require("../logger");
+const model = require("../../models/index");
 
+
+// TODO: 회원 등록절차는 따로 만들어야함
 module.exports = () => {
     // 세션에 저장 로그인이 최초로 성공했을 때만 호출되는 함수
     passport.serializeUser(async (user,done)=>{

@@ -30,6 +30,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(32),
       allowNull: true
     },
+    user_img: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
     create_at: {
       type: DataTypes.DATE,
       allowNull: true,
@@ -39,10 +43,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
-    },
-    user_picture:{
-        type : DataTypes.STRING(255),
-        allowNull: true
     }
   }, {
     sequelize,

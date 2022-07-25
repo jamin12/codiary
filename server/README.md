@@ -3,8 +3,10 @@
 - ~~구글 OAuth2 적용~~
 - ~~세션 적용~~
 ## 공통
+- ~~에러 핸들러 만들기~~
+- ~~resultDTO 만들기~~
 - 검색 endpoint
-- codiary버튼 endpoint
+- ~~codiary버튼 endpoint~~
 - 게시글 눌렀을 때 해당 게시글 endpoint
 - 내 프로필 확인 및 수정 endpoint
 ## 홈 화면
@@ -38,3 +40,5 @@
 ## 카테고리 수정
 - 기존 카테고리 내용 전송
 - 카테고리 추가 및 삭제 endpoint(적용 버튼)
+## 테스트
+- 테스트 코드 만들기

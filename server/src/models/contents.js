@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     user_id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     contents_title: {
@@ -29,7 +29,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     like_count: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     create_at: {
       type: DataTypes.DATE,

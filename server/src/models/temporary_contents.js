@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     user_id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     tmpcontents_title: {
