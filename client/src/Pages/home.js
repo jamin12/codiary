@@ -1,5 +1,5 @@
 import React from 'react'
-import './HomeStyle.css';
+import '../css/HomeStyle.css';
 import styled from 'styled-components'
 import Figure from 'react-bootstrap/Figure'
 // import Image from 'react-bootstrap/Image'

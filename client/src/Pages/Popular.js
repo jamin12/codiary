@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import PopOwlcarousel from '../../components/PopOwlcarousel'
+import PopOwlcarousel from '../components/PopOwlcarousel'
 
 const HomeTitle = styled.h1`
     font-size: 2.5rem;
