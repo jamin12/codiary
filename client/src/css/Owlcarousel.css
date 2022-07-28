@@ -1,0 +1,60 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.wrap {
+    position: relative;
+    width: 1278px;
+    height: 500px;
+    /* background-color: rgb(102, 94, 94); */
+    display: flex;
+
+    margin: 100px auto;
+}
+
+.btn {
+    position: absolute;
+    /* width: 50px; */
+    height: 100%;
+    font-size: 60px;
+    font-weight: bold;
+    
+    background-color: inherit;
+}
+.pre-btn {
+    left:0;
+    z-index: 999;
+}
+.next-btn {
+    right:0;
+}
+
+/* 안에 내용 */
+.con-wrap{
+    position: relative;
+    /* 전체 100%중에서 버튼 너비만큼만 뺌 */
+    width: calc(100% - 130px);
+    height: 100%;
+    margin:auto;
+
+    background-color: rgb(214, 213, 213);
+}
+.con-wrap>div {
+    display: inline-block;
+}
+
+.con-wrap>div {
+    width: 300px;
+    height: 400px;
+    /* height: 100%; */
+    background: red;
+    margin: 0 24.5px;
+}
+.con-wrap>div:nth-child(1){
+    transform: perspective(500px) rotateY(-30deg) translateZ(-90px);
+}
+.con-wrap>div:nth-child(3){
+    transform: perspective(500px) rotateY(30deg) translateZ(-90px);
+}
+
