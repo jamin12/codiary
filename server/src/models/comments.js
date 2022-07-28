@@ -1,6 +1,9 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('comments', {
+import _sequelize from 'sequelize';
+const { Model, Sequelize } = _sequelize;
+
+export default class comments extends Model {
+  static init(sequelize, DataTypes) {
+  return super.init({
     comments_id: {
       autoIncrement: true,
       type: DataTypes.BIGINT,
@@ -48,4 +51,5 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-};
+  }
+}

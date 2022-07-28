@@ -1,6 +1,6 @@
-const CustomError = require("./customError");
-const result_dto = require("../../dto/resultDto");
-const logger = require("../../config/logger");
+const CustomError = require("../util/Error/customError");
+const result_dto = require("../dto/resultDto");
+const logger = require("../config/logger");
 
 module.exports = (err,req,res,next) => {
     // 결과 값을 담기위한 dto 설정

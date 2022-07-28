@@ -1,6 +1,9 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('visit_record', {
+import _sequelize from 'sequelize';
+const { Model, Sequelize } = _sequelize;
+
+export default class visit_record extends Model {
+  static init(sequelize, DataTypes) {
+  return super.init({
     visit_record_id: {
       autoIncrement: true,
       type: DataTypes.BIGINT,
@@ -40,4 +43,5 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-};
+  }
+}

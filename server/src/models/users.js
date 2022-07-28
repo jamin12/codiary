@@ -1,6 +1,9 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('users', {
+import _sequelize from 'sequelize';
+const { Model, Sequelize } = _sequelize;
+
+export default class users extends Model {
+  static init(sequelize, DataTypes) {
+  return super.init({
     user_id: {
       type: DataTypes.STRING(255),
       allowNull: false,
@@ -8,30 +11,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     user_email: {
       type: DataTypes.STRING(64),
-      allowNull: true
-    },
-    user_unique_id: {
-      type: DataTypes.STRING(64),
       allowNull: false
-    },
-    user_name: {
-      type: DataTypes.STRING(16),
-      allowNull: true
-    },
-    user_nickname: {
-      type: DataTypes.STRING(64),
-      allowNull: true
-    },
-    user_introduce: {
-      type: DataTypes.STRING(255),
-      allowNull: true
     },
     user_role: {
       type: DataTypes.STRING(32),
-      allowNull: true
-    },
-    user_img: {
-      type: DataTypes.STRING(255),
       allowNull: true
     },
     create_at: {
@@ -59,4 +42,5 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-};
+  }
+}

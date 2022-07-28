@@ -1,14 +1,28 @@
-"use strict";
-
 const express = require('express');
+const mainRoutes = require('./mainRoutes');
+
 const router = express.Router();
-const ctrl = require('../controller/index.ctrl');
-const { isLoggedIn,isNotLoggedIn } = require('../middleware/middleware');
 
-router.get("/",isLoggedIn,ctrl.output.index);
-router.get("/login",ctrl.output.login);
-router.get("/oauth2callback",ctrl.output.oauth2callback);
-router.get("/logout",isLoggedIn,ctrl.output.logout)
+const defaultRoutes = [
+  {
+    path: '/main',
+    route: mainRoutes,
+  },
+];
 
+const devRoutes = [
+  // routes available only in development mode
+];
+
+defaultRoutes.forEach((route) => {
+  router.use(route.path, route.route);
+});
+
+/* istanbul ignore next */
+if (config.env === 'development') {
+  devRoutes.forEach((route) => {
+    router.use(route.path, route.route);
+  });
+}
 
 module.exports = router;

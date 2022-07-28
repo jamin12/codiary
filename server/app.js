@@ -1,6 +1,5 @@
 "use strict";
 
-
 // 모듈
 const express = require('express');
 const dotenv = require('dotenv');
@@ -10,12 +9,18 @@ const passport = require("passport");
 const session = require("express-session");
 const mysqlstore = require("express-mysql-session")(session);
 const logger = require('./src/config/logger');
-const error_handler = require('./src/util/error/errorHandler');
+const error_handler = require('./src/middleware/error');
+const cors = require('cors');
+const xss = require('xss')
+const { authLimiter } = require('./src/middleware/rateLimiter');
 
 const app = express();
 dotenv.config();
 
 const home = require("./src/routes");
+
+// set security HTTP headers
+app.use(helmet());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // URL을 통해 전달되는 데이터에 한글, 공백 등과 같은 문자가 포함될 경우 제대로 인식되지 않는 문제 해결
@@ -42,14 +47,33 @@ app.use(session({
     store: new mysqlstore(option),
 }));
 
+// TODO: 이것도 공부
+// gzip compression(보내는 데이터 압축을 통해 빠른 데이터 전송이 가능하게 해준다)
+app.use(compression());
+
+app.use(xss())
+
+// enable cors
+app.use(
+    cors({
+    origin: true, // 출처 허용 옵션
+    credential: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
+}));
+// app.options('*', cors());
+
 // passport 설정 (위에서 설정하면 model에서 에러가 남.....)
 const passportConfig = require('./src/config/passport/index');
 passportConfig();
 app.use(passport.initialize());
 app.use(passport.session());
 
+// limit repeated failed requests to auth endpoints
+if (config.env === 'production') {
+    app.use('/v1/auth', authLimiter);
+}
+
 // 라우팅
-app.use("/",home); // use -> 미들웨어를 등록해주는 메서드.
+app.use("/", home); // use -> 미들웨어를 등록해주는 메서드.
 
 // 에러 핸들러 미들웨어 설정
 app.use(error_handler);

@@ -1,11 +1,10 @@
 "use strict";
 
-const contents_repository = require("../repository/contentsRepository")
-const mesurement_repository = require("../repository/mesurementRepository")
+const {  } = require("../models/index");
 
 class ContentsService{
-    contents_model = new contents_repository();
-    mesurement_model = new mesurement_repository();
+    contents_model = new contentsRepository();
+    mesurement_model = new mesurementRepository();
     
     constructor() {
     }

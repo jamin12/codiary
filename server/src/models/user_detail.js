@@ -1,7 +1,7 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class sns_info extends Model {
+export default class user_detail extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
     user_id: {
@@ -13,15 +13,24 @@ export default class sns_info extends Model {
         key: 'user_id'
       }
     },
-    sns_type: {
-      type: DataTypes.STRING(45),
+    user_name: {
+      type: DataTypes.STRING(64),
       allowNull: true
     },
-    sns_name: {
-      type: DataTypes.STRING(45),
+    user_unique_id: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+      unique: "user_unique_id"
+    },
+    user_nickname: {
+      type: DataTypes.STRING(64),
       allowNull: true
     },
-    sns_img: {
+    user_introduce: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    user_img: {
       type: DataTypes.STRING(255),
       allowNull: true
     },
@@ -37,7 +46,7 @@ export default class sns_info extends Model {
     }
   }, {
     sequelize,
-    tableName: 'sns_info',
+    tableName: 'user_detail',
     timestamps: false,
     indexes: [
       {
@@ -46,6 +55,14 @@ export default class sns_info extends Model {
         using: "BTREE",
         fields: [
           { name: "user_id" },
+        ]
+      },
+      {
+        name: "user_unique_id",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "user_unique_id" },
         ]
       },
     ]
