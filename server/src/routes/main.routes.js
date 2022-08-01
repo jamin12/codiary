@@ -7,6 +7,6 @@ const { mainController } = require('../controller');
 
 router
   .route('/')
-  .get();
+  .get(mainController.output.getContents);
 
 module.exports = router;

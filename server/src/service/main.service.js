@@ -1,12 +1,20 @@
-const {  } = require("../models/index");
+const { contents } = require("../models/index");
+const Paging = require('../util/paging');
 
-class ContentsService{    
+class MainService{    
     constructor() {
+        this.paging = new Paging();
     }
 
-    getPopularContents() {
-        
+    async getPopularContents(...params) {
+        const pageResult = this.paging.pageResult(params[0], params[1]);
+        const result_contents = await contents.findAll({
+            order: [['like_count', 'DESC']],
+            offset: pageResult.offset,
+            limit: pageResult.limit
+        });
+        return result_contents;
     }
 }
 
-module.exports = ContentsService;
+module.exports = MainService;
