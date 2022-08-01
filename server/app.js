@@ -11,7 +11,9 @@ const mysqlstore = require("express-mysql-session")(session);
 const logger = require('./src/config/logger');
 const error_handler = require('./src/middleware/error');
 const cors = require('cors');
-const xss = require('xss')
+const xss = require('xss-clean');
+const helmet = require('helmet');
+const compression = require('compression');
 const { authLimiter } = require('./src/middleware/rateLimiter');
 
 const app = express();
@@ -24,7 +26,7 @@ app.use(helmet());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // URL을 통해 전달되는 데이터에 한글, 공백 등과 같은 문자가 포함될 경우 제대로 인식되지 않는 문제 해결
-app.use(morgan("tiny",{stream:logger.stream}))
+app.use(morgan("tiny", { stream: logger.stream }))
 app.use(cookieParser());
 
 const option = {
@@ -68,7 +70,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // limit repeated failed requests to auth endpoints
-if (config.env === 'production') {
+if (process.env.NODE_ENV === 'production') {
     app.use('/v1/auth', authLimiter);
 }
 

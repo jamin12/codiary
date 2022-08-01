@@ -1,29 +1,28 @@
-import _sequelize from "sequelize";
-const DataTypes = _sequelize.DataTypes;
-import _category from  "./category.js";
-import _comments from  "./comments.js";
-import _contents from  "./contents.js";
-import _like_record from  "./like_record.js";
-import _mesurement from  "./mesurement.js";
-import _sns_info from  "./sns_info.js";
-import _tag from  "./tag.js";
-import _temporary_contents from  "./temporary_contents.js";
-import _user_detail from  "./user_detail.js";
-import _users from  "./users.js";
-import _visit_record from  "./visit_record.js";
+var DataTypes = require("sequelize").DataTypes;
+var _category = require("./category");
+var _comments = require("./comments");
+var _contents = require("./contents");
+var _like_record = require("./like_record");
+var _mesurement = require("./mesurement");
+var _sns_info = require("./sns_info");
+var _tag = require("./tag");
+var _temporary_contents = require("./temporary_contents");
+var _user_detail = require("./user_detail");
+var _users = require("./users");
+var _visit_record = require("./visit_record");
 
-export default function initModels(sequelize) {
-  const category = _category.init(sequelize, DataTypes);
-  const comments = _comments.init(sequelize, DataTypes);
-  const contents = _contents.init(sequelize, DataTypes);
-  const like_record = _like_record.init(sequelize, DataTypes);
-  const mesurement = _mesurement.init(sequelize, DataTypes);
-  const sns_info = _sns_info.init(sequelize, DataTypes);
-  const tag = _tag.init(sequelize, DataTypes);
-  const temporary_contents = _temporary_contents.init(sequelize, DataTypes);
-  const user_detail = _user_detail.init(sequelize, DataTypes);
-  const users = _users.init(sequelize, DataTypes);
-  const visit_record = _visit_record.init(sequelize, DataTypes);
+function initModels(sequelize) {
+  var category = _category(sequelize, DataTypes);
+  var comments = _comments(sequelize, DataTypes);
+  var contents = _contents(sequelize, DataTypes);
+  var like_record = _like_record(sequelize, DataTypes);
+  var mesurement = _mesurement(sequelize, DataTypes);
+  var sns_info = _sns_info(sequelize, DataTypes);
+  var tag = _tag(sequelize, DataTypes);
+  var temporary_contents = _temporary_contents(sequelize, DataTypes);
+  var user_detail = _user_detail(sequelize, DataTypes);
+  var users = _users(sequelize, DataTypes);
+  var visit_record = _visit_record(sequelize, DataTypes);
 
   sns_info.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasOne(sns_info, { as: "sns_info", foreignKey: "user_id"});
@@ -44,3 +43,6 @@ export default function initModels(sequelize) {
     visit_record,
   };
 }
+module.exports = initModels;
+module.exports.initModels = initModels;
+module.exports.default = initModels;

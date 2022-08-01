@@ -1,9 +1,6 @@
-import _sequelize from 'sequelize';
-const { Model, Sequelize } = _sequelize;
-
-export default class users extends Model {
-  static init(sequelize, DataTypes) {
-  return super.init({
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('users', {
     user_id: {
       type: DataTypes.STRING(255),
       allowNull: false,
@@ -42,5 +39,4 @@ export default class users extends Model {
       },
     ]
   });
-  }
-}
+};

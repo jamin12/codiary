@@ -1,9 +1,6 @@
-import _sequelize from 'sequelize';
-const { Model, Sequelize } = _sequelize;
-
-export default class temporary_contents extends Model {
-  static init(sequelize, DataTypes) {
-  return super.init({
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('temporary_contents', {
     tmpcontents_id: {
       autoIncrement: true,
       type: DataTypes.BIGINT,
@@ -47,5 +44,4 @@ export default class temporary_contents extends Model {
       },
     ]
   });
-  }
-}
+};

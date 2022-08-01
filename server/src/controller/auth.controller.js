@@ -2,15 +2,9 @@
 
 const logger = require("../config/logger");
 const passport = require("passport");
-const ContentsService = require("../service/mainService");
-// const modle = require("../../models/index");
-
-const contentsService = new ContentsService();
 
 const output = {
 	index: async (req, res, next) => {
-		const b = await test.getIndexPagePopularContents();
-		console.log(b);
 		res.json({ test: "hihi", userid: req.user });
 	},
 

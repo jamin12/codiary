@@ -7,9 +7,15 @@ const logger = require('../config/logger');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/sequlize/database.json')[env];
+const cls = require('cls-hooked');
+const transaction = cls.createNamespace('transaction');
 const db = {};
 
-config.logging = msg => logger.info(`${msg}\n`);
+Sequelize.useCLS(transaction);
+
+if (process.env.NODE_ENV === 'development') {
+  config.logging = msg => logger.info(`${msg}\n`);
+}
 
 let sequelize;
 if (config.use_env_variable) {

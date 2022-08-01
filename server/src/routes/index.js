@@ -1,9 +1,14 @@
 const express = require('express');
-const mainRoutes = require('./mainRoutes');
+const authRoutes = require('./auth.routes');
+const mainRoutes = require('./main.routes');
 
 const router = express.Router();
 
 const defaultRoutes = [
+  {
+    path: '/',
+    route: authRoutes
+  },
   {
     path: '/main',
     route: mainRoutes,
@@ -19,7 +24,7 @@ defaultRoutes.forEach((route) => {
 });
 
 /* istanbul ignore next */
-if (config.env === 'development') {
+if (process.env.NODE_ENV === 'development') {
   devRoutes.forEach((route) => {
     router.use(route.path, route.route);
   });

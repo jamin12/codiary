@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 class CustomError extends Error {
     constructor(error_info,...params){
         super(...params);
