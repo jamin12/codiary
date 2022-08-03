@@ -6,7 +6,9 @@
 .container {
     width: 100%;
     height: 100vh;
-    background-color: #edeef1;
+    /* background-color: #edeef1; */
+    background-color: #59617a;
+    position: relative;
 }
 #home-search {
     background-color: #38393d;
@@ -23,12 +25,13 @@
 
 
 /* ================ 프로필 이미지 자리 =============== */
+/* 홈 프로필 */
 .home-profile {
     position: fixed;
     top: 20px;
     right: 20px;
+    z-index: 9999;
 }
-
 
 /* ================ search-bar =============== */
 .search-bar {
@@ -49,3 +52,7 @@
 
 
 /* ============ 인기 게시글 =========================== */
+.container .home-title-popular {
+    text-align: center;
+    padding: 100px 0 50px 0;
+}

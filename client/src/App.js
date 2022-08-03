@@ -1,15 +1,30 @@
 import React from "react";
 
-import Home from "./Pages/home";
-import Popular from "./Pages/Popular";
-import Footer from "./components/Footer";
+// import Home from "./Pages/home";
+import FrontTest from "./Pages/Mypage";
+
+// import { Routes, Route } from "react-router-dom";
 
 const App = () => {
   return (
     <>
-      <Home />
-      <Popular />
-      <Footer />
+      <FrontTest />
+
+        {/* <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/:userid" element={<Mypage />}>
+            <Route path="home" element={<Mypage />} />
+            <Route path=":postNum" element={<Post/>} />
+          </Route> */}
+
+          {/* <Route path="" element={</>}/>
+          <Route path="" element={</>}/>
+          <Route path="" element={</>}/>
+          <Route path="" element={</>}/>
+          <Route path="" element={</>}/>
+          <Route path="" element={</>}/>
+          <Route path="" element={</>}/> */}
+        {/* </Routes> */}
     </>
   );
 };

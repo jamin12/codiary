@@ -9,8 +9,8 @@
     height: 500px;
     /* background-color: rgb(102, 94, 94); */
     display: flex;
-
-    margin: 100px auto;
+    /* padding-top: 800px; */
+    margin: 0px auto;
 }
 
 .btn {
@@ -48,7 +48,7 @@
     width: 300px;
     height: 400px;
     /* height: 100%; */
-    background: red;
+    background: rgb(78, 65, 65);
     margin: 0 24.5px;
 }
 .con-wrap>div:nth-child(1){
