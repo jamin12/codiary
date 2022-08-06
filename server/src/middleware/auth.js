@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const cutomError = require('../util/Error/customError');
+const cutomError = require('../utils/Error/customError');
 const { roleRights } = require('../config/roles');
 
 const verifyCallback = (req, resolve, reject, requiredRights) => {
@@ -9,7 +9,7 @@ const verifyCallback = (req, resolve, reject, requiredRights) => {
   // req.user = user;
 
   if (requiredRights.length) {
-    const userRights = roleRights.get(req.user.role);
+    const userRights = roleRights.get(req.user.user_role);
     let hasRequiredRights = false;
     requiredRights.forEach((requiredRight) => {
       if(userRights.includes(requiredRight)){
@@ -27,7 +27,7 @@ const auth =
   (...requiredRights) =>
   async (req, res, next) => {
     return new Promise((resolve, reject) => {
-      verifyCallback(req,resolve,reject,requiredRights)(req, res, next);
+      verifyCallback(req,resolve,reject,requiredRights);
     })
       .then(() => next())
       .catch((err) => next(err));
