@@ -15,8 +15,9 @@ module.exports = () => {
             // 유저가 없을 경우 새로운 유저를 만들어줌
             if(!finduser){
                 await userService.createUser(user);
+                finduser = await model.users.findOne({where :{user_id: user.id}})
             }
-            done(null, user.id)
+            done(null, finduser)
         })
         .catch((err) => {
             done(err, null)
