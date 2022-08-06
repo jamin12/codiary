@@ -1,5 +1,5 @@
 const { contents } = require("../models/index");
-const Paging = require('../util/paging');
+const Paging = require('../utils/paging');
 
 class MainService{    
     constructor() {
