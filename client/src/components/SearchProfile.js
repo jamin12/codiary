@@ -1,52 +1,53 @@
 import React from 'react';
 import styled from "styled-components";
+import '../css/reset.css';
 
 // 스타일 설정
+// 1920*1080기준 작성
 const Wrap = styled.div`
   position: absolute;
   display: flex;
-  top: 10px;
-  right: 20px;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
 
-  width: 250px;
+  width: 1536px; //80% 
   height: 50px;
   align-items: center;
   justify-content: space-between;
-
 `
+
+const SearchWrap = styled.div`
+  position: relative;
+  display: flex;
+`
+
 const SearchBox = styled.div`
   position: relative;
   display: flex;
-  width: 200px;
-  height: 60%;
-
-  border-radius:35px;
+  background-color: #E8E8E8;
+  border-radius: 30px;
+  width: 250px;
   overflow: hidden;
 
-  cursor: pointer;
-
-  background-color: #E8E8E8;
-
-  ion-icon{
-    display: flex;
+  ion-icon{ //돋보기
     position: absolute;
-    right: 10px;
-    top: 5px;
-    height: 70%;
-
-    color: #8F8F8F;
-    font-weight: bold;
+    width: 25px;
+    height: 100%;
+    padding: 0 10px 0 5px;
+    right: 0;
 
     cursor: pointer;
   }
 `
 
 const Search = styled.input`
+  position: absolute;
+  width: calc(100% - 60px);
+  height: 100%;
+  margin-left: 15px;
+  background-color: transparent;
   border: none;
-  padding: 10px;
-  width: 150px;
-  background-color: #E8E8E8;
-
   :focus{
     outline: none;
   }
@@ -55,7 +56,7 @@ const Profile = styled.div`
   width: 40px;
   height: 40px;
   object-fit: cover;
-
+  margin-left: 30px;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
@@ -69,21 +70,37 @@ const Profile = styled.div`
   }
 `
 
+const GotoHome = styled.h1`
+  font-size: 2.5rem;
+`
+
 
 
 const SearchProfile = () => {
 
-  // return(
-  //   <Wrap>
-  //     <SearchBox className='search-box'>
-  //       <Search type='text' className='search' placeholder='SEARCH'></Search>
-  //       <ion-icon size='small' name="search-outline"></ion-icon>
-  //     </SearchBox>
+  return(
+    <Wrap>
+      <GotoHome>
+        <a href='#none'>
+          CODIARY
+        </a>
 
-  //     <Profile>
-  //       <img src={ require('../IMG/profile_test.png')} className='profile-img' alt='profile-img' />
-  //     </Profile>
-  //   </Wrap>
-  // )
+      </GotoHome>
+
+      <SearchWrap>
+        <SearchBox className='search-box'>
+          <Search type='text' className='search' placeholder='SEARCH'></Search>
+          <ion-icon size='small' name="search-outline"></ion-icon>
+        </SearchBox>
+
+        <Profile>
+          <img src={ require('../IMG/profile_test.png')} className='profile-img' alt='profile-img' />
+        </Profile>
+      </SearchWrap>
+
+
+      
+    </Wrap>
+  )
 }
 export default SearchProfile;

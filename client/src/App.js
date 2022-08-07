@@ -1,7 +1,7 @@
 import React from "react";
 
 // import Home from "./Pages/home";
-import FrontTest from "./Pages/Mypage";
+import FrontTest from "./Pages/Post";
 
 // import { Routes, Route } from "react-router-dom";
 

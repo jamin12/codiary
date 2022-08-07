@@ -1,0 +1,94 @@
+@import url(./reset.css);
+
+/* 1920사이즈 기준 */
+.wrap{
+    max-width: 1536px;
+    background-color: beige;
+    margin: 160px auto 0 auto;
+}
+
+/* 헤더 */
+.header-box{
+    width: 70%;
+    display: flex;
+    position: relative;
+    margin: 0 auto
+}
+.header-box .title{
+    width: 100%;
+    font-weight: bold;
+    font-size: 60px;
+    text-align: center;
+}
+.header-box > span{
+    position: absolute;
+}
+.header-box .write-data-box{
+    left: 0;
+    bottom: 0;
+}
+.header-box .cor-del-box{
+    display: flex;
+    right: 0;
+    bottom: 0;
+}
+.header-box .cor-del-box p{
+    margin: 2px;
+    padding: 0 3px;
+    cursor: pointer;
+}
+
+.title-hr{
+    width: 70%;
+    margin: 5px auto;
+}
+
+
+/* 본문내용 */
+.content-box{
+    width: 70%;
+    margin: 0 auto 50px auto;
+}
+.content-box .sub-title{
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+/* 태그 & 방문자수 */
+.tag-visite-wrap{
+    width: 70%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    background-color: orange;
+}
+.tag-visite-wrap .tag-box{
+    display: flex;
+    max-width: 600px;
+}
+.tag-visite-wrap .tag-box p{
+    border: 1px solid #000;
+    padding: 3px 20px;
+    border-radius: 50px;
+    margin: 0 15px;
+    margin-right: 5px;
+}
+
+.tag-visite-wrap .visite-box{
+    display: flex;
+    width: 170px;
+    justify-content: space-between;
+}
+.tag-visite-wrap .visite-box .total-visite{
+    background-color: red;
+
+}
+.tag-visite-wrap .visite-box .today-visite{
+
+}
+.tag-visite-wrap .visite-box .like-good{
+
+}
+.tag-visite-wrap .visite-box .like-good > input{
+    display: none;
+}
