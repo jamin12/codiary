@@ -73,17 +73,17 @@ const Profile = styled.div`
 
 const SearchProfile = () => {
 
-  return(
-    <Wrap>
-      <SearchBox className='search-box'>
-        <Search type='text' className='search' placeholder='SEARCH'></Search>
-        <ion-icon size='small' name="search-outline"></ion-icon>
-      </SearchBox>
+  // return(
+  //   <Wrap>
+  //     <SearchBox className='search-box'>
+  //       <Search type='text' className='search' placeholder='SEARCH'></Search>
+  //       <ion-icon size='small' name="search-outline"></ion-icon>
+  //     </SearchBox>
 
-      <Profile>
-        <img src={ require('../IMG/profile_test.png')} className='profile-img' alt='profile-img' />
-      </Profile>
-    </Wrap>
-  )
+  //     <Profile>
+  //       <img src={ require('../IMG/profile_test.png')} className='profile-img' alt='profile-img' />
+  //     </Profile>
+  //   </Wrap>
+  // )
 }
 export default SearchProfile;
