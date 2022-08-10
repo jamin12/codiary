@@ -2,6 +2,7 @@ const { users, user_detail, sns_info, sequelize } = require("../models/index");
 const logger = require("../config/logger");
 const CustomError = require("../utils/Error/customError");
 const httpStatus = require("http-status");
+const { v4: uuid } = require("uuid");
 
 // const
 
@@ -22,12 +23,26 @@ class UserService {
 		return user;
 	}
 
+	// 전체 유저 조회
+	async getUsers() {
+		const user = await users.findAll({
+			include: [
+				{ model: user_detail, as: "user_detail" },
+				{ model: sns_info, as: "sns_info" },
+			],
+		});
+		if (!user)
+			throw new CustomError(httpStatus.BAD_REQUEST, "User not found");
+		return user;
+	}
+
 	// 유니크 아이디로 유저 찾기
 	async getUserByUniqueId(userUniqueId) {
 		const user = await user_detail.findOne({
 			include: [
-				{ model: users, as: "users" },
-				{ model: sns_info, as: "sns_info" },
+				{ model: users, as: "user", include: [
+					{ model: sns_info, as: "sns_info"}
+				]},
 			],
 			where: { user_unique_id: userUniqueId },
 		});
@@ -65,7 +80,7 @@ class UserService {
 				await user_detail.create({
 					user_id: userInfo.id,
 					user_name: userInfo.displayName,
-					user_unique_id: userInfo.displayName,
+					user_unique_id: uuid(),
 					user_nickname: "",
 					user_introduce: "",
 					user_img: userInfo.picture,
@@ -82,11 +97,13 @@ class UserService {
 		} catch (err) {
 			throw new CustomError(
 				httpStatus.INTERNAL_SERVER_ERROR,
-				"delete user failed",
+				"create user failed",
 				true,
 				err.stack
-			);
-		}
+				);
+			}
+			
+		return await this.getUserByUserId(userInfo.id);
 	}
 
 	// 유저 업데이트

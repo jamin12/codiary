@@ -35,14 +35,13 @@
   "scripts": {
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "dev": "cross-env NODE_ENV=development nodemon src/bin/www.js",
-    "test": ""
+    "test": "jest -i --colors --verbose --detectOpenHandles",
+    "test:watch": "jest -i --watchAll"
   },
   "author": "",
   "license": "MIT",
   "description": "",
   "devDependencies": {
-    "mocha": "^10.0.0",
-    "should": "^13.2.3",
-    "sinon": "^14.0.0"
+    "jest": "^28.1.3"
   }
 }

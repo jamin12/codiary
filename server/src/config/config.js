@@ -84,7 +84,7 @@ module.exports = {
       port: envVars.MYSQL_PORT,
       username: envVars.MYSQL_USERNAME,
       password: envVars.MYSQL_PASSWORD,
-      database: envVars.MYSQL_DATABASE,
+      database: envVars.TEST_DB_DATABASE,
       dialect: "mysql",
       debug: false,
       charset: 'utf8mb4',
