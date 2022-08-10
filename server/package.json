@@ -26,16 +26,23 @@
     "passport-google-oauth2": "^0.2.0",
     "request": "^2.88.2",
     "sequelize-auto": "^0.8.8",
+    "uuid": "^8.3.2",
     "winston": "^3.8.1",
     "winston-daily-rotate-file": "^4.7.1",
     "xss": "^1.0.13",
     "xss-clean": "^0.1.1"
   },
   "scripts": {
-    "start": "nodemon ./bin/www.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "pm2 start ecosystem.config.json --no-daemon",
+    "dev": "cross-env NODE_ENV=development nodemon src/bin/www.js",
+    "test": ""
   },
   "author": "",
   "license": "MIT",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "mocha": "^10.0.0",
+    "should": "^13.2.3",
+    "sinon": "^14.0.0"
+  }
 }
