@@ -1,10 +1,16 @@
 const logger = require('../config/logger');
 const passport = require('passport');
 const catchAsync = require('../utils/catchAsync');
+const resultDto = require('../dto/resultDTO');
+const httpStatus = require('http-status');
 
 const output = {
 	index: catchAsync(async (req, res) => {
-		res.json({ test: 'hihi', userid: req.user });
+		res.send(resultDto(httpStatus.OK, "login success"));
+	}),
+
+	loginfail: catchAsync(async (req, res) => {
+		res.send(resultDto(httpStatus.INTERNAL_SERVER_ERROR, "login failed"));
 	}),
 
 	logout:catchAsync((req, res) => {
@@ -20,7 +26,7 @@ const input = {
 	// TODO: 성공 실패 url 수정
 	oauth2callback: passport.authenticate('google', {
 		successRedirect: '/',
-		failureRedirect: '/',
+		failureRedirect: '/fail',
 	}),
 };
 

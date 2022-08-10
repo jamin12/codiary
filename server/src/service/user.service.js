@@ -12,9 +12,20 @@ class UserService {
 	// 아이디로 유저 찾기
 	async getUserByUserId(userId) {
 		const user = await users.findOne({
+			attributes: ["user_email"],
 			include: [
-				{ model: user_detail, as: "user_detail" },
-				{ model: sns_info, as: "sns_info" },
+				{
+					model: user_detail,
+					as: "user_detail",
+					attributes: [
+						"user_name",
+						"user_unique_id",
+						"user_nickname",
+						"user_introduce",
+						"user_img",
+					],
+				},
+				{ model: sns_info, as: "sns_info", attributes: ["sns_name"] },
 			],
 			where: { user_id: userId },
 		});
@@ -26,9 +37,20 @@ class UserService {
 	// 전체 유저 조회
 	async getUsers() {
 		const user = await users.findAll({
+			attributes: ["user_email"],
 			include: [
-				{ model: user_detail, as: "user_detail" },
-				{ model: sns_info, as: "sns_info" },
+				{
+					model: user_detail,
+					as: "user_detail",
+					attributes: [
+						"user_name",
+						"user_unique_id",
+						"user_nickname",
+						"user_introduce",
+						"user_img",
+					],
+				},
+				{ model: sns_info, as: "sns_info", attributes: ["sns_name"] },
 			],
 		});
 		if (!user)
@@ -39,10 +61,20 @@ class UserService {
 	// 유니크 아이디로 유저 찾기
 	async getUserByUniqueId(userUniqueId) {
 		const user = await user_detail.findOne({
+			attributes: [
+				"user_name",
+				"user_unique_id",
+				"user_nickname",
+				"user_introduce",
+				"user_img",
+			],
 			include: [
-				{ model: users, as: "user", include: [
-					{ model: sns_info, as: "sns_info"}
-				]},
+				{
+					model: users,
+					as: "user",
+					attributes: ["user_email"],
+					include: [{ model: sns_info, as: "sns_info", attributes: ["sns_name"] }],
+				},
 			],
 			where: { user_unique_id: userUniqueId },
 		});
@@ -100,9 +132,8 @@ class UserService {
 				"create user failed",
 				true,
 				err.stack
-				);
-			}
-			
+			);
+		}
 		return await this.getUserByUserId(userInfo.id);
 	}
 
@@ -152,7 +183,6 @@ class UserService {
 				err.stack
 			);
 		}
-
 		return deletedUser;
 	}
 }
