@@ -10,6 +10,10 @@ const output = {
     const myInfo = await uService.getUserByUserId(req.user.user_id)
     res.send(resultDto(httpStatus.OK, "myInfo", myInfo));
   }),
+  getUsers: catchAsync(async(req,res) => {
+    const userList = await uService.getUsers();
+    res.send(resultDto(httpStatus.OK, "userList", userList));
+  }),
 };
 
 const input = {
@@ -23,6 +27,7 @@ const input = {
     res.send(resultDto(httpStatus.OK, 'delete user success', deletedUser));
   })
 };
+
 
 module.exports = {
 	output,
