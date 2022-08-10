@@ -27,12 +27,12 @@ describe("userService", () => {
 	// 유저 생성
 	it("createUser", async () => {
 		const createdUser = await uService.createUser(userModel);
-		expect(createdUser.user_id).toEqual(userModel.id);
+		expect(createdUser.user_email).toEqual(userModel.email);
 	});
 
 	// 유저 생성 실패
 	it("createUser Error : create user failed", async () => {
-		delete userModel.email;
+		delete userModel.provider;
 		await uService.createUser(userModel).catch((err) => {
 			expect(err.message).toEqual("create user failed");
 		});
@@ -43,7 +43,7 @@ describe("userService", () => {
 		const searchedUserByUserId = await uService.getUserByUserId(
 			userModel.id
 		);
-		expect(searchedUserByUserId.user_id).toEqual(userModel.id);
+		expect(searchedUserByUserId.user_email).toEqual(userModel.email);
 	});
 
 	// 유저 업데이트
@@ -62,7 +62,7 @@ describe("userService", () => {
 		const searchedUserByUserUniqueId = await uService.getUserByUniqueId(
 			"unique-test"
 		);
-		expect(searchedUserByUserUniqueId.user_id).toEqual(userModel.id);
+		expect(searchedUserByUserUniqueId.user_name).toEqual(userModel.displayName);
 	});
 
 	// 유저 업데이트 에러
@@ -84,6 +84,6 @@ describe("userService", () => {
 	// 유저 삭제
 	it("deleteUser", async () => {
 		const deletedUser = await uService.deleteUser(userModel.id);
-		expect(deletedUser.user_id).toEqual(userModel.id);
+		expect(deletedUser.user_email).toEqual(userModel.email);
 	});
 });
