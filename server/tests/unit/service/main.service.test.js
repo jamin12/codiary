@@ -16,4 +16,10 @@ describe("mainService", () => {
       expect(err.message).toEqual("not found contents");
     });
   });
+
+  // 메인페이지 게시글 검색
+  it("searchContentsInMain", async () => {
+    const searchedContents = await mService.searchContentsInMain("qwer");
+    expect(searchedContents.length).toEqual(4);
+  });
 });

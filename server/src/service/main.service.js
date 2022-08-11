@@ -29,6 +29,7 @@ class MainService {
 		return result_contents;
 	}
 
+	// 게시글 검색
 	async searchContentsInMain(searchWord) {
 		const searchedContents = await contents.findAll({
 			attributes: [
