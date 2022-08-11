@@ -27,6 +27,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true
     },
+    contents_txt: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
     like_count: {
       type: DataTypes.INTEGER,
       allowNull: true,

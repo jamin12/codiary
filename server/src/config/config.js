@@ -16,6 +16,10 @@ const envVarsSchema = Joi.object()
     MYSQL_USERNAME: Joi.string().required().description('MySQL username'),
     MYSQL_PASSWORD: Joi.string().required().description('MySQL password'),
     MYSQL_DATABASE: Joi.string().required().description('MySQL database'),
+    MAX_POOL: Joi.number().required(),
+    MIN_POOL: Joi.number().required(),
+    ACQUIRE: Joi.number().required(),
+    IDLE: Joi.number().required(),
     // JWT_SECRET: Joi.string().required().description('JWT secret key'),
     // JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
     // JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
@@ -64,7 +68,13 @@ module.exports = {
       charset: 'utf8mb4',
       timezone: '+09:00',
       waitForConnections: true,
-      connectionLimit: 20
+      connectionLimit: 20,
+      pool:{
+        max: envVars.MAX_POOL,
+        min: envVars.MIN_POOL,
+        acquire: envVars.ACQUIRE,
+        idle: envVars.IDLE
+      }
     },
     production: {
       host: envVars.MYSQL_HOST,
