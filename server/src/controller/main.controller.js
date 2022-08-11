@@ -5,11 +5,16 @@ const { mainService } = require('../service/index');
 const catchAsync = require('../utils/catchAsync');
 
 
+const mService = new mainService()
+
 const output = {
   getContents: catchAsync(async (req, res) => {
-    const mService = new mainService()
     const result_contents = await mService.getPopularContents(req.query.offset, req.query.limit);
     res.send(resultDto(httpStatus.OK, "getPopularContents", result_contents));
+  }),
+  searchContentsInMain: catchAsync(async (req, res) => {
+    const searchedContents = await mService.searchContentsInMain(req.params.searchword);
+    res.send(resultDto(httpStatus.OK, "searchContents", searchedContents));
   }),
 };
 

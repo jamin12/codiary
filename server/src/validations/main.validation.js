@@ -7,7 +7,14 @@ const getPopularContents = {
   }),
 };
 
+const searchContentsInMain = {
+  params: joi.object().keys({
+    searchword: joi.string().required(),
+  }),
+};
+
 
 module.exports = {
   getPopularContents,
+  searchContentsInMain,
 };
