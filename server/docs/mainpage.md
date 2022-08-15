@@ -5,7 +5,7 @@
 - **[GET] /main?offset=1&limit=10** </br>
 - |속성|타입|설명|
     |---|---|---|
-    |offet|int|페이지 번호|
+    |offet *|int|페이지 번호 (필수)|
     |limit|int|한번에 가져올 개수|
 ## __<span style="color:#ff9933">응답</span>__
 - ``` json
@@ -35,10 +35,12 @@
 
 ## **게시글 검색**
 ## __<span style="color:#ff9933">요청</span>__
-- **[GET] /main/:searchword** </br>
+- **[GET] /main/:searchword?offset=0&limit=5** </br>
 - |속성|타입|설명|
     |---|---|---|
-    |searchword|string|검색 단어|
+    |searchword *|string|검색 단어 (필수)|
+    |offset *|int|페이지 번호 (필수)|
+    |limit|int|한번에 가져올 개수|
 ## __<span style="color:#ff9933">응답</span>__
 - ``` json
     {

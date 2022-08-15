@@ -30,7 +30,8 @@ class MainService {
 	}
 
 	// 게시글 검색
-	async searchContentsInMain(searchWord) {
+	async searchContentsInMain(searchWord, ...params) {
+		const pageResult = this.paging.pageResult(params[0], params[1]);
 		const searchedContents = await contents.findAll({
 			attributes: [
 				"contents_id",
@@ -66,9 +67,11 @@ class MainService {
 						[Op.substring]: searchWord
 					}}
 				]
-			}
+			},
+			order: [["like_count", "DESC"]],
+			offset: pageResult.offset,
+			limit: pageResult.limit,
 		});
-
 		return searchedContents;
 	}
 }
