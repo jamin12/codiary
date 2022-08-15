@@ -2,15 +2,15 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const validate = require('../middleware/validate');
-const { mainValidation } = require('../validations/index');
-const { mainController } = require('../controller');
+const { personalValidation } = require('../validations/index');
+const { personalController } = require('../controller');
 
 router
-  .route('/')
-  .get(validate(mainValidation.getPopularContents), mainController.output.getContents);
+  .route('/:uniqueid')
+  .get(validate(personalValidation.getPsersonalContents), personalController.output.getPersonalContents);
 
 router
-  .route('/:searchword')
-  .get(validate(mainValidation.searchContentsInMain), mainController.output.searchContentsInMain);
+  .route('/:uniqueid/:searchword')
+  .get(validate(personalValidation.searchPsersonalContents), personalController.output.searchPersonalContents);
 
 module.exports = router;

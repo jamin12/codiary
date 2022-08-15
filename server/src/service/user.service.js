@@ -62,6 +62,7 @@ class UserService {
 	async getUserByUniqueId(userUniqueId) {
 		const user = await user_detail.findOne({
 			attributes: [
+				"user_id",
 				"user_name",
 				"user_unique_id",
 				"user_nickname",
