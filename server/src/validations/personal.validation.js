@@ -1,5 +1,15 @@
 const joi =  require('Joi');
 
+const getPsersonalCategory = {
+  query: joi.object().keys({
+    offset: joi.number().required(),
+    limit: joi.number()
+  }),
+  params: joi.object().keys({
+    uniqueid: joi.string().required(),
+  }),
+};
+
 const getPsersonalContents = {
   query: joi.object().keys({
     offset: joi.number().required(),
@@ -25,4 +35,5 @@ const searchPsersonalContents = {
 module.exports = {
   getPsersonalContents,
   searchPsersonalContents,
+  getPsersonalCategory,
 };

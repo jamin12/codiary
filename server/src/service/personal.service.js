@@ -11,17 +11,22 @@ class PersonalService {
 		this.uService = new userService();
 	}
 
-	// 사용자 코디어리 
-	async getPersonalContents(uniqueId, ...paging) {
+	// 사용자 카테고리 목록
+	async getPersonalCategory(uniqueId) {
 		const user = await this.uService.getUserByUniqueId(uniqueId);
-		const pageResult = this.paging.pageResult(paging[0], paging[1]);
-		const resultCategory = await category.findAll({
+		const personalCategory = await category.findAll({
 			attributes: ["category_id", "sub_category_id", "category_name"],
 			where: {
 				user_id: user.user_id,
 			},
 		});
-		const relustContents = await contents.findAll({
+		return personalCategory;
+	}
+
+	async getPersonalContents(uniqueId, ...paging) {
+		const user = await this.uService.getUserByUniqueId(uniqueId);
+		const pageResult = this.paging.pageResult(paging[0], paging[1]);
+		const personalContents = await contents.findAll({
 			attributes: [
 				"contents_id",
 				"contents_title",
@@ -36,9 +41,11 @@ class PersonalService {
 			offset: pageResult.offset,
 			limit: pageResult.limit,
 		});
-
-		return { resultCategory, relustContents };
+		
+		return personalContents;
 	}
+
+
 
 	// 개인페이지 검색기능
 	async searchPersonalContents(uniqueId, searchWord, ...paging) {

@@ -6,7 +6,11 @@ const { personalValidation } = require('../validations/index');
 const { personalController } = require('../controller');
 
 router
-  .route('/:uniqueid')
+  .route('/category/:uniqueid')
+  .get(validate(personalValidation.getPsersonalCategory), personalController.output.getPersonalCategory);
+
+router
+  .route('/contents/:uniqueid')
   .get(validate(personalValidation.getPsersonalContents), personalController.output.getPersonalContents);
 
 router
