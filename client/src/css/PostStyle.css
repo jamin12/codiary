@@ -1,5 +1,6 @@
 @import url(./reset.css);
 
+
 /* 1920사이즈 기준 */
 .wrap{
     width: 1536px;
@@ -10,6 +11,8 @@
     display: flex;
     justify-content: center;
 }
+
+
 
 .inner-width{
     width: 70%;
@@ -220,4 +223,84 @@ ul > li::before{
 }
 ul > li::after{
     content: ' "'
+}
+
+
+
+
+
+
+
+
+/* 랩탑L */
+@media (max-width: 1600px){
+    .wrap{
+        /* padding-right: 60px;
+        padding-left: 60px; */
+        width: 90%;
+    }
+
+    .header-box .title{
+        font-size: 3rem;
+    }
+    .header-box span{
+        font-size: 0.87rem;
+    }
+
+    .content-box .sub-title{
+        font-size: 1.2rem;
+    }
+    .content-box p{
+        font-size: 1rem;
+    }
+
+
+    .tag-visite-wrap .tag-box{
+        font-size: 0.89rem;
+    }
+
+
+    .comment-box{
+        width: 97%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .comment-box .comment-box img{
+        width: 25px;
+        height: 25px;
+    }
+
+    .reply-box{
+        width: 93%;
+    }
+}
+
+
+
+/* 랩탑 작은거 */
+@media (max-width: 1024px){
+    .wrap{
+        width: 90%;
+    }
+
+    .wrap > .sticky-box{
+        display: none;
+        margin: 0 auto;
+    }
+
+    .wrap .content-wrap-box{
+        width: 100%;
+    }
+
+    .wrap .content-box{
+        width: 90%;
+    }
+
+    .wrap .comment-box{
+        width: 90%;
+    }
+    .wrap .reply-box{
+        width: 85%;
+        margin-left: 60px;
+    }
 }

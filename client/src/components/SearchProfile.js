@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import '../css/reset.css';
+import { devices } from '../css/DeviceSize';
 
 // 스타일 설정
 // 1920*1080기준 작성
@@ -15,6 +16,11 @@ const Wrap = styled.div`
   height: 50px;
   align-items: center;
   justify-content: space-between;
+
+  @media ${devices.laptopL} {
+    width: 90%;
+  }
+
 `
 
 const SearchWrap = styled.div`
@@ -38,6 +44,16 @@ const SearchBox = styled.div`
     right: 0;
 
     cursor: pointer;
+  }
+
+  @media ${devices.laptopL} {
+    width: 220px;
+
+    ion-icon{
+    width: 20px;
+    padding: 0 13px 0 5px;
+
+    }
   }
 `
 
@@ -65,17 +81,30 @@ const Profile = styled.div`
   img {
     width: 40px;
     height: 40px;
-    
     background-color: #e4e4e4;
+  }
+
+  @media ${devices.laptopL}{
+    width: 35px;
+    height: 35px;
+
+    img{
+      width: 35px;
+      height: 35px;
+    }
   }
 `
 
 const GotoHome = styled.h1`
   font-size: 2.5rem;
+
+  @media ${devices.laptopL}{
+    font-size: 2rem;
+  }
 `
 
 
-
+// 회원 정보를 받아와서 프로필 사진을 불러와야 함
 const SearchProfile = () => {
 
   return(
@@ -97,8 +126,6 @@ const SearchProfile = () => {
           <img src={ require('../IMG/profile_test.png')} className='profile-img' alt='profile-img' />
         </Profile>
       </SearchWrap>
-
-
       
     </Wrap>
   )

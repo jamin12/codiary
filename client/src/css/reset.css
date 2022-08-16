@@ -1,9 +1,5 @@
 @charset "utf-8";
 
-:root{
-    --inner-width: 1536px;
-}
-
 *{
     margin: 0;
     padding: 0;

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import '../css/PostStyle.css';
+import '../css/DeviceSize';
 
 import SearchProfile from '../components/SearchProfile';
 import SimilarPost from '../components/SimilarPost';
