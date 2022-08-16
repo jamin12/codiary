@@ -4,10 +4,11 @@
 .wrap{
     width: 1536px;
     height: 100%;
-    background-color: beige;
-    margin: 160px auto 0 auto;
+    margin: 160px auto 100px auto;
 
     position: relative;
+    display: flex;
+    justify-content: center;
 }
 
 .inner-width{
@@ -16,11 +17,8 @@
 }
 
 .content-wrap-box{
-    background-color: red;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
+    display: block;
 }
 
 /* ====================헤더==================== */
@@ -180,24 +178,46 @@
 .reply-box{
     width: 60%;
     margin-top: 15px;
+    margin-left: 40px;
 }
 
 /* ====================카테고리창==================== */
 .wrap .sticky-box{
-    position: sticky;
-    top: 100px;
     width: 13%;
     z-index: 999;
 }
-.wrap .category{
+.wrap .category,
+.wrap .subtitle-box > ul{
     position: sticky;
-    top: 40px;
-    left: 0;
+    top: 250px;
+    /* border: 2px solid rgba(173, 167, 167, 0.7); */
+    border-left: 2px solid rgba(173, 167, 167, 0.7);
+    /* border-radius: 15px; */
+    /* background-color: rgb(222, 228, 228, 0.5); */
 
-    border: 2px solid rgba(0, 0, 0, 0.7);
-    border-radius: 15px;
+    /* text-align: center; */
+    padding: 15px 0;
+}
+.wrap .category > ul {
+    margin-top: 10px;
+}
+.wrap .category{
+    padding-left: 10px;
 }
 .wrap .subtitle-box{
-    background-color: green;
     right: 0;
+}
+
+ul > li {
+    width: 80%;
+    margin: 0 auto;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+ul > li::before{
+    content: '" '
+}
+ul > li::after{
+    content: ' "'
 }

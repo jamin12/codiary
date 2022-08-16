@@ -17,7 +17,10 @@ const Mypage = () => {
         <h1>CODIARY</h1>
       </div>
 
-      {/* css수정 필요 */}
+      <div>
+        
+      </div>
+
       <div className='folder-wrap'>
         <div className='folder'>
           <h3>전체보기</h3>

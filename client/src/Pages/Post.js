@@ -15,11 +15,11 @@ const WritePage = () => {
 
               {/* 카테고리창 - sticky 이용 */}
               <div className="category-box sticky-box">
-                <h3>사용자's CODIARY</h3>
+                {/* <h3>사용자's CODIARY</h3> */}
                 <div className="category">
-                카테고리명
+                - 카테고리명 -
                   <ul>
-                    <li>Category 1</li>
+                    <li>Category 1qwertyuiasdggjfgfghfghdhtg</li>
                     <li>Category 1</li>
                     <li>Category 1</li>
                     <li>Category 1</li>
@@ -27,14 +27,7 @@ const WritePage = () => {
                 </div>
               </div>
 
-              {/* subtitle창 - sticky 이용 */}
-              <div className="subtitle-box sticky-box">
-                <ul>
-                  <li>Subtitle</li>
-                  <li>What is Lorem Ipsum?</li>
-                  <li>Why do we use it?</li>
-                </ul>
-              </div>
+              
 
               <div className='content-wrap-box inner-width'>
                 {/* 제목 및 헤더 */}
@@ -115,9 +108,16 @@ const WritePage = () => {
                 </div>
 
               </div>
-              
 
 
+              {/* subtitle창 - sticky 이용 */}
+              <div className="subtitle-box sticky-box">
+                <ul>
+                  <li>Subtitle</li>
+                  <li>What is Lorem Ipsum?</li>
+                  <li>Why do we use it?</li>
+                </ul>
+              </div>
             </div>
 
             {/* 비슷한 게시물 props로 태그같은거 보내야함 */}
