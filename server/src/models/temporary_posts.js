@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('temporary_contents', {
-    tmpcontents_id: {
+  return sequelize.define('temporary_posts', {
+    tmppost_id: {
       autoIncrement: true,
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -11,35 +11,34 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    tmpcontents_title: {
+    tmppost_title: {
       type: DataTypes.STRING(45),
       allowNull: true
     },
-    tmpcontents_body: {
+    tmppost_body_md: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+    tmppost_body_html: {
+      type: DataTypes.TEXT,
+      allowNull: true
     },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+    tmppost_txt: {
+      type: DataTypes.TEXT,
+      allowNull: true
     }
-  }, {
+    }, {
     sequelize,
-    tableName: 'temporary_contents',
-    timestamps: false,
+    tableName: 'temporary_posts',
+    timestamps: true,
+    underscored: true,
     indexes: [
       {
         name: "PRIMARY",
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "tmpcontents_id" },
+          { name: "tmppost_id" },
         ]
       },
     ]

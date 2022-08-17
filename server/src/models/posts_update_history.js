@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('tag', {
-    tag_id: {
+  return sequelize.define('posts_update_history', {
+    post_update_history_id: {
       autoIncrement: true,
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -11,13 +11,13 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BIGINT,
       allowNull: false
     },
-    tag_name: {
-      type: DataTypes.STRING(64),
-      allowNull: true
+    update_history: {
+      type: DataTypes.DATE,
+      allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'tag',
+    tableName: 'posts_update_history',
     timestamps: true,
     underscored: true,
     indexes: [
@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "tag_id" },
+          { name: "post_update_history_id" },
         ]
       },
     ]

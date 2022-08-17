@@ -7,10 +7,10 @@ const { mainController } = require('../controller');
 
 router
   .route('/')
-  .get(validate(mainValidation.getPopularContents), mainController.output.getContents);
+  .get(validate(mainValidation.getPopularContents), mainController.output.getPopularPosts);
 
 router
   .route('/:searchword')
-  .get(validate(mainValidation.searchContentsInMain), mainController.output.searchContentsInMain);
+  .get(validate(mainValidation.searchContentsInMain), mainController.output.searchPostsInMain);
 
 module.exports = router;

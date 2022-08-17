@@ -7,10 +7,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    contents_id: {
+    post_id: {
       type: DataTypes.BIGINT,
       allowNull: false,
-      unique: "contents_id"
+      unique: "post_id"
     },
     today_visit_count: {
       type: DataTypes.INTEGER,
@@ -21,21 +21,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BIGINT,
       allowNull: true,
       defaultValue: 0
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     }
   }, {
     sequelize,
     tableName: 'mesurement',
-    timestamps: false,
+    timestamps: true,
+    underscored: true,
     indexes: [
       {
         name: "PRIMARY",
@@ -46,11 +37,11 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "contents_id",
+        name: "post_id",
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "contents_id" },
+          { name: "post_id" },
         ]
       },
     ]

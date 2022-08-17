@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('contents', {
-    contents_id: {
+  return sequelize.define('posts', {
+    post_id: {
       autoIncrement: true,
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -15,19 +15,19 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    contents_title: {
+    post_title: {
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    contents_body_md: {
+    post_body_md: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    contents_body_html: {
+    post_body_html: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    contents_txt: {
+    post_txt: {
       type: DataTypes.TEXT,
       allowNull: true
     },
@@ -35,28 +35,19 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     }
   }, {
     sequelize,
-    tableName: 'contents',
-    timestamps: false,
+    tableName: 'posts',
+    timestamps: true,
+    underscored: true,
     indexes: [
       {
         name: "PRIMARY",
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "contents_id" },
+          { name: "post_id" },
         ]
       },
     ]

@@ -9,8 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     sub_category_id: {
       type: DataTypes.BIGINT,
-      allowNull: true,
-      defaultValue: null
+      allowNull: true
     },
     user_id: {
       type: DataTypes.STRING(255),
@@ -19,21 +18,12 @@ module.exports = function(sequelize, DataTypes) {
     category_name: {
       type: DataTypes.STRING(128),
       allowNull: true
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     }
   }, {
     sequelize,
     tableName: 'category',
-    timestamps: false,
+    timestamps: true,
+    underscored: true,
     indexes: [
       {
         name: "PRIMARY",
