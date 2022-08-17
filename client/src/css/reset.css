@@ -21,5 +21,14 @@ ol, ul, li{
     list-style: none;
 }
 
+/* 1920사이즈 기준 */
+.wrap{
+    width: 1536px;
+    height: 100%;
+    margin: 160px auto 100px auto;
 
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
 

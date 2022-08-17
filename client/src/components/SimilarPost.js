@@ -15,7 +15,7 @@ const SimilarPost = () => {
               <div className="thumbnail"/>
               <div className="thumbnail"/> 
             </div>
-        </div>
+        </div> 
     )
 }
 export default SimilarPost;
