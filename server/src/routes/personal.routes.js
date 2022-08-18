@@ -12,6 +12,15 @@ router
 router
   .route('/tmpposts')
   .get(auth('user'), personalController.output.getPersonalTmppost);
+
+router
+  .route('/visitrecord')
+  .get(auth('user'), validate(personalValidation.getPsersonalVisitRecord), personalController.output.getPersonalVisitRecord);
+
+router
+  .route('/likerecord')
+  .get(auth('user'), validate(personalValidation.getPsersonalLikeRecord), personalController.output.getPersonalLikeRecord);
+
 router
   .route('/posts/:uniqueid')
   .get(validate(personalValidation.getPsersonalPostByDate), personalController.output.getPersonalPostByDate);
@@ -21,7 +30,7 @@ router
   .get(validate(personalValidation.getPsersonalPost), personalController.output.getPsersonalPost);
 
 router
-  .route('/:uniqueid/:searchword')
+  .route('/:uniqueid/:searchword/:searchtype')
   .get(validate(personalValidation.searchPsersonalContents), personalController.output.searchPersonalposts);
 
 module.exports = router;

@@ -23,8 +23,16 @@ const output = {
     const result_contents = await pService.getPersonalTmppost(req.user.user_id);
     res.send(resultDto(httpStatus.OK, "gettempPost", result_contents));
   }),
+  getPersonalVisitRecord: catchAsync(async (req, res) => {
+    const result_contents = await pService.getPsersonalVisitRecord(req.user.user_id, req.query.offset, req.query.limit);
+    res.send(resultDto(httpStatus.OK, "getVisitRecord", result_contents));
+  }),
+  getPersonalLikeRecord: catchAsync(async (req, res) => {
+    const result_contents = await pService.getPsersonalLikeRecord(req.user.user_id, req.query.offset, req.query.limit);
+    res.send(resultDto(httpStatus.OK, "getLikeRecord", result_contents));
+  }),
   searchPersonalposts: catchAsync(async (req, res) => {
-    const result_contents = await pService.searchPersonalposts(req.params.uniqueid, req.params.searchword, req.query.offset, req.query.limit);
+    const result_contents = await pService.searchPersonalposts(req.params.uniqueid, req.params.searchword, req.params.searchtype,req.query.offset, req.query.limit);
     res.send(resultDto(httpStatus.OK, "searchContents", result_contents));
   }),
 };

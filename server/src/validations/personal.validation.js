@@ -28,6 +28,20 @@ const getPsersonalPostByDate = {
   }),
 };
 
+const getPsersonalVisitRecord = {
+  query: joi.object().keys({
+    offset: joi.number().required(),
+    limit: joi.number()
+  }),
+};
+
+const getPsersonalLikeRecord = {
+  query: joi.object().keys({
+    offset: joi.number().required(),
+    limit: joi.number()
+  }),
+};
+
 const searchPsersonalContents = {
   query: joi.object().keys({
     offset: joi.number().required(),
@@ -36,6 +50,7 @@ const searchPsersonalContents = {
   params: joi.object().keys({
     uniqueid: joi.string().required(),
     searchword: joi.string().required(),
+    searchtype: joi.number().required().valid(0,1,2,3),
   }),
 };
 
@@ -45,4 +60,6 @@ module.exports = {
   searchPsersonalContents,
   getPsersonalCategory,
   getPsersonalPostByDate,
+  getPsersonalVisitRecord,
+  getPsersonalLikeRecord,
 };

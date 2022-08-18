@@ -1,23 +1,89 @@
-const httpStatus = require("http-status");
-const { 
-	posts, 
-	category, 
-	users, 
-	user_detail, 
-	posts_update_history,
-	temporary_posts
-} = require("../models/index");
-const CustomError = require("../utils/Error/customError");
-const Paging = require("../utils/paging");
-const { userService } = require("./index");
-const { Op } = require("sequelize");
+const httpStatus = require("http-status"),
+	{
+		posts,
+		category,
+		users,
+		user_detail,
+		posts_update_history,
+		temporary_posts,
+		visit_record,
+		like_record,
+		sequelize,
+	} = require("../models/index"),
+	CustomError = require("../utils/Error/customError"),
+	Paging = require("../utils/paging"),
+	{ userService } = require("./index"),
+	{ Op } = require("sequelize"),
+	postsDto = require("../dto/postsDto"),
+	tmppostsDto = require("../dto/tmpPostDto"),
+	visitRecordDto = require("../dto/visitRecordDto"),
+	likeRecordDto = require("../dto/likeRecordDto");
+
 class PersonalService {
 	constructor() {
 		this.paging = new Paging();
 		this.uService = new userService();
+		this.userJoin = {
+			model: users,
+			as: "users",
+			attributes: ["user_email"],
+			include: [
+				{
+					model: user_detail,
+					as: "user_detail",
+					attributes: [
+						"user_name",
+						"user_unique_id",
+						"user_nickname",
+						"user_img",
+					],
+				},
+			],
+		};
+		this.postJoin = {
+			model: posts,
+			as: "posts",
+			attributes: postsDto.filter((data) => {
+				const excludeColumn = ["category_id", "user_id", "like_count"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+		};
+		this.postAttr = postsDto.reduce((acc, cur) => {
+			const excludeColumn = [
+				"category_id",
+				"user_id",
+				"like_count",
+				"created_at",
+				"updated_at",
+			];
+			if (cur === "updated_at") {
+				return acc.push([
+					sequelize.fn(
+						"date_format",
+						sequelize.col("posts.updated_at"),
+						"%Y-%m-%d %H:%i"
+					),
+					"updated_at",
+				]);
+			}
+			if (!excludeColumn.includes(cur)) return acc.push(cur);
+		}, []);
+
+		// this.postAttr.push([
+		// 	sequelize.fn(
+		// 		"date_format",
+		// 		sequelize.col("posts.updated_at"),
+		// 		"%Y-%m-%d %H:%i"
+		// 	),
+		// 	"created_at",
+		// ]);
 	}
 
-	// 사용자 카테고리 목록
+	/**
+	 * 사용자 카테고리 목록 조회
+	 * @param {string} userId
+	 * @returns {Object}
+	 */
 	async getPersonalCategory(uniqueId) {
 		const user = await this.uService.getUserByUniqueId(uniqueId);
 		const personalCategory = await category.findAll({
@@ -29,7 +95,13 @@ class PersonalService {
 		return personalCategory;
 	}
 
-	// 사용자 포스트 목록
+	/**
+	 * 사용자 포스트 목록 조회
+	 * @param {string} uniqueId
+	 * @param {number} categoryId
+	 * @param {number[]} paging
+	 * @returns {Object}
+	 */
 	async getPsersonalPost(uniqueId, categoryId, ...paging) {
 		const user = await this.uService.getUserByUniqueId(uniqueId);
 		const pageResult = this.paging.pageResult(paging[0], paging[1]);
@@ -38,15 +110,10 @@ class PersonalService {
 		};
 		if (categoryId !== 0) whereOptions.category_id = categoryId;
 		const personalposts = await posts.findAll({
-			attributes: [
-				"post_id",
-				"post_title",
-				"post_body_md",
-				"post_body_html",
-				"post_txt",
-				"created_at",
-				"updated_at"
-			],
+			attributes: postsDto.filter((data) => {
+				const excludeColumn = ["category_id", "user_id", "like_count"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
 			where: whereOptions,
 			order: [["updated_at", "DESC"]],
 			offset: pageResult.offset,
@@ -56,112 +123,238 @@ class PersonalService {
 		return personalposts;
 	}
 
-	// 사용자 날짜 별 포스트 목록
+	/**
+	 * 사용자 날짜 별 포스트 목록 조회
+	 * @param {string} uniqueId
+	 * @param {datetime} startDate
+	 * @param {datetime} endDate
+	 * @returns {Object}
+	 */
 	async getPersonalPostByDate(uniqueId, startDate, endDate) {
 		const user = await this.uService.getUserByUniqueId(uniqueId);
 		const whereOptions = {
 			user_id: user.user_id,
 			created_at: {
-				[Op.between]: [startDate, endDate]
-			}
+				[Op.between]: [startDate, endDate],
+			},
 		};
 		const resultPost = await posts.findAll({
-			attributes: [
-				"post_id",
-				"post_title",
-				"post_body_md",
-				"post_body_html",
-				"post_txt",
-				"created_at",
-				"updated_at"
-			],
+			attributes: this.postAttr,
 			include: [
 				{
 					model: posts_update_history,
 					as: "posts_update_history",
 					attributes: [
 						"post_id",
-						"update_history"
-					]
-				}
+						[
+							sequelize.fn(
+								"date_format",
+								sequelize.col(
+									"posts_update_history.update_history"
+								),
+								"%Y-%m-%d %H:%i"
+							),
+							"update_history",
+						],
+					],
+				},
 			],
 			where: whereOptions,
-		})
+		});
 
 		return resultPost;
 	}
 
-	// 임시 게시물 목록
-	async getPersonalTmppost(userId){
+	/**
+	 * 임시 게시물 목록 조회
+	 * @param {string} userId
+	 * @returns {Object}
+	 */
+	async getPersonalTmppost(userId) {
 		const tmpposts = await temporary_posts.findAll({
-			attributes: [
-				"tmppost_id",
-				"tmppost_title",
-				"tmppost_body_md",
-				"tmppost_body_html",
-				"tmppost_txt",
-				"created_at",
-				"updated_at"
-			],
+			attributes: tmppostsDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
 			where: {
-				user_id: userId
-			}
+				user_id: userId,
+			},
 		});
 		return tmpposts;
 	}
 
-	// 개인페이지 검색기능
-	async searchPersonalposts(uniqueId, searchWord, ...paging) {
-		const user = await this.uService.getUserByUniqueId(uniqueId);
+	/**
+	 * 사용자 방문 기록 조회
+	 * @param {string} userId
+	 * @param {number[]} paging
+	 * @returns {Object}
+	 */
+	async getPsersonalVisitRecord(userId, ...paging) {
 		const pageResult = this.paging.pageResult(paging[0], paging[1]);
-		const searchedposts = await posts.findAll({
-			attributes: [
-				"post_id",
-				"post_title",
-				"post_txt",
-				"post_body_html",
-				"created_at",
-				"updated_at"
-			],
-			include: [
-				{
-					model: users,
-					as: "users",
-					attributes: ["user_email"],
-					include: [
-						{
-							model: user_detail,
-							as: "user_detail",
-							attributes: [
-								"user_name",
-								"user_unique_id",
-								"user_nickname",
-								"user_img",
-							],
-						}
-					]
-				}
-			],
-			where: {
-				user_id: user.user_id,
-				[Op.or]: [
-					{
-						"post_title": {
-							[Op.substring]: searchWord
-						}
-					},
-					{
-						"post_txt": {
-							[Op.substring]: searchWord
-						}
-					}
-				]
-			},
+		const whereOptions = {
+			user_id: userId,
+		};
+		const personalposts = await visit_record.findAll({
+			attributes: visitRecordDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			include: [this.postJoin],
+			where: whereOptions,
 			order: [["updated_at", "DESC"]],
 			offset: pageResult.offset,
 			limit: pageResult.limit,
 		});
 
+		return personalposts;
+	}
+
+	/**
+	 * 사용자 좋아요 기록 조회
+	 * @param {string} userId
+	 * @param {number[]} paging
+	 * @returns {Object}
+	 */
+	async getPsersonalLikeRecord(userId, ...paging) {
+		const pageResult = this.paging.pageResult(paging[0], paging[1]);
+		const whereOptions = {
+			user_id: userId,
+		};
+		const personalposts = await like_record.findAll({
+			attributes: likeRecordDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			include: [this.postJoin],
+			where: whereOptions,
+			order: [["updated_at", "DESC"]],
+			offset: pageResult.offset,
+			limit: pageResult.limit,
+		});
+
+		return personalposts;
+	}
+
+	/**
+	 * 개인페이지 검색기능
+	 * @param {string} uniqueId
+	 * @param {string} searchWord
+	 * @param {number} searchType 어느 페이지에서 검색 할 것인지
+	 * @param {number[]} paging
+	 * @returns {Object}
+	 */
+	async searchPersonalposts(uniqueId, searchWord, searchType, ...paging) {
+		const user = await this.uService.getUserByUniqueId(uniqueId);
+		const pageResult = this.paging.pageResult(paging[0], paging[1]);
+		let myAttributes = [];
+		let whereOptions = {};
+		let includeOptions = [];
+		// 개인 게시물 페이지에서 검색
+		if (searchType === 0) {
+			searchType = posts;
+			myAttributes = this.postAttr;
+			whereOptions = {
+				user_id: user.user_id,
+				[Op.or]: [
+					{
+						post_title: {
+							[Op.substring]: searchWord,
+						},
+					},
+					{
+						post_txt: {
+							[Op.substring]: searchWord,
+						},
+					},
+				],
+			};
+			includeOptions.push(this.userJoin);
+		}
+		// 개인 임시저장 페이지에서 검색
+		else if (searchType === 1) {
+			searchType = temporary_posts;
+			myAttributes = tmppostsDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			});
+			whereOptions = {
+				user_id: user.user_id,
+				[Op.or]: [
+					{
+						tmppost_title: {
+							[Op.substring]: searchWord,
+						},
+					},
+					{
+						tmppost_txt: {
+							[Op.substring]: searchWord,
+						},
+					},
+				],
+			};
+		}
+		// 개인 방문 목록에서 검색
+		else if (searchType === 2) {
+			searchType = visit_record;
+			myAttributes = visitRecordDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			});
+			this.postJoin.include = [this.userJoin];
+			this.postJoin.where = {
+				[Op.or]: [
+					{
+						post_title: {
+							[Op.substring]: searchWord,
+						},
+					},
+					{
+						post_txt: {
+							[Op.substring]: searchWord,
+						},
+					},
+				],
+			};
+			whereOptions = {
+				user_id: user.user_id,
+			};
+			includeOptions.push(this.postJoin);
+		}
+		// 개인 좋아요 목록에서 검색
+		else if (searchType === 3) {
+			searchType = like_record;
+			myAttributes = likeRecordDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			});
+			this.postJoin.include = [this.userJoin];
+			this.postJoin.where = {
+				[Op.or]: [
+					{
+						post_title: {
+							[Op.substring]: searchWord,
+						},
+					},
+					{
+						post_txt: {
+							[Op.substring]: searchWord,
+						},
+					},
+				],
+			};
+			whereOptions = {
+				user_id: user.user_id,
+			};
+			includeOptions.push(this.postJoin);
+		}
+		const searchedposts = await searchType.findAll({
+			attributes: myAttributes,
+			include: includeOptions,
+			where: whereOptions,
+			order: [["updated_at", "DESC"]],
+			offset: pageResult.offset,
+			limit: pageResult.limit,
+		});
 		return searchedposts;
 	}
 }
