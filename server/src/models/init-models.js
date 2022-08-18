@@ -28,12 +28,30 @@ function initModels(sequelize) {
 
   sns_info.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasOne(sns_info, { as: "sns_info", foreignKey: "user_id"});
+
   user_detail.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasOne(user_detail, { as: "user_detail", foreignKey: "user_id"});
+
   posts.belongsTo(users, { as: "users", foreignKey: "user_id"});
   users.hasMany(posts, { as: "posts", foreignKey: "user_id"});
+
+  temporary_posts.belongsTo(users, { as: "users", foreignKey: "user_id"});
+  users.hasMany(temporary_posts, { as: "temporary_posts", foreignKey: "user_id"});
+
+  visit_record.belongsTo(users, { as: "users", foreignKey: "user_id"});
+  users.hasMany(visit_record, { as: "visit_record", foreignKey: "user_id"});
+
+  like_record.belongsTo(users, { as: "users", foreignKey: "user_id"});
+  users.hasMany(like_record, { as: "like_record", foreignKey: "user_id"});
+
   posts_update_history.belongsTo(posts,{ as: "posts", foreignKey: "post_id"})
   posts.hasMany(posts_update_history,{ as: "posts_update_history", foreignKey: "post_id"})
+
+  visit_record.belongsTo(posts,{ as: "posts", foreignKey: "post_id"})
+  posts.hasMany(visit_record,{ as: "visit_record", foreignKey: "post_id"})
+
+  like_record.belongsTo(posts,{ as: "posts", foreignKey: "post_id"})
+  posts.hasMany(like_record,{ as: "like_record", foreignKey: "post_id"})
 
 
   return {
