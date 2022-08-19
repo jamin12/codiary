@@ -9,6 +9,9 @@ const httpStatus = require("http-status"),
 		visit_record,
 		like_record,
 		sequelize,
+		comments,
+		tag,
+		measurement,
 	} = require("../models/index"),
 	CustomError = require("../utils/Error/customError"),
 	Paging = require("../utils/paging"),
@@ -18,12 +21,17 @@ const httpStatus = require("http-status"),
 	tmppostsDto = require("../dto/tmpPostDto"),
 	visitRecordDto = require("../dto/visitRecordDto"),
 	likeRecordDto = require("../dto/likeRecordDto"),
-	postupdatehistory = require("../dto/postupdatehistory");
+	postupdatehistoryDto = require("../dto/postupdatehistoryDto"),
+	commentsDto = require("../dto/commentsDto"),
+	tagDto = require("../dto/tagDto"),
+	categoryDto = require("../dto/categoryDto"),
+	measurementDto = require("../dto/measurmentDto");
 
 class PersonalService {
 	constructor() {
 		this.paging = new Paging();
 		this.uService = new userService();
+
 		this.userJoin = {
 			model: users,
 			as: "users",
@@ -41,6 +49,7 @@ class PersonalService {
 				},
 			],
 		};
+
 		this.postJoin = {
 			model: posts,
 			as: "posts",
@@ -52,19 +61,94 @@ class PersonalService {
 	}
 
 	/**
+	 * 게시물 존재 유무 체크
+	 * @param {number} postId
+	 */
+	async checkPostExists(postId) {
+		const result = await posts.findOne({
+			where: {
+				post_id: postId,
+			},
+		});
+		if (!result)
+			throw new CustomError(httpStatus.BAD_REQUEST, "Post not found");
+	}
+
+	/**
+	 * 사용자 게시물 조회
+	 * @param {string} userId
+	 * @param {number} postId
+	 * @returns {Object}
+	 */
+	async getPersonalPost(uniqueId, postId) {
+		const user = await this.uService.getUserByUniqueId(uniqueId);
+		const getPost = await posts.findOne({
+			attributes: postsDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				user_id: user.user_id,
+				post_id: postId,
+			},
+			include: [
+				{
+					model: comments,
+					as: "comments",
+					attributes: commentsDto.filter((data) => {
+						const excludeColumn = ["user_id"];
+						if (!excludeColumn.includes(data)) return data;
+					}),
+					include: [this.userJoin],
+				},
+				{
+					model: tag,
+					as: "tag",
+					attributes: tagDto.filter((data) => {
+						const excludeColumn = ["user_id"];
+						if (!excludeColumn.includes(data)) return data;
+					}),
+				},
+				{
+					model: category,
+					as: "category",
+					attributes: categoryDto.filter((data) => {
+						const excludeColumn = ["user_id"];
+						if (!excludeColumn.includes(data)) return data;
+					}),
+					include: [
+						{
+							model: posts,
+							as: "posts",
+							attributes: ["post_id", "post_title"],
+						},
+					],
+				},
+				{
+					model: measurement,
+					as: "measurement",
+					attributes: measurementDto,
+				},
+			],
+		});
+		if (!getPost)
+			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+		return { getPost, user };
+	}
+
+	/**
 	 * 사용자 카테고리 목록 조회
 	 * @param {string} userId
 	 * @returns {Object}
 	 */
 	async getPersonalCategory(uniqueId) {
 		const user = await this.uService.getUserByUniqueId(uniqueId);
-		const personalCategory = await category.findAll({
+		return await category.findAll({
 			attributes: ["category_id", "sub_category_id", "category_name"],
 			where: {
 				user_id: user.user_id,
 			},
 		});
-		return personalCategory;
 	}
 
 	/**
@@ -74,14 +158,14 @@ class PersonalService {
 	 * @param {number[]} paging
 	 * @returns {Object}
 	 */
-	async getPsersonalPost(uniqueId, categoryId, ...paging) {
+	async getPersonalPosts(uniqueId, categoryId, ...paging) {
 		const user = await this.uService.getUserByUniqueId(uniqueId);
 		const pageResult = this.paging.pageResult(paging[0], paging[1]);
 		const whereOptions = {
 			user_id: user.user_id,
 		};
 		if (categoryId !== 0) whereOptions.category_id = categoryId;
-		const personalposts = await posts.findAll({
+		return await posts.findAll({
 			attributes: postsDto.filter((data) => {
 				const excludeColumn = ["category_id", "user_id", "like_count"];
 				if (!excludeColumn.includes(data)) return data;
@@ -91,8 +175,6 @@ class PersonalService {
 			offset: pageResult.offset,
 			limit: pageResult.limit,
 		});
-
-		return personalposts;
 	}
 
 	/**
@@ -102,7 +184,7 @@ class PersonalService {
 	 * @param {datetime} endDate
 	 * @returns {Object}
 	 */
-	async getPersonalPostByDate(uniqueId, startDate, endDate) {
+	async getPersonalPostsByDate(uniqueId, startDate, endDate) {
 		const user = await this.uService.getUserByUniqueId(uniqueId);
 		const whereOptions = {
 			user_id: user.user_id,
@@ -110,22 +192,20 @@ class PersonalService {
 				[Op.between]: [startDate, endDate],
 			},
 		};
-		const resultPost = await posts.findAll({
-			attributes: postsDto.reduce((acc, cur) => {
+		return await posts.findAll({
+			attributes: postsDto.filter((data) => {
 				const excludeColumn = ["category_id", "user_id", "like_count"];
-				if (!excludeColumn.includes(cur)) return acc.push(cur);
+				if (!excludeColumn.includes(data)) return data;
 			}),
 			include: [
 				{
 					model: posts_update_history,
 					as: "posts_update_history",
-					attributes: postupdatehistory,
+					attributes: postupdatehistoryDto,
 				},
 			],
 			where: whereOptions,
 		});
-
-		return resultPost;
 	}
 
 	/**
@@ -133,8 +213,8 @@ class PersonalService {
 	 * @param {string} userId
 	 * @returns {Object}
 	 */
-	async getPersonalTmppost(userId) {
-		const tmpposts = await temporary_posts.findAll({
+	async getPersonalTmpposts(userId) {
+		return await temporary_posts.findAll({
 			attributes: tmppostsDto.filter((data) => {
 				const excludeColumn = ["user_id"];
 				if (!excludeColumn.includes(data)) return data;
@@ -143,7 +223,80 @@ class PersonalService {
 				user_id: userId,
 			},
 		});
-		return tmpposts;
+	}
+
+	/**
+	 * 임시 게시물 저장
+	 * @param {string} userId
+	 * @param {object} tmpPostBody temporary_posts 테이블에 들어갈 정보
+	 * @returns {Object}
+	 */
+	async createPersonalTmpPost(userId, tmpPostBody) {
+		tmpPostBody.user_id = userId;
+		return await temporary_posts.create(tmpPostBody);
+	}
+
+	/**
+	 * 임시 게시물 수정
+	 * @param {string} userId
+	 * @param {number} tmpPostId
+	 * @param {object} tmpPostBody temporary_posts 테이블에 들어갈 정보
+	 * @returns {Object}
+	 */
+	async updatePersonalTmpPost(userId, tmpPostId, tmpPostBody) {
+		const result = await temporary_posts.findOne({
+			attributes: tmppostsDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				user_id: userId,
+				tmppost_id: tmpPostId,
+			},
+		});
+		if (!result)
+			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+		await temporary_posts.update(tmpPostBody, {
+			where: {
+				tmppost_id: tmpPostId,
+			},
+		});
+		return await temporary_posts.findOne({
+			attributes: tmppostsDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				tmppost_id: tmpPostId,
+			},
+		});
+	}
+
+	/**
+	 * 임시 게시물 삭제
+	 * @param {string} userId
+	 * @param {number} tmpPostId
+	 * @returns {Object}
+	 */
+	async deletePersonalTmpPost(userId, tmpPostId) {
+		const result = await temporary_posts.findOne({
+			attributes: tmppostsDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				user_id: userId,
+				tmppost_id: tmpPostId,
+			},
+		});
+		if (!result)
+			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+		await temporary_posts.destroy({
+			where: {
+				tmppost_id: tmpPostId,
+			},
+		});
+		return result;
 	}
 
 	/**
@@ -152,12 +305,13 @@ class PersonalService {
 	 * @param {number[]} paging
 	 * @returns {Object}
 	 */
-	async getPsersonalVisitRecord(userId, ...paging) {
+	async getPersonalVisitRecord(userId, ...paging) {
 		const pageResult = this.paging.pageResult(paging[0], paging[1]);
 		const whereOptions = {
 			user_id: userId,
 		};
-		const personalposts = await visit_record.findAll({
+		this.postJoin.include = [this.userJoin];
+		return await visit_record.findAll({
 			attributes: visitRecordDto.filter((data) => {
 				const excludeColumn = ["user_id"];
 				if (!excludeColumn.includes(data)) return data;
@@ -168,8 +322,58 @@ class PersonalService {
 			offset: pageResult.offset,
 			limit: pageResult.limit,
 		});
+	}
 
-		return personalposts;
+	/**
+	 * 방문 기록 저장
+	 * @param {string} userId
+	 * @param {object} visitRecordBody visit_record 테이블에 들어갈 정보
+	 * @returns {Object}
+	 */
+	async createPersonalVisitRecord(userId, visitRecordBody) {
+		await this.checkPostExists(visitRecordBody.post_id);
+		const result = await visit_record.findOne({
+			attributes: visitRecordDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				user_id: userId,
+				post_id: visitRecordBody.post_id,
+			},
+		});
+		if (result) {
+			return result;
+		}
+		visitRecordBody.user_id = userId;
+		return await visit_record.create(visitRecordBody);
+	}
+
+	/**
+	 * 방문 기록 삭제
+	 * @param {string} userId
+	 * @param {number} visitRecordId
+	 * @returns {Object}
+	 */
+	async deletePersonalVisitRecord(userId, visitRecordId) {
+		const result = await visit_record.findOne({
+			attributes: visitRecordDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				user_id: userId,
+				visit_record_id: visitRecordId,
+			},
+		});
+		if (!result)
+			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+		await visit_record.destroy({
+			where: {
+				visit_record_id: visitRecordId,
+			},
+		});
+		return result;
 	}
 
 	/**
@@ -178,12 +382,13 @@ class PersonalService {
 	 * @param {number[]} paging
 	 * @returns {Object}
 	 */
-	async getPsersonalLikeRecord(userId, ...paging) {
+	async getPersonalLikeRecord(userId, ...paging) {
 		const pageResult = this.paging.pageResult(paging[0], paging[1]);
 		const whereOptions = {
 			user_id: userId,
 		};
-		const personalposts = await like_record.findAll({
+		this.postJoin.include = [this.userJoin];
+		return await like_record.findAll({
 			attributes: likeRecordDto.filter((data) => {
 				const excludeColumn = ["user_id"];
 				if (!excludeColumn.includes(data)) return data;
@@ -194,8 +399,58 @@ class PersonalService {
 			offset: pageResult.offset,
 			limit: pageResult.limit,
 		});
+	}
 
-		return personalposts;
+	/**
+	 * 좋아요 기록 저장
+	 * @param {string} userId
+	 * @param {object} likeRecordBody visit_record 테이블에 들어갈 정보
+	 * @returns {Object}
+	 */
+	async createPersonalLikeRecord(userId, likeRecordBody) {
+		await this.checkPostExists(likeRecordBody.post_id);
+		const result = await like_record.findOne({
+			attributes: likeRecordDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				user_id: userId,
+				post_id: likeRecordBody.post_id,
+			},
+		});
+		if (result) {
+			return result;
+		}
+		likeRecordBody.user_id = userId;
+		return await like_record.create(likeRecordBody);
+	}
+
+	/**
+	 * 좋아요 기록 삭제
+	 * @param {string} userId
+	 * @param {number} likePostId
+	 * @returns {Object}
+	 */
+	async deletePersonalLikeRecord(userId, likePostId) {
+		const result = await like_record.findOne({
+			attributes: likeRecordDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				user_id: userId,
+				like_record_id: likePostId,
+			},
+		});
+		if (!result)
+			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+		await like_record.destroy({
+			where: {
+				like_record_id: likePostId,
+			},
+		});
+		return result;
 	}
 
 	/**
@@ -313,7 +568,8 @@ class PersonalService {
 			};
 			includeOptions.push(this.postJoin);
 		}
-		const searchedposts = await searchType.findAll({
+
+		return await searchType.findAll({
 			attributes: myAttributes,
 			include: includeOptions,
 			where: whereOptions,
@@ -321,7 +577,6 @@ class PersonalService {
 			offset: pageResult.offset,
 			limit: pageResult.limit,
 		});
-		return searchedposts;
 	}
 }
 
