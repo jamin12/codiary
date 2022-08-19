@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import SearchProfile from '../components/SearchProfile'
 import Calendar from 'react-calendar';
 import '../css/Calendar.css'; // css import
+import '../css/reset.css'
 import styled from 'styled-components';
 import moment from 'moment';
 
@@ -121,17 +122,97 @@ const MyCalendar = () => {
     flex-grow: 1;
   `
 
-  const Tile = styled.div`
-    display: flex;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0, 0.2);
+  const HightLight = styled.div`
+    /* display: flex; */
+    /* position: absolute; */
+    /* background-color: rgba(0, 0, 0, 0, 0.2); */
+    background-color: red;
   `
 
   const [value, onChange] = useState(new Date());
 
   // 받은 날짜에 대한 포스팅 기록 저장해서 표시
-  const [mark, setMark] = useState([]);
+  // const [mark, setMark] = useState([]);
 
+
+  const mark = [
+    {
+      "post_id": 1,
+      "post_title": "test1",
+      "post_body_md": null,
+      "post_body_html": null,
+      "post_txt": "qwer",
+      "created_at": "2022-08-09 12:12",
+      "updated_at": "2022-08-15 12:12",
+      "posts_update_history": [
+          {
+              "post_update_history_id": 3,
+              "post_id": 1,
+              "update_history": "2022-08-15 12:12",
+              "created_at": "2022-08-09 18:45",
+              "updated_at": "2022-08-16 18:45"
+          },
+          {
+              "post_update_history_id": 2,
+              "post_id": 1,
+              "update_history": "2022-08-15 12:12",
+              "created_at": "2022-08-09 18:45",
+              "updated_at": "2022-08-16 18:45"
+          },
+          {
+              "post_update_history_id": 1,
+              "post_id": 1,
+              "update_history": "2022-08-15 12:12",
+              "created_at": "2022-08-09 18:45",
+              "updated_at": "2022-08-16 18:45"
+          }
+      ]
+  },
+  {
+      "post_id": 2,
+      "post_title": "test2",
+      "post_body_md": null,
+      "post_body_html": null,
+      "post_txt": "qwerqwer",
+      "created_at": "2022-08-10 12:12",
+      "updated_at": "2022-08-18 21:58",
+      "posts_update_history": [
+          {
+              "post_update_history_id": 4,
+              "post_id": 2,
+              "update_history": "2022-08-15 12:12",
+              "created_at": "2022-08-10 18:45",
+              "updated_at": "2022-08-16 18:45"
+          }
+      ]
+  },
+  {
+      "post_id": 3,
+      "post_title": "qwer",
+      "post_body_md": null,
+      "post_body_html": null,
+      "post_txt": "asdf",
+      "created_at": "2022-08-11 12:12",
+      "updated_at": "2022-08-18 21:44",
+      "posts_update_history": []
+  },
+  {
+      "post_id": 4,
+      "post_title": "qwerzxcv",
+      "post_body_md": null,
+      "post_body_html": null,
+      "post_txt": "qaz",
+      "created_at": "2022-08-12 12:12",
+      "updated_at": "2022-08-18 21:59",
+      "posts_update_history": []
+  }
+  ]
+
+  // const [markDate, setMarkDate] = useState([]);
+
+  // 배열 안에 있는 날짜 뽑아오는 함수 구현해야함.
+  const test = mark.map(date => date.created_at);
+  console.log(test);
 
 
 
@@ -154,19 +235,15 @@ const MyCalendar = () => {
             
             // 날짜 받으면 색 추가해서 넣는 부분 진행해야함
             tileContent = {({date, view}) => {  // 날짜 타일에 갯수만큼 tile추가
-              // 추가할 html 태그 변수 초기화
-              let html = [];
               // 현재 날짜가 mark에 있다면 tile div 추가
-              if(mark.find((x) => x === moment(date).format('YYYY-MM-DD HH:mm:ss'))){
-                html.push(<Tile></Tile>);
-              }
+              if(mark.find((x) => x === moment(date).format('YYYY-MM-DD HH:mm'))){
                 return(
                   <>
-                    <Tile opacity={count}>
-                      {html}
-                    </Tile>
+                    <HightLight>
+                    </HightLight>
                   </>
                 );
+              }
             }}
           />
         </CalendarWrap>
