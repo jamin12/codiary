@@ -3,6 +3,8 @@ const { posts, users, user_detail } = require("../models/index");
 const CustomError = require("../utils/Error/customError");
 const Paging = require("../utils/paging");
 const { Op } = require("sequelize");
+const postDto = require("../dto/postsDto");
+
 class MainService {
 	constructor() {
 		this.paging = new Paging();
@@ -12,13 +14,10 @@ class MainService {
 	async getPopularPosts(...params) {
 		const pageResult = this.paging.pageResult(params[0], params[1]);
 		const result_contents = await posts.findAll({
-			attributes: [
-				"post_id",
-				"post_title",
-				"post_body_md",
-				"post_body_html",
-				"post_txt"
-			],
+			attributes: postDto.filter((data) => {
+				const excludeColumn = ["user_id", "like_count", "category_id"];
+				if(!excludeColumn.includes(data)) return data;
+			}),
 			order: [["like_count", "DESC"]],
 			offset: pageResult.offset,
 			limit: pageResult.limit,
@@ -33,12 +32,10 @@ class MainService {
 	async searchPostsInMain(searchWord, ...params) {
 		const pageResult = this.paging.pageResult(params[0], params[1]);
 		const searchedContents = await posts.findAll({
-			attributes: [
-				"post_id",
-				"post_title",
-				"post_txt",
-				"post_body_html"
-			],
+			attributes: postDto.filter((data) => {
+				const excludeColumn = ["user_id", "like_count", "category_id"];
+				if(!excludeColumn.includes(data)) return data;
+			}),
 			include: [
 				{
 					model: users,
