@@ -2,10 +2,11 @@ const { sequelize } = require("../models/index");
 
 module.exports = [
   "post_update_history_id",
+	"post_id",
   [
 		sequelize.fn(
 			"date_format",
-			sequelize.col("posts_update_history.updated_history"),
+			sequelize.col("posts_update_history.update_history"),
 			"%Y-%m-%d %H:%i"
 		),
 		"update_history",
