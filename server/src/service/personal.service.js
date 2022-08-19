@@ -17,7 +17,8 @@ const httpStatus = require("http-status"),
 	postsDto = require("../dto/postsDto"),
 	tmppostsDto = require("../dto/tmpPostDto"),
 	visitRecordDto = require("../dto/visitRecordDto"),
-	likeRecordDto = require("../dto/likeRecordDto");
+	likeRecordDto = require("../dto/likeRecordDto"),
+	postupdatehistory = require("../dto/postupdatehistory");
 
 class PersonalService {
 	constructor() {
@@ -48,35 +49,6 @@ class PersonalService {
 				if (!excludeColumn.includes(data)) return data;
 			}),
 		};
-		this.postAttr = postsDto.reduce((acc, cur) => {
-			const excludeColumn = [
-				"category_id",
-				"user_id",
-				"like_count",
-				"created_at",
-				"updated_at",
-			];
-			if (cur === "updated_at") {
-				return acc.push([
-					sequelize.fn(
-						"date_format",
-						sequelize.col("posts.updated_at"),
-						"%Y-%m-%d %H:%i"
-					),
-					"updated_at",
-				]);
-			}
-			if (!excludeColumn.includes(cur)) return acc.push(cur);
-		}, []);
-
-		// this.postAttr.push([
-		// 	sequelize.fn(
-		// 		"date_format",
-		// 		sequelize.col("posts.updated_at"),
-		// 		"%Y-%m-%d %H:%i"
-		// 	),
-		// 	"created_at",
-		// ]);
 	}
 
 	/**
@@ -139,24 +111,15 @@ class PersonalService {
 			},
 		};
 		const resultPost = await posts.findAll({
-			attributes: this.postAttr,
+			attributes: postsDto.reduce((acc, cur) => {
+				const excludeColumn = ["category_id", "user_id", "like_count"];
+				if (!excludeColumn.includes(cur)) return acc.push(cur);
+			}),
 			include: [
 				{
 					model: posts_update_history,
 					as: "posts_update_history",
-					attributes: [
-						"post_id",
-						[
-							sequelize.fn(
-								"date_format",
-								sequelize.col(
-									"posts_update_history.update_history"
-								),
-								"%Y-%m-%d %H:%i"
-							),
-							"update_history",
-						],
-					],
+					attributes: postupdatehistory,
 				},
 			],
 			where: whereOptions,
@@ -252,7 +215,10 @@ class PersonalService {
 		// 개인 게시물 페이지에서 검색
 		if (searchType === 0) {
 			searchType = posts;
-			myAttributes = this.postAttr;
+			myAttributes = postsDto.filter((data) => {
+				const excludeColumn = ["category_id", "user_id", "like_count"];
+				if (!excludeColumn.includes(data)) return data;
+			});
 			whereOptions = {
 				user_id: user.user_id,
 				[Op.or]: [
