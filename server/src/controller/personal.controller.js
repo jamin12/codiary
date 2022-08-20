@@ -20,6 +20,12 @@ const output = {
 		);
 		res.send(resultDto(httpStatus.OK, "getCategory", result_contents));
 	}),
+	getPersonalMyCategory: catchAsync(async (req, res) => {
+		const result_contents = await pService.getPersonalMyCategory(
+			req.user.user_id
+		);
+		res.send(resultDto(httpStatus.OK, "getMyCategory", result_contents));
+	}),
 	getPsersonalPosts: catchAsync(async (req, res) => {
 		const result_contents = await pService.getPersonalPosts(
 			req.params.uniqueid,
@@ -130,6 +136,29 @@ const input = {
 			req.params.likerecordid
 		);
 		res.send(resultDto(httpStatus.OK, "delete success", result_contents));
+	}),
+	// category
+	createPersonalCategory: catchAsync(async (req, res) => {
+		const result_contents = await pService.createPersonalCategory(
+			req.user.user_id,
+			req.body
+		);
+		res.send(resultDto(httpStatus.OK, "create success", result_contents));
+	}),
+	updatePersonalCategory: catchAsync(async (req, res) => {
+		const result_contents = await pService.updatePersonalCategory(
+			req.user.user_id,
+			req.params.categoryid,
+			req.body
+		);
+		res.send(resultDto(httpStatus.OK, "update success", result_contents));
+	}),
+	deletePersonalCategory: catchAsync(async (req, res) => {
+		const result_contents = await pService.deletePersonalCategory(
+			req.user.user_id,
+			req.params.categoryid
+		);
+		res.send(resultDto(httpStatus.OK, "update success", result_contents));
 	}),
 };
 

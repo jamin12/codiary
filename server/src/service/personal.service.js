@@ -63,6 +63,7 @@ class PersonalService {
 	/**
 	 * 게시물 존재 유무 체크
 	 * @param {number} postId
+	 * @returns {Object}
 	 */
 	async checkPostExists(postId) {
 		const result = await posts.findOne({
@@ -72,6 +73,29 @@ class PersonalService {
 		});
 		if (!result)
 			throw new CustomError(httpStatus.BAD_REQUEST, "Post not found");
+		return result;
+	}
+
+	/**
+	 * 카테고리 존재 유무 체크
+	 * @param {string} userId
+	 * @param {number} categoryId
+	 * @returns {Object}
+	 */
+	async checkCategoryExists(userId, categoryId) {
+		const result = await category.findOne({
+			attributes: categoryDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				user_id: userId,
+				category_id: categoryId,
+			},
+		});
+		if (!result)
+			throw new CustomError(httpStatus.BAD_REQUEST, "category not found");
+		return result;
 	}
 
 	/**
@@ -138,7 +162,7 @@ class PersonalService {
 
 	/**
 	 * 사용자 카테고리 목록 조회
-	 * @param {string} userId
+	 * @param {string} uniqueId
 	 * @returns {Object}
 	 */
 	async getPersonalCategory(uniqueId) {
@@ -149,6 +173,120 @@ class PersonalService {
 				user_id: user.user_id,
 			},
 		});
+	}
+
+	/**
+	 * 내 카테고리 목록 조회
+	 * @param {string} userId
+	 * @returns {Object}
+	 */
+	async getPersonalMyCategory(userId) {
+		return await category.findAll({
+			attributes: ["category_id", "sub_category_id", "category_name"],
+			where: {
+				user_id: userId,
+			},
+		});
+	}
+
+	/**
+	 * 사용자 카테고리 생성
+	 * @param {string} userId
+	 * @param {Object} categoryBody
+	 * @returns {Object}
+	 */
+	async createPersonalCategory(userId, categoryBody) {
+		categoryBody.user_id = userId;
+		if (categoryBody.sub_category_id) {
+			const checkedCategory = await this.checkCategoryExists(
+				userId,
+				categoryBody.sub_category_id
+			);
+			if (checkedCategory.sub_category_id)
+				throw new CustomError(
+					httpStatus.BAD_REQUEST,
+					"sub category already exists"
+				);
+		}
+		return await category.create(categoryBody);
+	}
+
+	/**
+	 * 사용자 카테고리 수정
+	 * @param {string} userId
+	 * @param {Object} categoryBody
+	 * @returns {Object}
+	 */
+	async updatePersonalCategory(userId, categoryId, categoryBody) {
+		const checkedCategory = await this.checkCategoryExists(
+			userId,
+			categoryId
+		);
+		if (categoryId === checkedCategory.sub_category_id) {
+			throw new CustomError(
+				httpStatus.BAD_REQUEST,
+				"sub category and category are the same"
+			);
+		}
+		if (categoryBody.sub_category_id) {
+			await this.checkCategoryExists(
+				userId,
+				categoryBody.sub_category_id
+			);
+			if (checkedCategory.sub_category_id) {
+				throw new CustomError(
+					httpStatus.BAD_REQUEST,
+					"sub category already exists"
+				);
+			}
+		}
+		return await category.update(categoryBody, {
+			where: {
+				user_id: userId,
+				category_id: categoryId,
+			},
+		});
+	}
+
+	/**
+	 * 사용자 카테고리 삭제
+	 * @param {string} userId
+	 * @param {number} categoryId
+	 * @returns {Object}
+	 */
+	async deletePersonalCategory(userId, categoryId) {
+		const result = await this.checkCategoryExists(userId, categoryId);
+		try {
+			await sequelize.transaction(async (t1) => {
+				await category.destroy({
+					where: {
+						user_id: userId,
+						category_id: categoryId,
+					},
+				});
+				await category.destroy({
+					where: {
+						user_id: userId,
+						sub_category_id: categoryId,
+					},
+				});
+			});
+			// await posts.destroy({
+			// 	where: {
+			// 		user_id: userId,
+			// 		category_id: categoryId,
+			// 	},
+			// });
+		} catch (error) {
+			throw new CustomError(
+				httpStatus.INTERNAL_SERVER_ERROR,
+				"delete category error",
+				false,
+				error.stack
+			);
+		}
+
+		return result;
 	}
 
 	/**

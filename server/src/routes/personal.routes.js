@@ -5,7 +5,6 @@ const validate = require("../middleware/validate");
 const { personalValidation } = require("../validations/index");
 const { personalController } = require("../controller");
 
-
 router
 	.route("/post/:uniqueid/:postid")
 	.get(
@@ -13,11 +12,34 @@ router
 		personalController.output.getPersonalPost
 	);
 
+// category
 router
 	.route("/category/:uniqueid")
 	.get(
 		validate(personalValidation.output.getPsersonalCategory),
 		personalController.output.getPersonalCategory
+	);
+
+router
+	.route("/category")
+	.get(auth("user"), personalController.output.getPersonalMyCategory)
+	.post(
+		auth("user"),
+		validate(personalValidation.input.createPersonalCategory),
+		personalController.input.createPersonalCategory
+	);
+
+router
+	.route("/category/:categoryid")
+	.patch(
+		auth("user"),
+		validate(personalValidation.input.updatePersonalCategory),
+		personalController.input.updatePersonalCategory
+	)
+	.delete(
+		auth("user"),
+		validate(personalValidation.input.deletePersonalCategory),
+		personalController.input.deletePersonalCategory
 	);
 
 // tmpposts

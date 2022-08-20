@@ -2,13 +2,13 @@ const joi = require("Joi");
 const { datetime } = require("./custom.validation");
 
 const output = {
-  getPsersonalPost: {
+	getPsersonalPost: {
 		params: joi.object().keys({
 			uniqueid: joi.string().required(),
-      postid: joi.number().required(),
+			postid: joi.number().required(),
 		}),
 	},
-  
+
 	getPsersonalCategory: {
 		params: joi.object().keys({
 			uniqueid: joi.string().required(),
@@ -64,6 +64,7 @@ const output = {
 };
 
 const input = {
+	// tmppost
 	createPersonalTmpPost: {
 		body: joi.object().keys({
 			tmppost_title: joi.string().required(),
@@ -73,9 +74,9 @@ const input = {
 		}),
 	},
 	updatePersonalTmpPost: {
-    params: joi.object().keys({
-      tmppostid: joi.number().required(),
-    }),
+		params: joi.object().keys({
+			tmppostid: joi.number().required(),
+		}),
 		body: joi.object().keys({
 			tmppost_title: joi.string().required(),
 			tmppost_body_md: joi.string(),
@@ -89,7 +90,8 @@ const input = {
 		}),
 	},
 
-  createPersonalVisitRecord: {
+	// visitrecord
+	createPersonalVisitRecord: {
 		body: joi.object().keys({
 			post_id: joi.number().required(),
 		}),
@@ -100,7 +102,8 @@ const input = {
 		}),
 	},
 
-  createPersonalLikeRecord: {
+	// likerecord
+	createPersonalLikeRecord: {
 		body: joi.object().keys({
 			post_id: joi.number().required(),
 		}),
@@ -110,6 +113,30 @@ const input = {
 			likerecordid: joi.number().required(),
 		}),
 	},
+
+	// category
+	createPersonalCategory: {
+		body: joi.object().keys({
+			category_name: joi.string().required(),
+			sub_category_id: joi.number(),
+		}),
+	},
+
+	updatePersonalCategory: {
+		params: joi.object().keys({
+			categoryid: joi.number().required(),
+		}),
+		body: joi.object().keys({
+			category_name: joi.string().required(),
+			sub_category_id: joi.number(),
+		}),
+	},
+
+	deletePersonalCategory: {
+		params: joi.object().keys({
+			categoryid: joi.number().required(),
+		}),
+	}
 };
 
 module.exports = {
