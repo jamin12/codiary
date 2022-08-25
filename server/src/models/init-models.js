@@ -74,18 +74,8 @@ function initModels(sequelize) {
 	measurement.belongsTo(posts, { as: "posts", foreignKey: "post_id" });
 	posts.hasOne(measurement, { as: "measurement", foreignKey: "post_id" });
 
-	posts.belongsTo(category, {
-		as: "category",
-		foreignKey: "category_id",
-		onDelete: "CASCADE",
-		hooks: true,
-	});
-	category.hasMany(posts, {
-		as: "posts",
-		foreignKey: "category_id",
-    onDelete: "CASCADE",
-		hooks: true,
-	});
+	posts.belongsTo(category, { foreignKey: "category_id", as: "category" });
+	category.hasMany(posts, { foreignKey: "category_id", as: "posts" });
 
 	return {
 		category,
