@@ -169,6 +169,7 @@ class UserService {
 						user_id: userId,
 					},
 				});
+				
 				// user 테이블에 데이터 삭제
 				await users.destroy({
 					where: {
@@ -177,6 +178,7 @@ class UserService {
 				});
 			});
 		} catch (err) {
+			logger.error(err.message);
 			throw new CustomError(
 				httpStatus.INTERNAL_SERVER_ERROR,
 				"delete user failed",
