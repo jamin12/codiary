@@ -5,7 +5,15 @@ import { devices } from '../css/DeviceSize';
 
 // 스타일 설정
 // 1920*1080기준 작성
+const Main = styled.div`
+  width: 100vw;
+  height: 100%;
+  position: relative;
+  background-color: pink;
+`
+
 const Wrap = styled.div`
+  background-color: orange;
   position: absolute;
   display: flex;
   top: 40px;
@@ -17,8 +25,10 @@ const Wrap = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  @media ${devices.laptopL} {
-    width: 90%;
+  // laptopL : 1600
+  @media screen and (max-width: 1600px) {
+    background-color:red;
+    width: 95vw;
   }
 
 `
@@ -108,26 +118,29 @@ const GotoHome = styled.h1`
 const SearchProfile = () => {
 
   return(
-    <Wrap>
-      <GotoHome>
-        <a href='#none'>
-          CODIARY
-        </a>
+    <Main>
+      <Wrap>
+        <GotoHome>
+          <a href='#none'>
+            CODIARY
+          </a>
 
-      </GotoHome>
+        </GotoHome>
 
-      <SearchWrap>
-        <SearchBox className='search-box'>
-          <Search type='text' className='search' placeholder='SEARCH'></Search>
-          <ion-icon size='small' name="search-outline"></ion-icon>
-        </SearchBox>
+        <SearchWrap>
+          <SearchBox className='search-box'>
+            <Search type='text' className='search' placeholder='SEARCH'></Search>
+            <ion-icon size='small' name="search-outline"></ion-icon>
+          </SearchBox>
 
-        <Profile>
-          <img src={ require('../IMG/profile_test.png')} className='profile-img' alt='profile-img' />
-        </Profile>
-      </SearchWrap>
-      
-    </Wrap>
+          <Profile>
+            <img src={ require('../IMG/profile_test.png')} className='profile-img' alt='profile-img' />
+          </Profile>
+        </SearchWrap>
+
+      </Wrap>
+    </Main>
+
   )
 }
 export default SearchProfile;
