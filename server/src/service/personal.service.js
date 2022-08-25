@@ -25,8 +25,10 @@ const httpStatus = require("http-status"),
 	commentsDto = require("../dto/commentsDto"),
 	tagDto = require("../dto/tagDto"),
 	categoryDto = require("../dto/categoryDto"),
-	measurementDto = require("../dto/measurmentDto");
+	measurementDto = require("../dto/measurmentDto"),
+	logger = require("../config/logger");
 
+// TODO:생성할때 userID 나오는거 생각좀 해보자구
 class PersonalService {
 	constructor() {
 		this.paging = new Paging();
@@ -99,65 +101,25 @@ class PersonalService {
 	}
 
 	/**
-	 * 사용자 게시물 조회
+	 * 댓글 존재 유무 체크
 	 * @param {string} userId
-	 * @param {number} postId
+	 * @param {number} commentId
 	 * @returns {Object}
 	 */
-	async getPersonalPost(uniqueId, postId) {
-		const user = await this.uService.getUserByUniqueId(uniqueId);
-		const getPost = await posts.findOne({
-			attributes: postsDto.filter((data) => {
+	async checkCommentExists(postId, commentId) {
+		const result = await comments.findOne({
+			attributes: commentsDto.filter((data) => {
 				const excludeColumn = ["user_id"];
 				if (!excludeColumn.includes(data)) return data;
 			}),
 			where: {
-				user_id: user.user_id,
 				post_id: postId,
+				comments_id: commentId,
 			},
-			include: [
-				{
-					model: comments,
-					as: "comments",
-					attributes: commentsDto.filter((data) => {
-						const excludeColumn = ["user_id"];
-						if (!excludeColumn.includes(data)) return data;
-					}),
-					include: [this.userJoin],
-				},
-				{
-					model: tag,
-					as: "tag",
-					attributes: tagDto.filter((data) => {
-						const excludeColumn = ["user_id"];
-						if (!excludeColumn.includes(data)) return data;
-					}),
-				},
-				{
-					model: category,
-					as: "category",
-					attributes: categoryDto.filter((data) => {
-						const excludeColumn = ["user_id"];
-						if (!excludeColumn.includes(data)) return data;
-					}),
-					include: [
-						{
-							model: posts,
-							as: "posts",
-							attributes: ["post_id", "post_title"],
-						},
-					],
-				},
-				{
-					model: measurement,
-					as: "measurement",
-					attributes: measurementDto,
-				},
-			],
 		});
-		if (!getPost)
-			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
-		return { getPost, user };
+		if (!result)
+			throw new CustomError(httpStatus.BAD_REQUEST, "comment not found");
+		return result;
 	}
 
 	/**
@@ -261,23 +223,18 @@ class PersonalService {
 				await category.destroy({
 					where: {
 						user_id: userId,
-						category_id: categoryId,
+						sub_category_id: categoryId,
 					},
 				});
 				await category.destroy({
 					where: {
 						user_id: userId,
-						sub_category_id: categoryId,
+						category_id: categoryId,
 					},
 				});
 			});
-			// await posts.destroy({
-			// 	where: {
-			// 		user_id: userId,
-			// 		category_id: categoryId,
-			// 	},
-			// });
 		} catch (error) {
+			logger.error(error.message);
 			throw new CustomError(
 				httpStatus.INTERNAL_SERVER_ERROR,
 				"delete category error",
@@ -344,6 +301,68 @@ class PersonalService {
 			],
 			where: whereOptions,
 		});
+	}
+
+	/**
+	 * 사용자 게시물 조회
+	 * @param {string} userId
+	 * @param {number} postId
+	 * @returns {Object}
+	 */
+	async getPersonalPost(uniqueId, postId) {
+		const user = await this.uService.getUserByUniqueId(uniqueId);
+		const getPost = await posts.findOne({
+			attributes: postsDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				user_id: user.user_id,
+				post_id: postId,
+			},
+			include: [
+				{
+					model: comments,
+					as: "comments",
+					attributes: commentsDto.filter((data) => {
+						const excludeColumn = ["user_id"];
+						if (!excludeColumn.includes(data)) return data;
+					}),
+					include: [this.userJoin],
+				},
+				{
+					model: tag,
+					as: "tag",
+					attributes: tagDto.filter((data) => {
+						const excludeColumn = ["user_id"];
+						if (!excludeColumn.includes(data)) return data;
+					}),
+				},
+				{
+					model: category,
+					as: "category",
+					attributes: categoryDto.filter((data) => {
+						const excludeColumn = ["user_id"];
+						if (!excludeColumn.includes(data)) return data;
+					}),
+					include: [
+						{
+							model: posts,
+							as: "posts",
+							attributes: ["post_id", "post_title"],
+						},
+					],
+				},
+				{
+					model: measurement,
+					as: "measurement",
+					attributes: measurementDto,
+				},
+			],
+		});
+		if (!getPost)
+			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+		return { getPost, user };
 	}
 
 	/**
@@ -589,6 +608,123 @@ class PersonalService {
 			},
 		});
 		return result;
+	}
+
+	/**
+	 * 댓글 생성
+	 * @param {string} uniqueId
+	 * @param {Object} commentBody
+	 * @returns {Object}
+	 */
+	async createCommnet(userId, commentBody) {
+		commentBody.user_id = userId;
+		if (!(await this.checkPostExists(commentBody.post_id))) {
+			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+		}
+		if (commentBody.sub_comments_id) {
+			const checkComment = await this.checkCommentExists(
+				commentBody.post_id,
+				commentBody.sub_comments_id
+			);
+			if (checkComment.sub_comments_id) {
+				throw new CustomError(
+					httpStatus.BAD_REQUEST,
+					"sub commnet already exists"
+				);
+			}
+		}
+		return await comments.create(commentBody);
+	}
+
+	/**
+	 * 댓글 수정
+	 * @param {string} uniqueId
+	 * @param {number} commnetId
+	 * @param {Object} commentBody
+	 * @returns {Object}
+	 */
+	async updateCommnet(userId, commnetId, commentBody) {
+		const updatedComment = await comments.findOne({
+			where: {
+				user_id: userId,
+				comments_id: commnetId,
+			},
+		});
+
+		if (!updatedComment) {
+			throw new CustomError(httpStatus.BAD_REQUEST, "comment not found");
+		}
+		// const user = this.uService.getUserByUniqueId(commentBody.unique_id);
+		// if (user.user_id !== userId) {
+		// 	throw new CustomError(
+		// 		httpStatus.BAD_REQUEST,
+		// 		"can not update comment, have no authority"
+		// 	);
+		// }
+		// if (commentBody.sub_comments_id) {
+		// 	if (commentBody.comments_id === commentBody.sub_comments_id) {
+		// 		throw new CustomError(
+		// 			httpStatus.BAD_REQUEST,
+		// 			"comments  and sub comments are the same"
+		// 		);
+		// 	}
+		// 	const checkComment = this.checkCommentExists(
+		// 		commentBody.postId,
+		// 		commentBody.sub_comments_id
+		// 	);
+		// 	if (checkComment.sub_comments_id) {
+		// 		throw new CustomError(
+		// 			httpStatus.BAD_REQUEST,
+		// 			"sub commnet already exists"
+		// 		);
+		// 	}
+		// }
+		return await comments.update(commentBody, {
+			where: {
+				user_id: userId,
+				comments_id: commnetId,
+			},
+		});
+	}
+
+	/**
+	 * 댓글 삭제
+	 * @param {string} uniqueId
+	 * @param {number} commentId
+	 * @returns {Object}
+	 */
+	async deleteCommnet(userId, commentId) {
+		const deletedComment = comments.findOne({
+			where: {
+				user_id: userId,
+				comments_id: commentId,
+			},
+		});
+		if (!deletedComment) {
+			throw new CustomError(httpStatus.BAD_REQUEST, "comment not found");
+		}
+		try {
+			await sequelize.transaction(async (t1) => {
+				await comments.destroy({
+					where: {
+						sub_comments_id: commentId,
+					},
+				});
+				await comments.destroy({
+					where: {
+						user_id: userId,
+						comments_id: commentId,
+					},
+				});
+			});
+		} catch (error) {
+			logger.error(error.message);
+			throw new CustomError(
+				httpStatus.INTERNAL_SERVER_ERROR,
+				"delete comment failed"
+			);
+		}
+		return deletedComment;
 	}
 
 	/**

@@ -124,6 +124,28 @@ router
 		personalController.output.getPsersonalPosts
 	);
 
+// commnets
+router
+	.route("/comments")
+	.post(
+		auth("user"),
+		validate(personalValidation.input.createComment),
+		personalController.input.createComment
+	);
+
+router
+	.route("/comments/:commentid")
+	.patch(
+		auth("user"),
+		validate(personalValidation.input.updateComment),
+		personalController.input.updateComment
+	)
+	.delete(
+		auth("user"),
+		validate(personalValidation.input.deleteComment),
+		personalController.input.deleteComment
+	);
+
 // search
 router
 	.route("/:uniqueid/:searchword/:searchtype")

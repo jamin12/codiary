@@ -158,7 +158,30 @@ const input = {
 			req.user.user_id,
 			req.params.categoryid
 		);
+		res.send(resultDto(httpStatus.OK, "delete success", result_contents));
+	}),
+	// comments
+	createComment: catchAsync(async (req, res) => {
+		const result_contents = await pService.createCommnet(
+			req.user.user_id,
+			req.body
+		);
+		res.send(resultDto(httpStatus.OK, "create success", result_contents));
+	}),
+	updateComment: catchAsync(async (req, res) => {
+		const result_contents = await pService.updateCommnet(
+			req.user.user_id,
+			req.params.commentid,
+			req.body
+		);
 		res.send(resultDto(httpStatus.OK, "update success", result_contents));
+	}),
+	deleteComment: catchAsync(async (req, res) => {
+		const result_contents = await pService.deleteCommnet(
+			req.user.user_id,
+			req.params.commentid
+		);
+		res.send(resultDto(httpStatus.OK, "delete success", result_contents));
 	}),
 };
 

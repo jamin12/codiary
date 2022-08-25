@@ -136,7 +136,31 @@ const input = {
 		params: joi.object().keys({
 			categoryid: joi.number().required(),
 		}),
-	}
+	},
+
+	// commnets
+	createComment: {
+		body: joi.object().keys({
+			post_id: joi.number().required(),
+			comments_body: joi.string().required(),
+			sub_comments_id: joi.number(),
+		}),
+	},
+
+	updateComment: {
+		params: joi.object().keys({
+			commentid: joi.number().required(),
+		}),
+		body: joi.object().keys({
+			comments_body: joi.string().required(),
+		}),
+	},
+
+	deleteComment: {
+		params: joi.object().keys({
+			commentid: joi.number().required(),
+		}),
+	},
 };
 
 module.exports = {
