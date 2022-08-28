@@ -2,16 +2,13 @@ const joi = require("Joi");
 const { datetime } = require("./custom.validation");
 
 const output = {
+	/**
+	 * 게시물
+	 */
 	getPsersonalPost: {
 		params: joi.object().keys({
 			uniqueid: joi.string().required(),
 			postid: joi.number().required(),
-		}),
-	},
-
-	getPsersonalCategory: {
-		params: joi.object().keys({
-			uniqueid: joi.string().required(),
 		}),
 	},
 
@@ -36,6 +33,27 @@ const output = {
 		}),
 	},
 
+	/**
+	 * 임시 게시물
+	 */
+	getPsersonalTmpPost: {
+		params: joi.object().keys({
+			tmppostid: joi.number().required(),
+		}),
+	},
+
+	/**
+	 * 카테고리
+	 */
+	getPsersonalCategory: {
+		params: joi.object().keys({
+			uniqueid: joi.string().required(),
+		}),
+	},
+
+	/**
+	 * 방문 기록
+	 */
 	getPsersonalVisitRecord: {
 		query: joi.object().keys({
 			offset: joi.number().required(),
@@ -43,6 +61,9 @@ const output = {
 		}),
 	},
 
+	/**
+	 * 좋아요 기록
+	 */
 	getPsersonalLikeRecord: {
 		query: joi.object().keys({
 			offset: joi.number().required(),
@@ -50,6 +71,9 @@ const output = {
 		}),
 	},
 
+	/**
+	 * 검색
+	 */
 	searchPsersonalContents: {
 		query: joi.object().keys({
 			offset: joi.number().required(),
@@ -64,7 +88,47 @@ const output = {
 };
 
 const input = {
-	// tmppost
+	/**
+	 *  post
+	 */
+	createPersonalPost: {
+		body: joi.object().keys({
+			post: joi.object().keys({
+				post_title: joi.string().required(),
+				post_body_md: joi.string(),
+				post_body_html: joi.string(),
+				post_txt: joi.string(),
+				category_id: joi.number().required(),
+			}),
+			tag: joi.object().keys({
+				tag_name: joi.array().items(joi.string()).required(),
+			}),
+		}),
+	},
+
+	updatePersonalPost: {
+		body: joi.object().keys({
+			post: joi.object().keys({
+				post_title: joi.string().required(),
+				post_body_md: joi.string(),
+				post_body_html: joi.string(),
+				post_txt: joi.string(),
+				category_id: joi.number(),
+			}),
+			tag: joi.object().keys({
+				tag_name: joi.array().items(joi.string()),
+			}),
+		}),
+	},
+
+	deletePersonalPost: {
+		params: joi.object().keys({
+			postid: joi.number().required(),
+		}),
+	},
+	/**
+	 *  tmppost
+	 */
 	createPersonalTmpPost: {
 		body: joi.object().keys({
 			tmppost_title: joi.string().required(),
@@ -73,6 +137,7 @@ const input = {
 			tmppost_txt: joi.string(),
 		}),
 	},
+
 	updatePersonalTmpPost: {
 		params: joi.object().keys({
 			tmppostid: joi.number().required(),
@@ -90,7 +155,9 @@ const input = {
 		}),
 	},
 
-	// visitrecord
+	/**
+	 *  visitrecord
+	 */
 	createPersonalVisitRecord: {
 		body: joi.object().keys({
 			post_id: joi.number().required(),
@@ -102,7 +169,9 @@ const input = {
 		}),
 	},
 
-	// likerecord
+	/**
+	 *  likerecord
+	 */
 	createPersonalLikeRecord: {
 		body: joi.object().keys({
 			post_id: joi.number().required(),
@@ -114,7 +183,9 @@ const input = {
 		}),
 	},
 
-	// category
+	/**
+	 *  category
+	 */
 	createPersonalCategory: {
 		body: joi.object().keys({
 			category_name: joi.string().required(),
@@ -127,7 +198,7 @@ const input = {
 			categoryid: joi.number().required(),
 		}),
 		body: joi.object().keys({
-			category_name: joi.string().required(),
+			category_name: joi.string().max(128).required(),
 			sub_category_id: joi.number(),
 		}),
 	},
@@ -138,7 +209,9 @@ const input = {
 		}),
 	},
 
-	// commnets
+	/**
+	 *  commnets
+	 */
 	createComment: {
 		body: joi.object().keys({
 			post_id: joi.number().required(),

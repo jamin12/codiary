@@ -14,7 +14,7 @@ module.exports = function (sequelize, DataTypes) {
 				allowNull: false,
 			},
 			tmppost_title: {
-				type: DataTypes.STRING(45),
+				type: DataTypes.STRING(255),
 				allowNull: true,
 			},
 			tmppost_body_md: {

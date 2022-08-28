@@ -65,13 +65,16 @@ class PersonalService {
 	/**
 	 * 게시물 존재 유무 체크
 	 * @param {number} postId
+	 * @param {String} userId
 	 * @returns {Object}
 	 */
-	async checkPostExists(postId) {
+	async checkPostExists(postId, userId) {
+		const whereOption = {
+			post_id: postId,
+		};
+		if (userId) whereOption.user_id = userId;
 		const result = await posts.findOne({
-			where: {
-				post_id: postId,
-			},
+			where: whereOption,
 		});
 		if (!result)
 			throw new CustomError(httpStatus.BAD_REQUEST, "Post not found");
@@ -366,6 +369,100 @@ class PersonalService {
 	}
 
 	/**
+	 * 사용자 게시물 생성
+	 * @param {string} userId
+	 * @param {Object} body
+	 * @returns {Object}
+	 */
+	async createPersonalPost(userId, body) {
+		body.post.user_id = userId;
+		await this.checkCategoryExists(userId, body.post.category_id);
+		return await sequelize.transaction(async (t1) => {
+			const createdPost = await posts.create(body.post);
+			for (let index = 0; index < body.tag.tag_name.length; index++) {
+				await tag.create({
+					post_id: createdPost.post_id,
+					tag_name: body.tag.tag_name[index],
+				});
+			}
+		});
+	}
+
+	/**
+	 * 사용자 게시물 수정
+	 * @param {string} userId
+	 * @param {number} postId
+	 * @param {Object} body
+	 * @returns {Object}
+	 */
+	async updatePersonalPost(userId, postId, body) {
+		await this.checkPostExists(postId, userId);
+		if (body.post.category_id)
+			await this.checkCategoryExists(userId, body.post.category_id);
+		return await sequelize.transaction(async (t1) => {
+			await posts.update(body.post, {
+				where: {
+					user_id: userId,
+					post_id: postId,
+				},
+			});
+			if (body.tag) {
+				await tag.destroy({
+					where: {
+						post_id: postId,
+					},
+				});
+				for (let index = 0; index < body.tag.tag_name.length; index++) {
+					await tag.create({
+						post_id: postId,
+						tag_name: body.tag.tag_name[index],
+					});
+				}
+			}
+		});
+	}
+
+	/**
+	 * 사용자 게시물 삭제
+	 * @param {string} userId
+	 * @param {number} postId
+	 * @returns {Object}
+	 */
+	async deletePersonalPost(userId, postId) {
+		const deletedPost = await this.checkPostExists(postId, userId);
+		await posts.destroy({
+			where: {
+				user_id: userId,
+				post_id: postId,
+			},
+		});
+		return deletedPost;
+	}
+
+	/**
+	 * 임시 게시물 조회
+	 * @param {string} userId
+	 * @param {number} tmpPostId
+	 * @returns {Object}
+	 */
+	async getPersonalTmppost(userId, tmpPostId) {
+		const getTmpPost = await temporary_posts.findOne({
+			attributes: tmppostsDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				user_id: userId,
+				tmppost_id: tmpPostId,
+			},
+		});
+		if (!getTmpPost) {
+			throw new CustomError(httpStatus.BAD_REQUEST, "tmppost not found");
+		}
+		return getTmpPost;
+	}
+
+	/**
 	 * 임시 게시물 목록 조회
 	 * @param {string} userId
 	 * @returns {Object}
@@ -618,9 +715,8 @@ class PersonalService {
 	 */
 	async createCommnet(userId, commentBody) {
 		commentBody.user_id = userId;
-		if (!(await this.checkPostExists(commentBody.post_id))) {
-			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
-		}
+		await this.checkPostExists(commentBody.post_id);
+
 		if (commentBody.sub_comments_id) {
 			const checkComment = await this.checkCommentExists(
 				commentBody.post_id,
@@ -738,6 +834,11 @@ class PersonalService {
 	async searchPersonalposts(uniqueId, searchWord, searchType, ...paging) {
 		const user = await this.uService.getUserByUniqueId(uniqueId);
 		const pageResult = this.paging.pageResult(paging[0], paging[1]);
+		// 아무 검색어도 안 들어 왔을경우 모든 게시물 검색
+		if (searchWord === ":searchword") {
+			console.log(`searchWord: ${searchWord}`);
+			searchWord = "";
+		}
 		let myAttributes = [];
 		let whereOptions = {};
 		let includeOptions = [];

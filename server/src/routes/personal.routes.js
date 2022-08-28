@@ -5,6 +5,23 @@ const validate = require("../middleware/validate");
 const { personalValidation } = require("../validations/index");
 const { personalController } = require("../controller");
 
+/**
+ * post
+ */
+router
+	.route("/posts/:uniqueid")
+	.get(
+		validate(personalValidation.output.getPsersonalPostsByDate),
+		personalController.output.getPersonalPostsByDate
+	);
+
+router
+	.route("/posts/:uniqueid/:categoryid")
+	.get(
+		validate(personalValidation.output.getPsersonalPosts),
+		personalController.output.getPsersonalPosts
+	);
+
 router
 	.route("/post/:uniqueid/:postid")
 	.get(
@@ -12,7 +29,30 @@ router
 		personalController.output.getPersonalPost
 	);
 
-// category
+router
+	.route("/post")
+	.post(
+		auth("user"),
+		validate(personalValidation.input.createPersonalPost),
+		personalController.input.createPersonalPost
+	);
+
+router
+	.route("/post/:postid")
+	.patch(
+		auth("user"),
+		validate(personalValidation.input.updatePersonalPost),
+		personalController.input.updatePersonalPost
+	)
+	.delete(
+		auth("user"),
+		validate(personalValidation.input.deletePersonalPost),
+		personalController.input.deletePersonalPost
+	);
+
+/**
+ * category
+ */
 router
 	.route("/category/:uniqueid")
 	.get(
@@ -42,10 +82,12 @@ router
 		personalController.input.deletePersonalCategory
 	);
 
-// tmpposts
+/**
+ * tmpposts
+ */
 router
 	.route("/tmpposts")
-	.get(auth("user"), personalController.output.getPersonalTmppost)
+	.get(auth("user"), personalController.output.getPersonalTmpposts)
 	.post(
 		auth("user"),
 		validate(personalValidation.input.createPersonalTmpPost),
@@ -54,6 +96,11 @@ router
 
 router
 	.route("/tmpposts/:tmppostid")
+	.get(
+		auth("user"),
+		validate(personalValidation.output.getPsersonalTmpPost),
+		personalController.output.getPersonalTmppost
+	)
 	.patch(
 		auth("user"),
 		validate(personalValidation.input.updatePersonalTmpPost),
@@ -65,7 +112,9 @@ router
 		personalController.input.deletePersonalTmpPost
 	);
 
-// visitrecord
+/**
+ * visitrecord
+ */
 router
 	.route("/visitrecord")
 	.get(
@@ -87,7 +136,9 @@ router
 		personalController.input.deletePersonalVisitRecord
 	);
 
-// likerecord
+/**
+ * likerecord
+ */
 router
 	.route("/likerecord")
 	.get(
@@ -109,22 +160,9 @@ router
 		personalController.input.deletePersonalLikeRecord
 	);
 
-// posts list
-router
-	.route("/posts/:uniqueid")
-	.get(
-		validate(personalValidation.output.getPsersonalPostsByDate),
-		personalController.output.getPersonalPostsByDate
-	);
-
-router
-	.route("/posts/:uniqueid/:categoryid")
-	.get(
-		validate(personalValidation.output.getPsersonalPosts),
-		personalController.output.getPsersonalPosts
-	);
-
-// commnets
+/**
+ * commnets
+ */
 router
 	.route("/comments")
 	.post(
@@ -146,7 +184,9 @@ router
 		personalController.input.deleteComment
 	);
 
-// search
+/**
+ * search
+ */
 router
 	.route("/:uniqueid/:searchword/:searchtype")
 	.get(

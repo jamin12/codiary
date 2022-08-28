@@ -1,12 +1,15 @@
-const httpStatus = require("http-status");
-const logger = require("../config/logger");
-const resultDto = require("../dto/resultDTO");
-const { personalService } = require("../service/index");
-const catchAsync = require("../utils/catchAsync");
-
-const pService = new personalService();
+const httpStatus = require("http-status"),
+	logger = require("../config/logger"),
+	resultDto = require("../dto/resultDTO"),
+	{ personalService } = require("../service/index"),
+	catchAsync = require("../utils/catchAsync"),
+	pService = new personalService();
 
 const output = {
+	/**
+	 * 포스트
+	 */
+	// 사용자 게시물 조회
 	getPersonalPost: catchAsync(async (req, res) => {
 		const result_contents = await pService.getPersonalPost(
 			req.params.uniqueid,
@@ -14,18 +17,7 @@ const output = {
 		);
 		res.send(resultDto(httpStatus.OK, "getPost", result_contents));
 	}),
-	getPersonalCategory: catchAsync(async (req, res) => {
-		const result_contents = await pService.getPersonalCategory(
-			req.params.uniqueid
-		);
-		res.send(resultDto(httpStatus.OK, "getCategory", result_contents));
-	}),
-	getPersonalMyCategory: catchAsync(async (req, res) => {
-		const result_contents = await pService.getPersonalMyCategory(
-			req.user.user_id
-		);
-		res.send(resultDto(httpStatus.OK, "getMyCategory", result_contents));
-	}),
+	// 사용자 포스트 목록 조회
 	getPsersonalPosts: catchAsync(async (req, res) => {
 		const result_contents = await pService.getPersonalPosts(
 			req.params.uniqueid,
@@ -35,6 +27,7 @@ const output = {
 		);
 		res.send(resultDto(httpStatus.OK, "getPost", result_contents));
 	}),
+	// 사용자 날짜 별 포스트 목록 조회
 	getPersonalPostsByDate: catchAsync(async (req, res) => {
 		const result_contents = await pService.getPersonalPostsByDate(
 			req.params.uniqueid,
@@ -43,12 +36,48 @@ const output = {
 		);
 		res.send(resultDto(httpStatus.OK, "getPost", result_contents));
 	}),
-	getPersonalTmppost: catchAsync(async (req, res) => {
+
+	/**
+	 * 카테고리
+	 */
+	// 해당 유저의 카테고리 정보
+	getPersonalCategory: catchAsync(async (req, res) => {
+		const result_contents = await pService.getPersonalCategory(
+			req.params.uniqueid
+		);
+		res.send(resultDto(httpStatus.OK, "getCategory", result_contents));
+	}),
+
+	// 내 카테고리 목록 정보
+	getPersonalMyCategory: catchAsync(async (req, res) => {
+		const result_contents = await pService.getPersonalMyCategory(
+			req.user.user_id
+		);
+		res.send(resultDto(httpStatus.OK, "getMyCategory", result_contents));
+	}),
+
+	/**
+	 * 임시 게시물
+	 */
+	// 임시 게시물 목록 조회
+	getPersonalTmpposts: catchAsync(async (req, res) => {
 		const result_contents = await pService.getPersonalTmpposts(
 			req.user.user_id
 		);
+		res.send(resultDto(httpStatus.OK, "gettempPosts", result_contents));
+	}),
+	// 임시 게시물 조회
+	getPersonalTmppost: catchAsync(async (req, res) => {
+		const result_contents = await pService.getPersonalTmppost(
+			req.user.user_id,
+			req.params.tmppostid
+		);
 		res.send(resultDto(httpStatus.OK, "gettempPost", result_contents));
 	}),
+
+	/**
+	 * 방문 게시물
+	 */
 	getPersonalVisitRecord: catchAsync(async (req, res) => {
 		const result_contents = await pService.getPersonalVisitRecord(
 			req.user.user_id,
@@ -57,6 +86,10 @@ const output = {
 		);
 		res.send(resultDto(httpStatus.OK, "getVisitRecord", result_contents));
 	}),
+
+	/**
+	 * 좋아요 게시물
+	 */
 	getPersonalLikeRecord: catchAsync(async (req, res) => {
 		const result_contents = await pService.getPersonalLikeRecord(
 			req.user.user_id,
@@ -65,6 +98,10 @@ const output = {
 		);
 		res.send(resultDto(httpStatus.OK, "getLikeRecord", result_contents));
 	}),
+
+	/**
+	 * 검색
+	 */
 	searchPersonalposts: catchAsync(async (req, res) => {
 		const result_contents = await pService.searchPersonalposts(
 			req.params.uniqueid,
@@ -78,7 +115,36 @@ const output = {
 };
 
 const input = {
-	// temporary_posts
+	/**
+	 * posts
+	 */
+	createPersonalPost: catchAsync(async (req, res) => {
+		const result_contents = await pService.createPersonalPost(
+			req.user.user_id,
+			req.body
+		);
+		res.send(
+			resultDto(httpStatus.CREATED, "create success", result_contents)
+		);
+	}),
+	updatePersonalPost: catchAsync(async (req, res) => {
+		const result_contents = await pService.updatePersonalPost(
+			req.user.user_id,
+			req.params.postid,
+			req.body
+		);
+		res.send(resultDto(httpStatus.OK, "update success", result_contents));
+	}),
+	deletePersonalPost: catchAsync(async (req, res) => {
+		const result_contents = await pService.deletePersonalPost(
+			req.user.user_id,
+			req.params.postid
+		);
+		res.send(resultDto(httpStatus.OK, "delete success", result_contents));
+	}),
+	/**
+	 * temporary_posts
+	 */
 	createPersonalTmpPost: catchAsync(async (req, res) => {
 		const result_contents = await pService.createPersonalTmpPost(
 			req.user.user_id,
@@ -103,7 +169,9 @@ const input = {
 		);
 		res.send(resultDto(httpStatus.OK, "delete success", result_contents));
 	}),
-	// visit_record
+	/**
+	 * visit_record
+	 */
 	createPersonalVisitRecord: catchAsync(async (req, res) => {
 		const result_contents = await pService.createPersonalVisitRecord(
 			req.user.user_id,
@@ -120,7 +188,9 @@ const input = {
 		);
 		res.send(resultDto(httpStatus.OK, "delete success", result_contents));
 	}),
-	// like_record
+	/**
+	 * like_record
+	 */
 	createPersonalLikeRecord: catchAsync(async (req, res) => {
 		const result_contents = await pService.createPersonalLikeRecord(
 			req.user.user_id,
@@ -137,13 +207,17 @@ const input = {
 		);
 		res.send(resultDto(httpStatus.OK, "delete success", result_contents));
 	}),
-	// category
+	/**
+	 * category
+	 */
 	createPersonalCategory: catchAsync(async (req, res) => {
 		const result_contents = await pService.createPersonalCategory(
 			req.user.user_id,
 			req.body
 		);
-		res.send(resultDto(httpStatus.OK, "create success", result_contents));
+		res.send(
+			resultDto(httpStatus.CREATED, "create success", result_contents)
+		);
 	}),
 	updatePersonalCategory: catchAsync(async (req, res) => {
 		const result_contents = await pService.updatePersonalCategory(
@@ -160,13 +234,17 @@ const input = {
 		);
 		res.send(resultDto(httpStatus.OK, "delete success", result_contents));
 	}),
-	// comments
+	/**
+	 * comments
+	 */
 	createComment: catchAsync(async (req, res) => {
 		const result_contents = await pService.createCommnet(
 			req.user.user_id,
 			req.body
 		);
-		res.send(resultDto(httpStatus.OK, "create success", result_contents));
+		res.send(
+			resultDto(httpStatus.CREATED, "create success", result_contents)
+		);
 	}),
 	updateComment: catchAsync(async (req, res) => {
 		const result_contents = await pService.updateCommnet(
