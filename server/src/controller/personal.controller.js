@@ -207,6 +207,13 @@ const input = {
 		);
 		res.send(resultDto(httpStatus.OK, "delete success", result_contents));
 	}),
+	deletePersonalLikeRecordByPostId: catchAsync(async (req, res) => {
+		const result_contents = await pService.deletePersonalLikeRecordByPostId(
+			req.user.user_id,
+			req.params.postid
+		);
+		res.send(resultDto(httpStatus.OK, "delete success", result_contents));
+	}),
 	/**
 	 * category
 	 */

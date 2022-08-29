@@ -698,6 +698,36 @@ class PersonalService {
 	}
 
 	/**
+	 * 좋아요 기록 포스트 아이디로 삭제 
+	 * @param {string} userId
+	 * @param {object} likeRecordBody visit_record 테이블에 들어갈 정보
+	 * @returns {Object}
+	 */
+	async deletePersonalLikeRecordByPostId(userId, postId) {
+		const result = await like_record.findOne({
+			attributes: likeRecordDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				user_id: userId,
+				post_id: postId,
+			},
+		});
+		await posts.decrement(
+			{ like_count: 1 },
+			{ where: { post_id: result.post_id } }
+		);
+		await like_record.destroy({
+			where: {
+				user_id: userId,
+				post_id: postId,
+			},
+		});
+		return result;
+	}
+
+	/**
 	 * 좋아요 기록 삭제
 	 * @param {string} userId
 	 * @param {number} likePostId
