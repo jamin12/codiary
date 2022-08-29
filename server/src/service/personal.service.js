@@ -26,13 +26,15 @@ const httpStatus = require("http-status"),
 	tagDto = require("../dto/tagDto"),
 	categoryDto = require("../dto/categoryDto"),
 	measurementDto = require("../dto/measurmentDto"),
-	logger = require("../config/logger");
+	logger = require("../config/logger"),
+	myDate = require("../utils/myDate");
 
 // TODO:생성할때 userID 나오는거 생각좀 해보자구
 class PersonalService {
 	constructor() {
 		this.paging = new Paging();
 		this.uService = new userService();
+		this.myDate = new myDate();
 
 		this.userJoin = {
 			model: users,
@@ -308,7 +310,7 @@ class PersonalService {
 
 	/**
 	 * 사용자 게시물 조회
-	 * @param {string} userId
+	 * @param {string} uniqueId
 	 * @param {number} postId
 	 * @returns {Object}
 	 */
@@ -365,6 +367,10 @@ class PersonalService {
 		});
 		if (!getPost)
 			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+		await measurement.increment(
+			{ today_visit_count: 1, total_visit_count: 1 },
+			{ where: { post_id: postId } }
+		);
 		return { getPost, user };
 	}
 
@@ -385,6 +391,9 @@ class PersonalService {
 					tag_name: body.tag.tag_name[index],
 				});
 			}
+			await measurement.create({
+				post_id: createdPost.post_id,
+			});
 		});
 	}
 
@@ -419,6 +428,10 @@ class PersonalService {
 					});
 				}
 			}
+			await posts_update_history.create({
+				post_id: postId,
+				update_history: this.myDate.getDatetime(),
+			});
 		});
 	}
 
@@ -676,6 +689,10 @@ class PersonalService {
 		if (result) {
 			return result;
 		}
+		await posts.increment(
+			{ like_count: 1 },
+			{ where: { post_id: likeRecordBody.post_id } }
+		);
 		likeRecordBody.user_id = userId;
 		return await like_record.create(likeRecordBody);
 	}
@@ -699,6 +716,10 @@ class PersonalService {
 		});
 		if (!result)
 			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+		await posts.decrement(
+			{ like_count: 1 },
+			{ where: { post_id: result.post_id } }
+		);
 		await like_record.destroy({
 			where: {
 				like_record_id: likePostId,
