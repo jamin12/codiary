@@ -1,8 +1,12 @@
 import React from "react";
 
+
 // import Home from "./Pages/home";
 import FrontTest from "./Pages/Setting";
+
 import './css/reset.css'
+import './App.css'
+
 
 // import { Routes, Route } from "react-router-dom";
 

@@ -2,7 +2,8 @@ import React from 'react';
 import SearchProfile from '../components/SearchProfile';
 import styled from 'styled-components';
 
-
+// import Myinfo from '../components/SettingMyinfo';
+import MyCategory from '../components/SettingMycategory';
 
 
 
@@ -20,21 +21,14 @@ const Setting = () => {
     display: flex;
     position: relative;
     
-    width: 90%;
-    height: 100%;
-    padding-top: 150px;
+    width: 80%;
+    // height: 752px;
+    height: 70vh;
+
     margin: 0 auto;
     margin-top: 100px;
-    background-color: yellow;
 
-    div{
-      // width: 1536px; //80% 
-      margin: 0 auto;
-      background-color: pink;
-    }
-
-    @media screen and (max-width: 1600px) {
-
+    @media screen and (max-width: 1300px) {
     }
 
   `
@@ -42,7 +36,7 @@ const Setting = () => {
   const Title = styled.h1`
     font-size: 2.5rem;
     position: absolute;
-    top: 10px;
+    top: 0;
     left: 50%;
     width: 12rem;
     text-align: center;
@@ -58,14 +52,14 @@ const Setting = () => {
   const Menu = styled.ul`
     position: absolute;
     // background-color: red;
-    top: 7rem;
+    top: 4rem;
     left: 0;
     width: 11rem;
-    height: 70vh;
-    border-right: 1px solid #000;
+    height: calc(100% - 4rem);
+    border-right: 1px solid var(--gray900);
 
     li{
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid var(--gray200);
       width: 90%;
       margin: 0 auto;
     }
@@ -84,8 +78,9 @@ const Setting = () => {
       }
     }
 
-    @media screen and (max-width: 1600px) {
+    @media screen and (max-width: 1300px) {
       width: 9rem;
+      height: 100%;
       li button{
         font-size: 1.2rem;
       }
@@ -94,14 +89,13 @@ const Setting = () => {
 
   const Contents = styled.div`  
     width: 80%;
-    height: 100%;
+    height: calc(100% - 5rem);
     position: absolute;
-    background-color: red;
     right: 0;
-    top: 7rem;
+    top: 5rem;
     width: calc(100% - 13rem);
 
-    @media screen and (max-width: 1600px) {
+    @media screen and (max-width: 1300px) {
       width: calc(100% - 11rem);
     }
   `
@@ -125,7 +119,9 @@ const Setting = () => {
           </Menu>
 
           <Contents>
-
+            {/* <Myinfo name=''/> */}
+            {/* 여기에 서버에서 json타입으로 받아온걸 넣어주면 됨. const로 변수 안에 넣어서. */}
+            <MyCategory categoryList={undefined}/>
           </Contents>
         </div>
 
