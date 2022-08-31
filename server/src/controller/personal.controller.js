@@ -13,7 +13,8 @@ const output = {
 	getPersonalPost: catchAsync(async (req, res) => {
 		const result_contents = await pService.getPersonalPost(
 			req.params.uniqueid,
-			req.params.postid
+			req.params.postid,
+			req.user?.user_id
 		);
 		res.send(resultDto(httpStatus.OK, "getPost", result_contents));
 	}),
@@ -111,6 +112,17 @@ const output = {
 			req.query.limit
 		);
 		res.send(resultDto(httpStatus.OK, "searchContents", result_contents));
+	}),
+	/**
+	 * 연관 게시물
+	 */
+	associatePersonalposts: catchAsync(async (req, res) => {
+		const result_contents = await pService.associatePost(
+			req.params.postid
+		);
+		res.send(
+			resultDto(httpStatus.OK, "associateContents", result_contents)
+		);
 	}),
 };
 

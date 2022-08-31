@@ -5,14 +5,14 @@ const output = {
 	/**
 	 * 게시물
 	 */
-	getPsersonalPost: {
+	getPersonalPost: {
 		params: joi.object().keys({
 			uniqueid: joi.string().required(),
 			postid: joi.number().required(),
 		}),
 	},
 
-	getPsersonalPosts: {
+	getPersonalPosts: {
 		query: joi.object().keys({
 			offset: joi.number().required(),
 			limit: joi.number(),
@@ -23,7 +23,7 @@ const output = {
 		}),
 	},
 
-	getPsersonalPostsByDate: {
+	getPersonalPostsByDate: {
 		query: joi.object().keys({
 			startdate: joi.custom(datetime).required(),
 			enddate: joi.custom(datetime).required(),
@@ -36,7 +36,7 @@ const output = {
 	/**
 	 * 임시 게시물
 	 */
-	getPsersonalTmpPost: {
+	getPersonalTmpPost: {
 		params: joi.object().keys({
 			tmppostid: joi.number().required(),
 		}),
@@ -45,7 +45,7 @@ const output = {
 	/**
 	 * 카테고리
 	 */
-	getPsersonalCategory: {
+	getPersonalCategory: {
 		params: joi.object().keys({
 			uniqueid: joi.string().required(),
 		}),
@@ -54,7 +54,7 @@ const output = {
 	/**
 	 * 방문 기록
 	 */
-	getPsersonalVisitRecord: {
+	getPersonalVisitRecord: {
 		query: joi.object().keys({
 			offset: joi.number().required(),
 			limit: joi.number(),
@@ -64,7 +64,7 @@ const output = {
 	/**
 	 * 좋아요 기록
 	 */
-	getPsersonalLikeRecord: {
+	getPersonalLikeRecord: {
 		query: joi.object().keys({
 			offset: joi.number().required(),
 			limit: joi.number(),
@@ -74,7 +74,7 @@ const output = {
 	/**
 	 * 검색
 	 */
-	searchPsersonalContents: {
+	searchPersonalContents: {
 		query: joi.object().keys({
 			offset: joi.number().required(),
 			limit: joi.number(),
@@ -83,6 +83,14 @@ const output = {
 			uniqueid: joi.string().required(),
 			searchword: joi.string().required(),
 			searchtype: joi.number().required().valid(0, 1, 2, 3),
+		}),
+	},
+	/**
+	 * 연관 게시물
+	 */
+	associatePersonalContents: {
+		params: joi.object().keys({
+			postid: joi.string().required(),
 		}),
 	},
 };
@@ -182,7 +190,11 @@ const input = {
 			likerecordid: joi.number().required(),
 		}),
 	},
-
+	deletePersonalLikeRecordByPostId: {
+		params: joi.object().keys({
+			postid: joi.number().required(),
+		}),
+	},
 	/**
 	 *  category
 	 */
@@ -198,7 +210,7 @@ const input = {
 			categoryid: joi.number().required(),
 		}),
 		body: joi.object().keys({
-			category_name: joi.string().max(128).required(),
+			category_name: joi.string(),
 			sub_category_id: joi.number(),
 		}),
 	},

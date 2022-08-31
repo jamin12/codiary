@@ -27,14 +27,14 @@ const httpStatus = require("http-status"),
 	categoryDto = require("../dto/categoryDto"),
 	measurementDto = require("../dto/measurmentDto"),
 	logger = require("../config/logger"),
-	myDate = require("../utils/myDate");
+	myMath = require("../utils/myMath");
 
 // TODO:생성할때 userID 나오는거 생각좀 해보자구
 class PersonalService {
 	constructor() {
 		this.paging = new Paging();
 		this.uService = new userService();
-		this.myDate = new myDate();
+		this.myMath = new myMath();
 
 		this.userJoin = {
 			model: users,
@@ -270,6 +270,7 @@ class PersonalService {
 				const excludeColumn = ["category_id", "user_id", "like_count"];
 				if (!excludeColumn.includes(data)) return data;
 			}),
+			include: [this.userJoin],
 			where: whereOptions,
 			order: [["updated_at", "DESC"]],
 			offset: pageResult.offset,
@@ -298,6 +299,7 @@ class PersonalService {
 				if (!excludeColumn.includes(data)) return data;
 			}),
 			include: [
+				this.userJoin,
 				{
 					model: posts_update_history,
 					as: "posts_update_history",
@@ -312,10 +314,23 @@ class PersonalService {
 	 * 사용자 게시물 조회
 	 * @param {string} uniqueId
 	 * @param {number} postId
+	 * @param {String} userId
 	 * @returns {Object}
 	 */
-	async getPersonalPost(uniqueId, postId) {
-		const user = await this.uService.getUserByUniqueId(uniqueId);
+	async getPersonalPost(uniqueId, postId, userId) {
+		let user = await this.uService.getUserByUniqueId(uniqueId);
+		let checkLike = false;
+		if (userId) {
+			const checkLiked = await like_record.findOne({
+				where: {
+					user_id: userId,
+					post_id: postId,
+				},
+			});
+			if(checkLiked){
+				checkLike = true;
+			}
+		}
 		const getPost = await posts.findOne({
 			attributes: postsDto.filter((data) => {
 				const excludeColumn = ["user_id"];
@@ -371,7 +386,8 @@ class PersonalService {
 			{ today_visit_count: 1, total_visit_count: 1 },
 			{ where: { post_id: postId } }
 		);
-		return { getPost, user };
+		user = await this.uService.getUserByUserId(user.user_id)
+		return { getPost, user, checkLike };
 	}
 
 	/**
@@ -383,6 +399,8 @@ class PersonalService {
 	async createPersonalPost(userId, body) {
 		body.post.user_id = userId;
 		await this.checkCategoryExists(userId, body.post.category_id);
+		const setTagList = new Set(body.tag.tag_name);
+		body.tag.tag_name = [...setTagList];
 		return await sequelize.transaction(async (t1) => {
 			const createdPost = await posts.create(body.post);
 			for (let index = 0; index < body.tag.tag_name.length; index++) {
@@ -698,7 +716,7 @@ class PersonalService {
 	}
 
 	/**
-	 * 좋아요 기록 포스트 아이디로 삭제 
+	 * 좋아요 기록 포스트 아이디로 삭제
 	 * @param {string} userId
 	 * @param {object} likeRecordBody visit_record 테이블에 들어갈 정보
 	 * @returns {Object}
@@ -714,9 +732,11 @@ class PersonalService {
 				post_id: postId,
 			},
 		});
+		if (!result)
+			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
 		await posts.decrement(
 			{ like_count: 1 },
-			{ where: { post_id: result.post_id } }
+			{ where: { post_id: postId } }
 		);
 		await like_record.destroy({
 			where: {
@@ -1003,6 +1023,68 @@ class PersonalService {
 			offset: pageResult.offset,
 			limit: pageResult.limit,
 		});
+	}
+
+	/**
+	 * 연관 게시물 조회
+	 * @param {number} postId
+	 * @returns {Object}
+	 */
+	async associatePost(postId) {
+		await this.checkPostExists(postId);
+		// 태그 리스트 구하기
+		const tagList = await tag.findAll({
+			where: {
+				post_id: postId,
+			},
+		});
+		// 조합을 이용후 랜덤으로 태그 리스트 가져오기
+		const tagCombis = this.myMath.getCombinations(
+			tagList,
+			Math.ceil(tagList.length / 2)
+		);
+		let tagCombi = tagCombis[this.myMath.getRandomInt(0, tagCombis.length)];
+		tagCombi = tagCombi.map((data) => data.dataValues.tag_name);
+		this.postJoin.include = [this.userJoin];
+		const associatePost = await tag.findAll({
+			attributes: ["tag_id", "tag_name"],
+			where: {
+				tag_name: {
+					[Op.or]: tagCombi,
+				},
+				post_id: {
+					[Op.notIn]: [postId],
+				},
+			},
+			include: [this.postJoin],
+			offset: 1,
+			limit: 6,
+		});
+		// 연관된 게시물이 없을 경우 최신 게시물 가져옴
+		if (associatePost.length <= 0) {
+			return await posts.findAll({
+				attributes: postsDto.filter((data) => {
+					const excludeColumn = [
+						"category_id",
+						"user_id",
+						"like_count",
+					];
+					if (!excludeColumn.includes(data)) return data;
+				}),
+				include: [
+					this.userJoin,
+					// {
+					// 	model: tag,
+					// 	as: "tag",
+					// 	attributes: ["tag_id", "tag_name"],
+					// },
+				],
+				orderBy: [["updated_at", "DESC"]],
+				offset: 1,
+				limit: 6,
+			});
+		}
+		return associatePost;
 	}
 }
 

@@ -11,21 +11,21 @@ const { personalController } = require("../controller");
 router
 	.route("/posts/:uniqueid")
 	.get(
-		validate(personalValidation.output.getPsersonalPostsByDate),
+		validate(personalValidation.output.getPersonalPostsByDate),
 		personalController.output.getPersonalPostsByDate
 	);
 
 router
 	.route("/posts/:uniqueid/:categoryid")
 	.get(
-		validate(personalValidation.output.getPsersonalPosts),
+		validate(personalValidation.output.getPersonalPosts),
 		personalController.output.getPsersonalPosts
 	);
 
 router
 	.route("/post/:uniqueid/:postid")
 	.get(
-		validate(personalValidation.output.getPsersonalPost),
+		validate(personalValidation.output.getPersonalPost),
 		personalController.output.getPersonalPost
 	);
 
@@ -56,7 +56,7 @@ router
 router
 	.route("/category/:uniqueid")
 	.get(
-		validate(personalValidation.output.getPsersonalCategory),
+		validate(personalValidation.output.getPersonalCategory),
 		personalController.output.getPersonalCategory
 	);
 
@@ -98,7 +98,7 @@ router
 	.route("/tmpposts/:tmppostid")
 	.get(
 		auth("user"),
-		validate(personalValidation.output.getPsersonalTmpPost),
+		validate(personalValidation.output.getPersonalTmpPost),
 		personalController.output.getPersonalTmppost
 	)
 	.patch(
@@ -119,7 +119,7 @@ router
 	.route("/visitrecord")
 	.get(
 		auth("user"),
-		validate(personalValidation.output.getPsersonalVisitRecord),
+		validate(personalValidation.output.getPersonalVisitRecord),
 		personalController.output.getPersonalVisitRecord
 	)
 	.post(
@@ -143,7 +143,7 @@ router
 	.route("/likerecord")
 	.get(
 		auth("user"),
-		validate(personalValidation.output.getPsersonalLikeRecord),
+		validate(personalValidation.output.getPersonalLikeRecord),
 		personalController.output.getPersonalLikeRecord
 	)
 	.post(
@@ -156,10 +156,17 @@ router
 	.route("/likerecord/:likerecordid")
 	.delete(
 		auth("user"),
-		validate(personalValidation.input.deletePersonalLikeRecord),
+		validate(personalValidation.input.deletePersonalLikeRecordb),
 		personalController.input.deletePersonalLikeRecord
 	);
 
+router
+	.route("/likerecord/post/:postid")
+	.delete(
+		auth("user"),
+		validate(personalValidation.input.deletePersonalLikeRecordByPostId),
+		personalController.input.deletePersonalLikeRecordByPostId
+	);
 /**
  * commnets
  */
@@ -190,8 +197,17 @@ router
 router
 	.route("/:uniqueid/:searchword/:searchtype")
 	.get(
-		validate(personalValidation.output.searchPsersonalContents),
+		validate(personalValidation.output.searchPersonalContents),
 		personalController.output.searchPersonalposts
 	);
 
+/**
+ * search
+ */
+router
+	.route("/associate/:postid")
+	.get(
+		validate(personalValidation.output.associatePersonalContents),
+		personalController.output.associatePersonalposts
+	);
 module.exports = router;
