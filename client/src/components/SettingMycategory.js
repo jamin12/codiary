@@ -48,7 +48,7 @@ const MyCategory = ({categoryList}) => {
       position: absolute;
       top: 0;
       right: 0;
-      transform: translate(50%,-50%);
+      transform: translate(30%,-40%);
       font-size: 1.7rem;
       background-color: var(--gray800);
       color: var(--gray50);
@@ -208,7 +208,7 @@ const MyCategory = ({categoryList}) => {
         });
       }
     });
-  })
+  });
 
   return (
     <MainWrap>
