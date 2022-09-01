@@ -9,11 +9,9 @@ const Main = styled.div`
   width: 100vw;
   height: 100%;
   position: relative;
-  background-color: pink;
 `
 
 const Wrap = styled.div`
-  background-color: orange;
   position: absolute;
   display: flex;
   top: 40px;
@@ -27,7 +25,6 @@ const Wrap = styled.div`
 
   // laptopL : 1600
   @media screen and (max-width: 1600px) {
-    background-color:red;
     width: 95vw;
   }
 
