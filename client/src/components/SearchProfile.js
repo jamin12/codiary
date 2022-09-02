@@ -10,7 +10,6 @@ const Main = styled.div`
   height: 100%;
   position: relative;
 `
-
 const Wrap = styled.div`
   position: absolute;
   display: flex;
@@ -29,12 +28,10 @@ const Wrap = styled.div`
   }
 
 `
-
 const SearchWrap = styled.div`
   position: relative;
   display: flex;
 `
-
 const SearchBox = styled.div`
   position: relative;
   display: flex;
@@ -63,7 +60,6 @@ const SearchBox = styled.div`
     }
   }
 `
-
 const Search = styled.input`
   position: absolute;
   width: calc(100% - 60px);
@@ -101,7 +97,6 @@ const Profile = styled.div`
     }
   }
 `
-
 const GotoHome = styled.h1`
   font-size: 2.5rem;
 
@@ -109,6 +104,30 @@ const GotoHome = styled.h1`
     font-size: 2rem;
   }
 `
+const SettingBox = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0,0,10,0.7);
+  z-index: 999;
+  display: flex;
+  justify-contents: center;
+  
+  .text-box{
+    position: relative;
+    width: 100px;
+    height: 10rem;
+    background-color: var(--gray50);
+    padding: 20px 20px;
+    
+  }
+  .text-box::before {
+    
+  }
+`
+
+
+
 
 
 // 회원 정보를 받아와서 프로필 사진을 불러와야 함
@@ -136,6 +155,20 @@ const SearchProfile = () => {
         </SearchWrap>
 
       </Wrap>
+
+      <SettingBox>
+        <Wrap>
+          <div className='text-box'>
+            <p>홈화면</p>
+            <p>내 프로필</p>
+            <p>내 코디어리</p>
+            <p>임시글</p>
+            <p>방문&좋아요</p>
+            <p className='logout'>로그아웃</p>  
+          </div>
+        </Wrap>
+
+      </SettingBox>
     </Main>
 
   )
