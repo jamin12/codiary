@@ -101,13 +101,13 @@ const output = {
 	}),
 
 	/**
-	 * 검색
+	 * 개인 페이지 검색
 	 */
 	searchPersonalposts: catchAsync(async (req, res) => {
 		const result_contents = await pService.searchPersonalposts(
-			req.params.uniqueid,
 			req.params.searchword,
 			req.params.searchtype,
+			req.user.user_id,
 			req.query.offset,
 			req.query.limit
 		);

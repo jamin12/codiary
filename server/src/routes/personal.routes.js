@@ -156,7 +156,7 @@ router
 	.route("/likerecord/:likerecordid")
 	.delete(
 		auth("user"),
-		validate(personalValidation.input.deletePersonalLikeRecordb),
+		validate(personalValidation.input.deletePersonalLikeRecord),
 		personalController.input.deletePersonalLikeRecord
 	);
 
@@ -195,14 +195,15 @@ router
  * search
  */
 router
-	.route("/:uniqueid/:searchword/:searchtype")
+	.route("/search/:searchword/:searchtype")
 	.get(
+		auth("user"),
 		validate(personalValidation.output.searchPersonalContents),
 		personalController.output.searchPersonalposts
 	);
 
 /**
- * search
+ * associate
  */
 router
 	.route("/associate/:postid")

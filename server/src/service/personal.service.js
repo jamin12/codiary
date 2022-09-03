@@ -27,6 +27,7 @@ const httpStatus = require("http-status"),
 	categoryDto = require("../dto/categoryDto"),
 	measurementDto = require("../dto/measurmentDto"),
 	logger = require("../config/logger"),
+	myDate = require("../utils/myDate"),
 	myMath = require("../utils/myMath");
 
 // TODO:생성할때 userID 나오는거 생각좀 해보자구
@@ -34,6 +35,7 @@ class PersonalService {
 	constructor() {
 		this.paging = new Paging();
 		this.uService = new userService();
+		this.myDate = new myDate();
 		this.myMath = new myMath();
 
 		this.userJoin = {
@@ -65,7 +67,7 @@ class PersonalService {
 	}
 
 	/**
-	 * 게시물 존재 유무 체크
+	 * 포스트 존재 유무 체크
 	 * @param {number} postId
 	 * @param {String} userId
 	 * @returns {Object}
@@ -175,7 +177,8 @@ class PersonalService {
 					"sub category already exists"
 				);
 		}
-		return await category.create(categoryBody);
+		await category.create(categoryBody);
+		return;
 	}
 
 	/**
@@ -311,7 +314,7 @@ class PersonalService {
 	}
 
 	/**
-	 * 사용자 게시물 조회
+	 * 사용자 포스트 조회
 	 * @param {string} uniqueId
 	 * @param {number} postId
 	 * @param {String} userId
@@ -327,7 +330,7 @@ class PersonalService {
 					post_id: postId,
 				},
 			});
-			if(checkLiked){
+			if (checkLiked) {
 				checkLike = true;
 			}
 		}
@@ -386,12 +389,12 @@ class PersonalService {
 			{ today_visit_count: 1, total_visit_count: 1 },
 			{ where: { post_id: postId } }
 		);
-		user = await this.uService.getUserByUserId(user.user_id)
+		user = await this.uService.getUserByUserId(user.user_id);
 		return { getPost, user, checkLike };
 	}
 
 	/**
-	 * 사용자 게시물 생성
+	 * 사용자 포스트 생성
 	 * @param {string} userId
 	 * @param {Object} body
 	 * @returns {Object}
@@ -400,9 +403,10 @@ class PersonalService {
 		body.post.user_id = userId;
 		await this.checkCategoryExists(userId, body.post.category_id);
 		const setTagList = new Set(body.tag.tag_name);
+		let createdPost = null;
 		body.tag.tag_name = [...setTagList];
-		return await sequelize.transaction(async (t1) => {
-			const createdPost = await posts.create(body.post);
+		await sequelize.transaction(async (t1) => {
+			createdPost = await posts.create(body.post);
 			for (let index = 0; index < body.tag.tag_name.length; index++) {
 				await tag.create({
 					post_id: createdPost.post_id,
@@ -413,10 +417,11 @@ class PersonalService {
 				post_id: createdPost.post_id,
 			});
 		});
+		return { post_id: createdPost.post_id };
 	}
 
 	/**
-	 * 사용자 게시물 수정
+	 * 사용자 포스트 수정
 	 * @param {string} userId
 	 * @param {number} postId
 	 * @param {Object} body
@@ -454,24 +459,24 @@ class PersonalService {
 	}
 
 	/**
-	 * 사용자 게시물 삭제
+	 * 사용자 포스트 삭제
 	 * @param {string} userId
 	 * @param {number} postId
 	 * @returns {Object}
 	 */
 	async deletePersonalPost(userId, postId) {
-		const deletedPost = await this.checkPostExists(postId, userId);
+		await this.checkPostExists(postId, userId);
 		await posts.destroy({
 			where: {
 				user_id: userId,
 				post_id: postId,
 			},
 		});
-		return deletedPost;
+		return;
 	}
 
 	/**
-	 * 임시 게시물 조회
+	 * 임시 포스트 조회
 	 * @param {string} userId
 	 * @param {number} tmpPostId
 	 * @returns {Object}
@@ -494,7 +499,7 @@ class PersonalService {
 	}
 
 	/**
-	 * 임시 게시물 목록 조회
+	 * 임시 포스트 목록 조회
 	 * @param {string} userId
 	 * @returns {Object}
 	 */
@@ -511,18 +516,19 @@ class PersonalService {
 	}
 
 	/**
-	 * 임시 게시물 저장
+	 * 임시 포스트 저장
 	 * @param {string} userId
 	 * @param {object} tmpPostBody temporary_posts 테이블에 들어갈 정보
 	 * @returns {Object}
 	 */
 	async createPersonalTmpPost(userId, tmpPostBody) {
 		tmpPostBody.user_id = userId;
-		return await temporary_posts.create(tmpPostBody);
+		const createdTmpPost = await temporary_posts.create(tmpPostBody);
+		return { tmppost_id: createdTmpPost.tmppost_id };
 	}
 
 	/**
-	 * 임시 게시물 수정
+	 * 임시 포스트 수정
 	 * @param {string} userId
 	 * @param {number} tmpPostId
 	 * @param {object} tmpPostBody temporary_posts 테이블에 들어갈 정보
@@ -546,7 +552,7 @@ class PersonalService {
 				tmppost_id: tmpPostId,
 			},
 		});
-		return await temporary_posts.findOne({
+		await temporary_posts.findOne({
 			attributes: tmppostsDto.filter((data) => {
 				const excludeColumn = ["user_id"];
 				if (!excludeColumn.includes(data)) return data;
@@ -555,10 +561,11 @@ class PersonalService {
 				tmppost_id: tmpPostId,
 			},
 		});
+		return;
 	}
 
 	/**
-	 * 임시 게시물 삭제
+	 * 임시 포스트 삭제
 	 * @param {string} userId
 	 * @param {number} tmpPostId
 	 * @returns {Object}
@@ -581,7 +588,7 @@ class PersonalService {
 				tmppost_id: tmpPostId,
 			},
 		});
-		return result;
+		return;
 	}
 
 	/**
@@ -628,10 +635,17 @@ class PersonalService {
 			},
 		});
 		if (result) {
-			return result;
+			await visit_record.update(visitRecordBody, {
+				where: {
+					user_id: userId,
+					post_id: visitRecordBody.post_id,
+				},
+			});
+			return;
 		}
 		visitRecordBody.user_id = userId;
-		return await visit_record.create(visitRecordBody);
+		await visit_record.create(visitRecordBody);
+		return;
 	}
 
 	/**
@@ -658,7 +672,7 @@ class PersonalService {
 				visit_record_id: visitRecordId,
 			},
 		});
-		return result;
+		return;
 	}
 
 	/**
@@ -705,14 +719,21 @@ class PersonalService {
 			},
 		});
 		if (result) {
-			return result;
+			await like_record.update(likeRecordBody, {
+				where: {
+					user_id: userId,
+					post_id: likeRecordBody.post_id,
+				},
+			});
+			return;
 		}
 		await posts.increment(
 			{ like_count: 1 },
 			{ where: { post_id: likeRecordBody.post_id } }
 		);
 		likeRecordBody.user_id = userId;
-		return await like_record.create(likeRecordBody);
+		await like_record.create(likeRecordBody);
+		return;
 	}
 
 	/**
@@ -744,7 +765,7 @@ class PersonalService {
 				post_id: postId,
 			},
 		});
-		return result;
+		return;
 	}
 
 	/**
@@ -775,7 +796,7 @@ class PersonalService {
 				like_record_id: likePostId,
 			},
 		});
-		return result;
+		return;
 	}
 
 	/**
@@ -800,7 +821,8 @@ class PersonalService {
 				);
 			}
 		}
-		return await comments.create(commentBody);
+		await comments.create(commentBody);
+		return;
 	}
 
 	/**
@@ -846,12 +868,13 @@ class PersonalService {
 		// 		);
 		// 	}
 		// }
-		return await comments.update(commentBody, {
+		await comments.update(commentBody, {
 			where: {
 				user_id: userId,
 				comments_id: commnetId,
 			},
 		});
+		return;
 	}
 
 	/**
@@ -891,7 +914,7 @@ class PersonalService {
 				"delete comment failed"
 			);
 		}
-		return deletedComment;
+		return;
 	}
 
 	/**
@@ -902,18 +925,16 @@ class PersonalService {
 	 * @param {number[]} paging
 	 * @returns {Object}
 	 */
-	async searchPersonalposts(uniqueId, searchWord, searchType, ...paging) {
-		const user = await this.uService.getUserByUniqueId(uniqueId);
+	async searchPersonalposts(searchWord, searchType, userId, ...paging) {
 		const pageResult = this.paging.pageResult(paging[0], paging[1]);
-		// 아무 검색어도 안 들어 왔을경우 모든 게시물 검색
+		// 아무 검색어도 안 들어 왔을경우 모든 포스트 검색
 		if (searchWord === ":searchword") {
-			console.log(`searchWord: ${searchWord}`);
 			searchWord = "";
 		}
 		let myAttributes = [];
 		let whereOptions = {};
 		let includeOptions = [];
-		// 개인 게시물 페이지에서 검색
+		// 개인 포스트 페이지에서 검색
 		if (searchType === 0) {
 			searchType = posts;
 			myAttributes = postsDto.filter((data) => {
@@ -921,7 +942,7 @@ class PersonalService {
 				if (!excludeColumn.includes(data)) return data;
 			});
 			whereOptions = {
-				user_id: user.user_id,
+				user_id: userId,
 				[Op.or]: [
 					{
 						post_title: {
@@ -938,14 +959,14 @@ class PersonalService {
 			includeOptions.push(this.userJoin);
 		}
 		// 개인 임시저장 페이지에서 검색
-		else if (searchType === 1) {
+		if (searchType === 1) {
 			searchType = temporary_posts;
 			myAttributes = tmppostsDto.filter((data) => {
 				const excludeColumn = ["user_id"];
 				if (!excludeColumn.includes(data)) return data;
 			});
 			whereOptions = {
-				user_id: user.user_id,
+				user_id: userId,
 				[Op.or]: [
 					{
 						tmppost_title: {
@@ -983,7 +1004,7 @@ class PersonalService {
 				],
 			};
 			whereOptions = {
-				user_id: user.user_id,
+				user_id: userId,
 			};
 			includeOptions.push(this.postJoin);
 		}
@@ -1010,7 +1031,7 @@ class PersonalService {
 				],
 			};
 			whereOptions = {
-				user_id: user.user_id,
+				user_id: userId,
 			};
 			includeOptions.push(this.postJoin);
 		}
@@ -1026,7 +1047,18 @@ class PersonalService {
 	}
 
 	/**
-	 * 연관 게시물 조회
+	 * 공용 검색기능
+	 * @param {string} uniqueId
+	 * @param {string} searchWord
+	 * @param {number} searchType 어느 페이지에서 검색 할 것인지
+	 * @param {number[]} paging
+	 * @returns {Object}
+	 */
+	async searchCommonPosts(uniqueId, searchWord, searchType, ...paging) {
+		const user = await this.uService.getUserByUniqueId(uniqueId);
+	}
+	/**
+	 * 연관 포스트 조회
 	 * @param {number} postId
 	 * @returns {Object}
 	 */
@@ -1060,7 +1092,7 @@ class PersonalService {
 			offset: 1,
 			limit: 6,
 		});
-		// 연관된 게시물이 없을 경우 최신 게시물 가져옴
+		// 연관된 포스트이 없을 경우 최신 포스트 가져옴
 		if (associatePost.length <= 0) {
 			return await posts.findAll({
 				attributes: postsDto.filter((data) => {

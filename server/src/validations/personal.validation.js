@@ -80,7 +80,6 @@ const output = {
 			limit: joi.number(),
 		}),
 		params: joi.object().keys({
-			uniqueid: joi.string().required(),
 			searchword: joi.string().required(),
 			searchtype: joi.number().required().valid(0, 1, 2, 3),
 		}),
