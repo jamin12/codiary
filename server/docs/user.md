@@ -1,8 +1,8 @@
 # user
 
 ## **자신 정보 조회**
-## __<span style="color:#ff9933">요청</span>__
-- **[GET] /user** </br>
+## __<span style="color:#ff9933">요청</span>__ **[GET] /user**
+- authentication 쿠키 필요
 ## __<span style="color:#ff9933">응답</span>__
 - ``` json
   {
@@ -37,9 +37,8 @@
 
 
 ## **유저 정보 수정**
-## __<span style="color:#ff9933">요청</span>__
-- **[PATCH] /user** </br>
-- ```
+## __<span style="color:#ff9933">요청</span>__ **[PATCH] /user**
+- ``` json
     {
         "user_unique_id": String,
         "user_nickname": String,
@@ -52,6 +51,8 @@
     |user_nickname|string|유저 닉네임|
     |user_introduce|string|유저 소개|
     |user_img|string|유저 이미지 url|
+- authentication 쿠키 필요
+
 ## __<span style="color:#ff9933">응답</span>__
 - ``` json
   {
@@ -86,8 +87,9 @@
 
 
 ## **유저 정보 삭제**
-## __<span style="color:#ff9933">요청</span>__
-- **[DELETE] /user** </br>
+## __<span style="color:#ff9933">요청</span>__ **[DELETE] /user**
+- authentication 쿠키 필요
+
 ## __<span style="color:#ff9933">응답</span>__
 - ``` json
   {
@@ -120,8 +122,8 @@
     |result_data.sns_info.sns_name|string|유저 sns 이름|
 
 ## **유저 리스트 조회(admin유저만 가능)**
-## __<span style="color:#ff9933">요청</span>__
-- **[GET] /user/manage** </br>
+## __<span style="color:#ff9933">요청</span>__ **[GET] /user/manage**
+- authentication 쿠키 필요
 ## __<span style="color:#ff9933">응답</span>__
 - ``` json
   {
