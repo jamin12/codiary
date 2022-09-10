@@ -5,9 +5,8 @@ const customError = require('../utils/Error/customError');
 const errorConverter = (err, req, res, next) => {
   let error = err;
   if (!(error instanceof customError)) {
-    const stack = error.stack || httpStatus.INTERNAL_SERVER_ERROR
     const message = error.message || httpStatus[statusCode];
-    error = new customError(stack, message, false, err.stack);
+    error = new customError(httpStatus.INTERNAL_SERVER_ERROR, message, false, err.stack);
   }
   next(error);
 };

@@ -1,30 +1,38 @@
 const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
 	return sequelize.define(
-		"category",
+		"temporary_posts",
 		{
-			category_id: {
+			tmppost_id: {
 				autoIncrement: true,
 				type: DataTypes.BIGINT,
 				allowNull: false,
 				primaryKey: true,
 			},
-			sub_category_id: {
-				type: DataTypes.BIGINT,
-				allowNull: true,
-			},
 			user_id: {
 				type: DataTypes.STRING(255),
 				allowNull: false,
 			},
-			category_name: {
-				type: DataTypes.STRING(128),
+			tmppost_title: {
+				type: DataTypes.STRING(255),
+				allowNull: true,
+			},
+			tmppost_body_md: {
+				type: DataTypes.TEXT,
+				allowNull: true,
+			},
+			tmppost_body_html: {
+				type: DataTypes.TEXT,
+				allowNull: true,
+			},
+			tmppost_txt: {
+				type: DataTypes.TEXT,
 				allowNull: true,
 			},
 		},
 		{
 			sequelize,
-			tableName: "category",
+			tableName: "temporary_posts",
 			timestamps: true,
 			underscored: true,
 			indexes: [
@@ -32,7 +40,7 @@ module.exports = function (sequelize, DataTypes) {
 					name: "PRIMARY",
 					unique: true,
 					using: "BTREE",
-					fields: [{ name: "category_id" }],
+					fields: [{ name: "tmppost_id" }],
 				},
 			],
 		}

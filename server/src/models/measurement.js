@@ -1,30 +1,33 @@
 const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
 	return sequelize.define(
-		"category",
+		"measurement",
 		{
-			category_id: {
+			measurement_id: {
 				autoIncrement: true,
 				type: DataTypes.BIGINT,
 				allowNull: false,
 				primaryKey: true,
 			},
-			sub_category_id: {
+			post_id: {
+				type: DataTypes.BIGINT,
+				allowNull: false,
+				unique: "post_id",
+			},
+			today_visit_count: {
+				type: DataTypes.INTEGER,
+				allowNull: true,
+				defaultValue: 0,
+			},
+			total_visit_count: {
 				type: DataTypes.BIGINT,
 				allowNull: true,
-			},
-			user_id: {
-				type: DataTypes.STRING(255),
-				allowNull: false,
-			},
-			category_name: {
-				type: DataTypes.STRING(128),
-				allowNull: true,
+				defaultValue: 0,
 			},
 		},
 		{
 			sequelize,
-			tableName: "category",
+			tableName: "measurement",
 			timestamps: true,
 			underscored: true,
 			indexes: [
@@ -32,7 +35,13 @@ module.exports = function (sequelize, DataTypes) {
 					name: "PRIMARY",
 					unique: true,
 					using: "BTREE",
-					fields: [{ name: "category_id" }],
+					fields: [{ name: "mesurement_id" }],
+				},
+				{
+					name: "post_id",
+					unique: true,
+					using: "BTREE",
+					fields: [{ name: "post_id" }],
 				},
 			],
 		}
