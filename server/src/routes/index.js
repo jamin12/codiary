@@ -1,8 +1,9 @@
-const express = require("express");
-const authRoutes = require("./auth.routes");
-const mainRoutes = require("./main.routes");
-const userRoutes = require("./user.routes");
-const personalRoutes = require("./personal.routes");
+const express = require("express"),
+	authRoutes = require("./auth.routes"),
+	mainRoutes = require("./main.routes"),
+	userRoutes = require("./user.routes"),
+	personalRoutes = require("./personal.routes"),
+	manageRoutes = require("./manage.routes");
 
 const router = express.Router();
 
@@ -21,7 +22,11 @@ const defaultRoutes = [
 	},
 	{
 		path: "/personal",
-    route: personalRoutes
+		route: personalRoutes
+	},
+	{
+		path: "/manage",
+		route: manageRoutes
 	},
 ];
 

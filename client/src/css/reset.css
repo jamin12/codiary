@@ -1,0 +1,38 @@
+@charset "utf-8";
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+a{
+    text-decoration: none;
+    color: #000;
+}
+
+ol, ul, li{
+    list-style: none;
+}
+
+/* 1920사이즈 기준 */
+.wrap{
+    width: 1536px;
+    height: 100%;
+    margin: 160px auto 100px auto;
+
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+/* 사이즈 기준 */
+/* 1920 */
+/* 1600 */
+/* 1024 */
