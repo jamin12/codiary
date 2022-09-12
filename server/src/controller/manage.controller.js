@@ -12,10 +12,6 @@ const output = {
     const result_contents = await mService.getPopularPosts(req.query.offset, req.query.limit);
     res.send(resultDto(httpStatus.OK, "getPopularContents", result_contents));
   }),
-  searchPostsInMain: catchAsync(async (req, res) => {
-    const searchedContents = await mService.searchPostsInMain(req.params.searchword, req.query.offset, req.query.limit);
-    res.send(resultDto(httpStatus.OK, "searchContents", searchedContents));
-  }),
 };
 
 const input = {

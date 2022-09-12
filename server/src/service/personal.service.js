@@ -69,7 +69,7 @@ class PersonalService {
 	/**
 	 * 포스트 존재 유무 체크
 	 * @param {number} postId
-	 * @param {String} userId
+	 * @param {String} userId Optional (없어도됨)
 	 * @returns {Object}
 	 */
 	async checkPostExists(postId, userId) {
@@ -109,18 +109,16 @@ class PersonalService {
 
 	/**
 	 * 댓글 존재 유무 체크
-	 * @param {string} userId
 	 * @param {number} commentId
 	 * @returns {Object}
 	 */
-	async checkCommentExists(postId, commentId) {
+	async checkCommentExists(commentId) {
 		const result = await comments.findOne({
 			attributes: commentsDto.filter((data) => {
 				const excludeColumn = ["user_id"];
 				if (!excludeColumn.includes(data)) return data;
 			}),
 			where: {
-				post_id: postId,
 				comments_id: commentId,
 			},
 		});
@@ -811,7 +809,6 @@ class PersonalService {
 
 		if (commentBody.sub_comments_id) {
 			const checkComment = await this.checkCommentExists(
-				commentBody.post_id,
 				commentBody.sub_comments_id
 			);
 			if (checkComment.sub_comments_id) {

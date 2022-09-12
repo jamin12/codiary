@@ -34,30 +34,6 @@ class UserService {
 		return user;
 	}
 
-	// 전체 유저 조회
-	async getUsers() {
-		const user = await users.findAll({
-			attributes: ["user_email"],
-			include: [
-				{
-					model: user_detail,
-					as: "user_detail",
-					attributes: [
-						"user_name",
-						"user_unique_id",
-						"user_nickname",
-						"user_introduce",
-						"user_img",
-					],
-				},
-				{ model: sns_info, as: "sns_info", attributes: ["sns_name"] },
-			],
-		});
-		if (!user)
-			throw new CustomError(httpStatus.BAD_REQUEST, "User not found");
-		return user;
-	}
-
 	// 유니크 아이디로 유저 찾기
 	async getUserByUniqueId(userUniqueId) {
 		const user = await user_detail.findOne({
