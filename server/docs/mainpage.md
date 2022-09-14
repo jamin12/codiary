@@ -1,7 +1,7 @@
-# mainpage
+# mainpage(url prefix = /main)
 
-## **인기 게시글 조회**
-## __<span style="color:#ff9933">요청</span>__ **[GET] /main?offset=1&limit=10** 
+## __<span style="color:#9999ff">인기 게시글 조회</span>__
+## __<span style="color:#ff9933">요청</span>__ **[GET] /?offset=1&limit=10** 
 - |속성|타입|설명|
     |---|---|---|
     |offet *|int|페이지 번호 (필수)|
@@ -25,15 +25,15 @@
     |---|---|---|
     |status|int|상태코드|
     |message|string|메시지|
-    |result_data.contents_id|string|게시물 아이디|
-    |result_data.contents_title|string|게시물 제목|
-    |result_data.contents_body_md|string|게시물 md 텍스트|
-    |result_data.contents_body_html|string|게시물 html 텍스트|
-    |result_data.contents_txt|string|게시물 태그를 제외한 텍스트|
+    |contents_id|string|게시물 아이디|
+    |contents_title|string|게시물 제목|
+    |contents_body_md|string|게시물 md 텍스트|
+    |contents_body_html|string|게시물 html 텍스트|
+    |contents_txt|string|게시물 태그를 제외한 텍스트|
 
 
-## **게시글 검색**
-## __<span style="color:#ff9933">요청</span>__ **[GET] /main/:searchword?offset=0&limit=5**
+## __<span style="color:#9999ff">게시글 검색</span>__
+## __<span style="color:#ff9933">요청</span>__ **[GET] /:searchword?offset=0&limit=5**
 - |속성|타입|설명|
     |---|---|---|
     |searchword *|string|검색 단어 (필수)|
@@ -66,15 +66,17 @@
     |---|---|---|
     |status|int|상태코드|
     |message|string|메시지|
-    |result_data.contents_id|string|게시물 아이디|
-    |result_data.contents_title|string|게시물 제목|
-    |result_data.contents_body_md|string|게시물 md 텍스트|
-    |result_data.contents_body_html|string|게시물 html 텍스트|
-    |result_data.contents_txt|string|게시물 태그를 제외한 텍스트|
-    |result_data.user.user_email|string|유저 이메일|
-    |result_data.user.user_detail.user_name|string|유저 이름|
-    |result_data.user.user_detail.user_unique_id|string|유저 유니크 아이디|
-    |result_data.user.user_detail.user_nickname|string|유저 닉네임|
-    |result_data.user.user_detail.user_img|string|유저 이미지 url|
+    |**result_data**|json|결과 값|
+    |||
+    |contents_id|string|게시물 아이디|
+    |contents_title|string|게시물 제목|
+    |contents_body_md|string|게시물 md 텍스트|
+    |contents_body_html|string|게시물 html 텍스트|
+    |contents_txt|string|게시물 태그를 제외한 텍스트|
+    |user_email|string|유저 이메일|
+    |user_name|string|유저 이름|
+    |user_unique_id|string|유저 유니크 아이디|
+    |user_nickname|string|유저 닉네임|
+    |user_img|string|유저 이미지 url|
 
 

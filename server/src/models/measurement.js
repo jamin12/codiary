@@ -35,7 +35,7 @@ module.exports = function (sequelize, DataTypes) {
 					name: "PRIMARY",
 					unique: true,
 					using: "BTREE",
-					fields: [{ name: "mesurement_id" }],
+					fields: [{ name: "measurement_id" }],
 				},
 				{
 					name: "post_id",
