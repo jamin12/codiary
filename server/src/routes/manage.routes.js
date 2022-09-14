@@ -7,16 +7,16 @@ const { manageController } = require('../controller');
 
 router
   .route('/')
-  .get(user('admin'), validate(manageValidation.output.getusers), manageController.output.getUsers)
-  .post(user('admin'), validate(manageValidation.input.createReport), manageController.input.createReport);
+  .get(auth('admin'), validate(manageValidation.output.getusers), manageController.output.getUsers)
+  .post(validate(manageValidation.input.createReport), manageController.input.createReport);
 
 router
   .route('/:reportid')
-  .get(user('admin'), validate(manageValidation.output.getReport), manageController.output.getReport)
-  .delete(user('admin'), validate(manageValidation.input.deleteReport), manageController.input.deleteReport);
+  .get(auth('admin'), validate(manageValidation.output.getReport), manageController.output.getReport)
+  .delete(auth('admin'), validate(manageValidation.input.deleteReport), manageController.input.deleteReport);
 
 router
   .route('/:reporttype/:reporttargettype')
-  .get(user('admin'), validate(manageValidation.output.getReports), manageController.output.getReports);
+  .get(auth('admin'), validate(manageValidation.output.getReports), manageController.output.getReports);
 
 module.exports = router;

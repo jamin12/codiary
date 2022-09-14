@@ -26,9 +26,9 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     report_type: {
-      type: DataTypes.INT,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      comment: "0 = 욕설, 1 = 음란물, 2 = 개인정보 노출, 3 = 불법 정보"
+      comment: "0 = 욕설, 1 = 음란물, 2 = 개인정보 노출, 3 = 불법 정보, 4 = 기타"
     },
     report_body: {
       type: DataTypes.TEXT,
@@ -38,6 +38,7 @@ module.exports = function(sequelize, DataTypes) {
     sequelize,
     tableName: 'report',
     timestamps: true,
+		underscored: true,
     indexes: [
       {
         name: "PRIMARY",

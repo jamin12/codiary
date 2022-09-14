@@ -8,7 +8,7 @@ const output = {
 	getusers: {
 		query: joi.object().keys({
 			offset: joi.number().required(),
-			limit: joi.number().required(),
+			limit: joi.number(),
 		}),
 	},
 	/**
@@ -17,9 +17,9 @@ const output = {
 	getReports: {
 		query: joi.object().keys({
 			offset: joi.number().required(),
-			limit: joi.number().required(),
-			startdate: joi.custom(datetime).required(),
-			enddate: joi.custom(datetime).required(),
+			limit: joi.number(),
+			startDate: joi.custom(datetime).required(),
+			endDate: joi.custom(datetime).required(),
 		}),
 		params: joi.object().keys({
 			reporttype: joi.number().required(),
@@ -51,11 +51,11 @@ const input = {
 	 */
 	createReport: {
 		body: joi.object().keys({
-			report_user: joi.string().required(),
+			report_user: joi.string(),
 			report_target_type: joi.number().required(),
 			report_target_id: joi.number().required(),
 			report_type: joi.number().required(),
-			report_body: joi.string().required(),
+			report_body: joi.string(),
 		}),
 	},
 };

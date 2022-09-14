@@ -25,11 +25,11 @@ const output = {
 const input = {
   deleteReport: catchAsync(async (req, res) => {
     const result_contents = await mService.deleteReport(req.params.reportid);
-    res.send(resultDto(httpStatus.OK, "getReport", result_contents));
+    res.send(resultDto(httpStatus.OK, "deleteReport", result_contents));
   }),
   createReport: catchAsync(async (req, res) => {
-    const result_contents = await mService.deleteReport(req.body);
-    res.send(resultDto(httpStatus.OK, "getReport", result_contents));
+    const result_contents = await mService.createReport(req.body);
+    res.send(resultDto(httpStatus.OK, "createReport", result_contents));
   }),
 };
 

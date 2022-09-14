@@ -1,11 +1,19 @@
 const httpStatus = require("http-status"),
-	{ report, posts, comments, users } = require("../models/index"),
+	{
+		report,
+		posts,
+		comments,
+		users,
+		user_detail,
+		sns_info,
+	} = require("../models/index"),
 	CustomError = require("../utils/Error/customError"),
 	{ personalService } = require("./index"),
 	{ Op } = require("sequelize"),
 	reportDto = require("../dto/reportDto"),
 	commentsDto = require("../dto/commentsDto"),
-	postsDto = require("../dto/postsDto");
+	postsDto = require("../dto/postsDto"),
+	Paging = require("../utils/paging");
 
 class manageService {
 	constructor() {
@@ -33,8 +41,8 @@ class manageService {
 		this.postJoin = {
 			model: posts,
 			as: "posts",
-			attributes: ["post_title"]
-		}
+			attributes: ["post_title"],
+		};
 
 		this.commentJoin = {
 			model: comments,
@@ -50,9 +58,9 @@ class manageService {
 	async checkReportExists(reportId) {
 		const getreport = await report.findOne({
 			where: {
-				report_id: reportId
-			}
-		})
+				report_id: reportId,
+			},
+		});
 		if (!getreport) {
 			throw new CustomError(httpStatus.BAD_REQUEST, "Report not found");
 		}
@@ -60,6 +68,7 @@ class manageService {
 
 	/**
 	 * 전체 유저 조회
+	 * @param  {...any} paging
 	 * @returns {object}
 	 */
 	async getUsers(...paging) {
@@ -89,24 +98,37 @@ class manageService {
 	}
 
 	/**
-	* 신고 목록 조회
-	* @returns {object}
-	*/
-	async getReports(reportType, reportTargetType, startDate, endDate, ...paging) {
+	 * 신고 목록 조회
+	 * @param {number} reportType
+	 * @param {number} reportTargetType
+	 * @param {datetime} startDate
+	 * @param {datetime} endDate
+	 * @param  {...any} paging
+	 * @returns
+	 */
+	async getReports(
+		reportType,
+		reportTargetType,
+		startDate,
+		endDate,
+		...paging
+	) {
 		const pageResult = this.paging.pageResult(paging[0], paging[1]);
 		const whereOptions = {
 			report_date: {
 				[Op.between]: [startDate, endDate],
-			}
+			},
 		};
-		
+
 		if (reportType !== -1) whereOptions.report_type = reportType;
-		if (reportTargetType !== -1) whereOptions.report_target_type = reportTargetType;
+		if (reportTargetType !== -1)
+			whereOptions.report_target_type = reportTargetType;
 		return await report.findAll({
+			attributes: reportDto,
 			where: whereOptions,
 			offset: pageResult.offset,
 			limit: pageResult.limit,
-		})
+		});
 	}
 
 	/**
@@ -119,9 +141,9 @@ class manageService {
 		const getReport = await report.findOne({
 			attributes: reportDto,
 			where: {
-				report_id: reportId
-			}
-		})
+				report_id: reportId,
+			},
+		});
 		let getPost;
 		let getComment;
 		// 게시글 신고
@@ -129,10 +151,10 @@ class manageService {
 			getPost = await posts.findOne({
 				attributes: postsDto,
 				where: {
-					post_id: getReport.report_target_id
+					post_id: getReport.report_target_id,
 				},
 				include: [this.userJoin],
-			})
+			});
 		}
 		// 댓글 신고
 		else if (getReport.report_target_type === 1) {
@@ -147,21 +169,21 @@ class manageService {
 		return {
 			report: getReport,
 			post: getPost,
-			comment: getComment
-		}
+			comment: getComment,
+		};
 	}
 
 	/**
- * 신고 삭제
- * @param {number} reportId
- * @returns 
- */
+	 * 신고 삭제
+	 * @param {number} reportId
+	 * @returns
+	 */
 	async deleteReport(reportId) {
 		await this.checkReportExists(reportId);
 		await report.destroy({
 			where: {
-				report_id: reportId
-			}
+				report_id: reportId,
+			},
 		});
 		return;
 	}
@@ -169,7 +191,7 @@ class manageService {
 	/**
 	 * 신고하기
 	 * @param {Object} reportBody
-	 * @returns 
+	 * @returns
 	 */
 	async createReport(reportBody) {
 		if (reportBody.report_type === 0) {
