@@ -92,17 +92,21 @@ class manageService {
 	* 신고 목록 조회
 	* @returns {object}
 	*/
-	async getReports(reportType, startDate, endDate, ...paging) {
+	async getReports(reportType, reportTargetType, startDate, endDate, ...paging) {
 		const pageResult = this.paging.pageResult(paging[0], paging[1]);
 		const whereOptions = {
-
+			report_date: {
+				[Op.between]: [startDate, endDate],
+			}
 		};
-		await report.findAll({
+		
+		if (reportType !== -1) whereOptions.report_type = reportType;
+		if (reportTargetType !== -1) whereOptions.report_target_type = reportTargetType;
+		return await report.findAll({
 			where: whereOptions,
 			offset: pageResult.offset,
 			limit: pageResult.limit,
 		})
-		return;
 	}
 
 	/**

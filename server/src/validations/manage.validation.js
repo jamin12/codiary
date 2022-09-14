@@ -3,19 +3,61 @@ const { datetime } = require("./custom.validation");
 
 const output = {
 	/**
-	 * 게시물
+	 * 유저 목록 조회
 	 */
-	getPersonalPost: {
+	getusers: {
+		query: joi.object().keys({
+			offset: joi.number().required(),
+			limit: joi.number().required(),
+		}),
+	},
+	/**
+	 * 신고 목록 조회
+	 */
+	getReports: {
+		query: joi.object().keys({
+			offset: joi.number().required(),
+			limit: joi.number().required(),
+			startdate: joi.custom(datetime).required(),
+			enddate: joi.custom(datetime).required(),
+		}),
 		params: joi.object().keys({
-			uniqueid: joi.string().required(),
-			postid: joi.number().required(),
+			reporttype: joi.number().required(),
+			reporttargettype: joi.number().required(),
+		}),
+	},
+	/**
+	 * 신고 조회
+	 */
+	getReport: {
+		params: joi.object().keys({
+			reportid: joi.number().required(),
 		}),
 	},
 
 };
 
 const input = {
-
+	/**
+	 * 신고 삭제
+	 */
+	deleteReport: {
+		params: joi.object().keys({
+			reportid: joi.number().required(),
+		}),
+	},
+	/**
+	 * 신고 생성
+	 */
+	createReport: {
+		body: joi.object().keys({
+			report_user: joi.string().required(),
+			report_target_type: joi.number().required(),
+			report_target_id: joi.number().required(),
+			report_type: joi.number().required(),
+			report_body: joi.string().required(),
+		}),
+	},
 };
 
 module.exports = {

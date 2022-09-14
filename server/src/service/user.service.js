@@ -9,7 +9,11 @@ const { v4: uuid } = require("uuid");
 class UserService {
 	constructor() {}
 
-	// 아이디로 유저 찾기
+	/**
+	 * 아이디로 유저 찾기
+	 * @param {String} userId 
+	 * @returns 
+	 */
 	async getUserByUserId(userId) {
 		const user = await users.findOne({
 			attributes: ["user_email"],
@@ -34,7 +38,11 @@ class UserService {
 		return user;
 	}
 
-	// 유니크 아이디로 유저 찾기
+	/**
+	 * 유니크 아이디로 유저 찾기
+	 * @param {string} userUniqueId 
+	 * @returns 
+	 */
 	async getUserByUniqueId(userUniqueId) {
 		const user = await user_detail.findOne({
 			attributes: [
@@ -60,7 +68,10 @@ class UserService {
 		return user;
 	}
 
-	// 유저 유니크 아이디 체크
+	/**
+	 * 유저 유니크 아이디 체크
+	 * @param {string} userUniqueId 
+	 */
 	async checkUserUniqueId(userUniqueId) {
 		const userList = await user_detail.findAll({
 			attributes: ["user_unique_id"],
@@ -74,7 +85,11 @@ class UserService {
 		});
 	}
 
-	// 유저 생성
+	/**
+	 * 유저 생성
+	 * @param {object} userInfo 
+	 * @returns 
+	 */
 	async createUser(userInfo) {
 		try {
 			await sequelize.transaction(async (t1) => {
@@ -114,7 +129,12 @@ class UserService {
 		return await this.getUserByUserId(userInfo.id);
 	}
 
-	// 유저 업데이트
+	/**
+	 * 유저 업데이트
+	 * @param {string} userId 
+	 * @param {object} userInfo 
+	 * @returns 
+	 */
 	async updateUser(userId, userInfo) {
 		await this.getUserByUserId(userId);
 		await this.checkUserUniqueId(userInfo.user_unique_id);
@@ -126,7 +146,11 @@ class UserService {
 		return await this.getUserByUserId(userId);
 	}
 
-	// 유저 삭제
+	/**
+	 * 유저 삭제
+	 * @param {String} userId 
+	 * @returns {Object}
+	 */
 	async deleteUser(userId) {
 		const deletedUser = await this.getUserByUserId(userId);
 
