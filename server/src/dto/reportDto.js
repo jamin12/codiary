@@ -12,6 +12,7 @@ module.exports = [
 	],
   "report_user",
   "report_type",
+	"report_body",
   "report_target_type",
   "report_target_id",
 	[

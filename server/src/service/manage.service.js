@@ -13,7 +13,8 @@ const httpStatus = require("http-status"),
 	reportDto = require("../dto/reportDto"),
 	commentsDto = require("../dto/commentsDto"),
 	postsDto = require("../dto/postsDto"),
-	Paging = require("../utils/paging");
+	Paging = require("../utils/paging"),
+	{ v4: uuid } = require("uuid");
 
 class manageService {
 	constructor() {
@@ -198,6 +199,19 @@ class manageService {
 			await this.pService.checkPostExists(reportBody.report_target_id);
 		} else if (reportBody.report_type === 1) {
 			await this.pService.checkCommentExists(reportBody.report_target_id);
+		}
+		if (!reportBody.report_user) {
+			reportBody.report_user = uuid();
+		}
+		// 똑같은 유저가 똑같은 신고를 못하게 함
+		const checkSameReport = await report.findOne({
+			where: reportBody,
+		});
+		if (checkSameReport) {
+			throw new CustomError(
+				httpStatus.BAD_REQUEST,
+				"same report already exists"
+			);
 		}
 		await report.create(reportBody);
 		return;
