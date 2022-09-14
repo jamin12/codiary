@@ -74,9 +74,9 @@
     |contents_body_html|string|게시물 html 텍스트|
     |contents_txt|string|게시물 태그를 제외한 텍스트|
     |user_email|string|유저 이메일|
-    |user_detail.user_name|string|유저 이름|
-    |user_detail.user_unique_id|string|유저 유니크 아이디|
-    |user_detail.user_nickname|string|유저 닉네임|
-    |user_detail.user_img|string|유저 이미지 url|
+    |user_name|string|유저 이름|
+    |user_unique_id|string|유저 유니크 아이디|
+    |user_nickname|string|유저 닉네임|
+    |user_img|string|유저 이미지 url|
 
 
