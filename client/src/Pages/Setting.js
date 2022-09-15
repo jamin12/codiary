@@ -2,8 +2,8 @@ import React from 'react';
 import SearchProfile from '../components/SearchProfile';
 import styled from 'styled-components';
 
-// import Myinfo from '../components/SettingMyinfo';
-import MyCategory from '../components/SettingMycategory';
+import Myinfo from '../components/SettingMyinfo';
+// import MyCategory from '../components/SettingMycategory';
 
 
 
@@ -16,7 +16,6 @@ const Setting = () => {
     height: 100%; 
     padding-bottom: 50px;
   `
-
   const ContentsWrap = styled.div`
     display: flex;
     position: relative;
@@ -30,9 +29,7 @@ const Setting = () => {
 
     @media screen and (max-width: 1300px) {
     }
-
   `
-
   const Title = styled.h1`
     font-size: 2.5rem;
     position: absolute;
@@ -48,7 +45,6 @@ const Setting = () => {
       width: 10rem;
     }
   `
-
   const Menu = styled.ul`
     position: absolute;
     // background-color: red;
@@ -86,7 +82,6 @@ const Setting = () => {
       }
     }
   `
-
   const Contents = styled.div`  
     width: 80%;
     height: calc(100% - 5rem);
@@ -105,7 +100,7 @@ const Setting = () => {
 
   return (
     <>
-      <Header>
+      <Header style={{zIndex: '999'}}>
         <SearchProfile/>
       </Header>
     
@@ -119,9 +114,9 @@ const Setting = () => {
           </Menu>
 
           <Contents>
-            {/* <Myinfo name=''/> */}
+            <Myinfo name=''/>
             {/* 여기에 서버에서 json타입으로 받아온걸 넣어주면 됨. const로 변수 안에 넣어서. */}
-            <MyCategory categoryList={undefined}/>
+            {/* <MyCategory categoryList={undefined}/> */}
           </Contents>
         </div>
 
