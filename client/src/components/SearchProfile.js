@@ -73,7 +73,7 @@ const Search = styled.input`
 `
 const Profile = styled.div`
   width: 100px;
-  height: 50px;
+  height: 40px;
   margin-left: 30px;
 
   display: flex;
@@ -81,14 +81,14 @@ const Profile = styled.div`
 
   .userBox{
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
 
     // 현재 이미지 안들어감 해결 해야함.
     .imgBox{
       position: relative;
-      min-width: 50px;
-      height: 50px;
+      min-width: 40px;
+      height: 40px;
       /* background-image: url(${(props) => props.img || '../IMG/KAKAO.png.png'}); */
       background-color: orange;
       background-size: cover;
@@ -102,8 +102,8 @@ const Profile = styled.div`
 
   .menuToggleOFF{
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -132,8 +132,8 @@ const Profile = styled.div`
 
   .menuToggleON{
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -234,9 +234,18 @@ const GotoHome = styled.h1`
 const SearchProfile = () => {
 
   const [isOpen, setMenu] = useState(false);
+  const [searchWord, setSearch] = useState('');
 
   const toggleMenu = () => {
       setMenu(isOpen => !isOpen);
+  }
+
+  const changeSearch = (e) => {
+    setSearch(e.target.value);
+  }
+  const clickSearch = () => {
+    console.log(searchWord);
+    // 백엔드에 searchWord전송
   }
 
   return(
@@ -246,13 +255,14 @@ const SearchProfile = () => {
           <a href='#none'>
             CODIARY
           </a>
-
         </GotoHome>
 
         <SearchWrap>
           <SearchBox className='search-box'>
-            <Search type='text' className='search' placeholder='SEARCH'></Search>
-            <ion-icon size='small' name="search-outline"></ion-icon>
+            <Search type='text' className='search' 
+              placeholder='SEARCH' onChange={changeSearch} value={searchWord}></Search>
+            <ion-icon size='small' name="search-outline"
+              onClick={clickSearch}></ion-icon>
           </SearchBox>
 
           <Profile>
