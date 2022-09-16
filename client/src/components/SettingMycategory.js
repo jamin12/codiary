@@ -39,7 +39,7 @@ const MyCategory = ({categoryList}) => {
   `
   const Category = styled.div`
     position: relative;
-    z-index: 200;
+    /* z-index: 10; */
     width: 100%;
     flex-basis: 30%;
     margin: 10px 0;
@@ -69,7 +69,7 @@ const MyCategory = ({categoryList}) => {
       background-color: var(--gray100);
       border-radius: 20px;
       overflow: hidden; 
-      box-size: border-box;
+      box-sizing: border-box;
       align-items: center;
       z-index: 10;
 

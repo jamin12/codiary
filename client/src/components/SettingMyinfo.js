@@ -4,71 +4,15 @@ import { IoClose } from "react-icons/io5";
 import '../App.css'
 
 // 글자를 입력하면 하나씩 밖에 입력되는 현상 해결해야함.
-const InputGroup = styled.form`
-  div{
-    display: flex;
-    position: absolute;
-    width: calc(100% - 250px);
-    height: 56px;
-    overflow: hidden;
-    background-color: white;
 
-    border-radius: 10px;
-    border: 2px solid var(--gray200);
-    box-sizing: border-box;
-    font-size: 1.2rem;
-
-    @media screen and (max-width: 1300px){
-      height: 44px;
-      font-size: 1rem;
-    }
-
-    p{
-      background-color: var(--gray200);
-      color: var(--gray600);
-      display: flex;
-      align-items: center;
-      
-      padding: 10px 20px;
-      font-size: 1rem;
-    }
-    input{
-      width: 100%;
-      padding-left: 10px;
-      padding-right: 10px;
-      border: none;
-      box-sizing: border-box;
-      background-color: transparent;
-      overflow: hidden;
-    }
-  }
-  .user-name{
-    top: 10px;
-    right: 0;
-    p{
-      min-width: 32px;
-    }
-  }
-  .user-nickname{
-    top: 120px;
-    right: 0;
-    p{
-      min-width: 45px;
-    }
-  }
-  .user-info{
-    top: 250px;
-    left: 0;
-    width: 100%;
-    p{
-      min-width: 60px;
-    }
-
-    @media screen and (max-width: 1600px) {
-      top: 230px;
-      width: 100%;
-    }
-  }
+const InputField = styled.input`
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: none;
+  box-sizing: border-box;
+  background-color: transparent;
+  overflow: hidden;
 `
 
 const Myinfo = () => {
@@ -100,6 +44,63 @@ const Myinfo = () => {
       height: 184px;
     }
   `
+  const InputGroup = styled.div`
+  div{
+    display: flex;
+    position: absolute;
+    width: calc(100% - 250px);
+    height: 56px;
+    overflow: hidden;
+    background-color: white;
+
+    border-radius: 10px;
+    border: 2px solid var(--gray200);
+    box-sizing: border-box;
+    font-size: 1.2rem;
+
+    @media screen and (max-width: 1300px){
+      height: 44px;
+      font-size: 1rem;
+    }
+
+    p{
+      background-color: var(--gray200);
+      color: var(--gray600);
+      display: flex;
+      align-items: center;
+      
+      padding: 10px 20px;
+      font-size: 1rem;
+    }
+  }
+  .user-name{
+    top: 10px;
+    right: 0;
+    p{
+      min-width: 32px;
+    }
+  }
+  .user-nickname{
+    top: 120px;
+    right: 0;
+    p{
+      min-width: 45px;
+    }
+  }
+  .user-info{
+    top: 250px;
+    left: 0;
+    width: 100%;
+    p{
+      min-width: 60px;
+    }
+
+    @media screen and (max-width: 1600px) {
+      top: 230px;
+      width: 100%;
+    }
+  }
+`
   const Btn = styled.button`
     position: absolute;
     width: 130px;
@@ -219,13 +220,12 @@ const Myinfo = () => {
   const clickSubmit = () =>{
     // 적어놓은 정보 백엔드에 전달
     if(window.confirm("적용하시겠습니까?")) {
-      if(user_name==='' || user_nickname==='' || user_info===''){
+      if(user_nickname==='' || user_info===''){
         alert('빈칸을 모두 채운 후에 적용 버튼을 눌러주세요.');
       }else{
         alert("적용되었습니다.");
         // 백엔드에 정보 전달
       }
-
     } else {
       alert("취소합니다.");
       // 취소 이벤트
@@ -240,6 +240,7 @@ const Myinfo = () => {
     if(nameValue === MyName){   // 백엔드에서 받아온 내 이름 확인
       alert('계정이 삭제되었습니다');
       // 백엔드로 계정 삭제 요청
+      // codiary 메인화면으로 이동
     }else{
       alert('이름이 올바르지 않습니다. 다시 확인해주세요.')
     }
@@ -259,23 +260,23 @@ const Myinfo = () => {
       <InputGroup>
         <div className="user-name">
           <p>이름</p>
-          <input disabled type="text" id="user_name" 
+          <InputField disabled type="text" id="user_name" 
             name='user_name'
-            onChange={onChange} value={user_name}></input>
+            onChange={onChange} value={user_name}></InputField>
         </div>
 
         <div className="user-nickname">
           <p>닉네임</p>
-          <input type="text" id="user_nickname" 
+          <InputField type="text" id="user_nickname" 
             name='user_nickname' placeholder="이묘"
-            onChange={onChange} value={user_nickname}></input>
+            onChange={onChange} value={user_nickname}></InputField>
         </div>
 
         <div className="user-info">
           <p>한줄소개</p>
-          <input type="text" id="user_info" 
+          <InputField type="text" id="user_info" 
             name='user_info' placeholder="프론트엔드 개발자가 될거야"
-            onChange={onChange} value={user_info}></input>
+            onChange={onChange} value={user_info}></InputField>
         </div>
       </InputGroup>
 
