@@ -62,7 +62,7 @@ const Setting = () => {
     li button{
       width: 100%;
       height: 3.5rem;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       border: none;
       border-radius: 30px;
       margin: 10px auto;
