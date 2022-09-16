@@ -202,10 +202,12 @@ const Myinfo = () => {
   const MyName = '이묘';
   const {user_name, user_nickname, user_info} = inputInfo;
 
+  // 회원탈퇴(setting에서) 버튼 클릭
   const clickWithdraw = () => {
     setLoad((prev) => !prev)
   }
 
+  // 내 정보 수정 onChange
   const onChange = (e) => {
     const {name, value} = e.target;
     const nextInputs = {
@@ -215,6 +217,7 @@ const Myinfo = () => {
     setInfo(nextInputs);
   }
 
+  // 적용 버튼 클릭 이벤트
   const clickSubmit = () =>{
     // 적어놓은 정보 백엔드에 전달
     if(window.confirm("적용하시겠습니까?")) {
@@ -230,10 +233,12 @@ const Myinfo = () => {
     }
   }
 
+  // 회원 탈퇴 이름 확인 onChange
   const withdrawNameChange = (e) => {
     setName(e.target.value);
   }
 
+  // 회원탈퇴 확인 버튼
   const realWithdraw = () => {
     if(nameValue === MyName){   // 백엔드에서 받아온 내 이름 확인
       alert('계정이 삭제되었습니다');
@@ -244,6 +249,7 @@ const Myinfo = () => {
     }
   }
 
+  // 회원탈퇴창 취소(닫기)버튼
   const withdrawCancle = () => {
     setLoad(false);
   }
