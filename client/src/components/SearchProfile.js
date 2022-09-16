@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from "styled-components";
 import '../css/reset.css';
 import { devices } from '../css/DeviceSize';
 
 // 스타일 설정
-// 1920*1080기준 작성
+// 1680*900 기준 작성
 const Main = styled.div`
   width: 100vw;
   height: 100%;
@@ -72,28 +72,148 @@ const Search = styled.input`
   }
 `
 const Profile = styled.div`
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
+  width: 100px;
+  height: 50px;
   margin-left: 30px;
-  border-radius: 50%;
-  overflow: hidden;
-  cursor: pointer;
 
+  display: flex;
+  justify-content: space-between;
 
-  img {
-    width: 40px;
-    height: 40px;
-    background-color: #e4e4e4;
+  .userBox{
+    position: relative;
+    width: 50px;
+    height: 50px;
+
+    // 현재 이미지 안들어감 해결 해야함.
+    .imgBox{
+      position: relative;
+      min-width: 50px;
+      height: 50px;
+      /* background-image: url(${(props) => props.img || '../IMG/KAKAO.png.png'}); */
+      background-color: orange;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      border-radius: 50%;
+      border: 5px solid #fff;
+      box-sizing: border-box;
+    }
   }
 
-  @media ${devices.laptopL}{
-    width: 35px;
-    height: 35px;
+  .menuToggleOFF{
+    position: relative;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    img{
-      width: 35px;
-      height: 35px;
+    ::before{
+      content: '';
+      position: absolute;
+      width: 32px;
+      height: 2px;
+      background-color: var(--gray600);
+      transform: translateY(-10px);
+      box-shadow: 0 10px var(--gray600);
+      transition: 0.5s;
+    }    
+    ::after{
+      content: '';
+      position: absolute;
+      width: 32px;
+      height: 2px;
+      background-color: var(--gray600);
+      transform: translateY(10px);
+      transition: 0.5s;
+    }
+  }
+
+  .menuToggleON{
+    position: relative;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    ::before{
+      content: '';
+      position: absolute;
+      width: 32px;
+      height: 2px;
+      background-color: var(--gray600);
+      transform: translateY(0px) rotate(45deg);
+      box-shadow: 0 0px var(--gray600);
+      transition: 0.5s;
+    }    
+    ::after{
+      content: '';
+      position: absolute;
+      width: 32px;
+      height: 2px;
+      background-color: var(--gray600);
+      transform: translateY(0px) rotate(-45deg);
+      transition: 0.5s;
+    }
+  }
+`
+const Menu = styled.div`
+  position: absolute;
+  right: 0;
+  top: 4.5rem;
+  .menuOFF{
+    transition: 0.5s;
+    width: 200px;
+    height: 0;
+    p{
+      display: none;
+    }
+  }
+  .menuON{
+    position: relative;
+    transition: 0.5s;
+    display: inline-block;
+    width: 200px;
+    height: 250px;
+    background-color: var(--gray50);
+    box-shadow: 0 25px 35px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    padding: 20px;
+
+    ::before{
+      content: '';
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      background-color: var(--gray50);
+      transform: rotate(45deg);
+      top: -15px;
+      right: 10px;
+      z-index: -1;
+    }
+
+    p{
+      font-size: 1.1rem;
+      width: 100%;
+      margin-bottom: 1px;
+      padding: 3px 0;
+      cursor: pointer;
+      :hover{
+        background-color: var(--gray100);
+      }
+    }
+    .logout{
+      position: absolute;
+      color: red;
+      bottom: 20px;
+      left: 20px;
+      width: 160px;
+      :hover{
+        color: #AE1414;
+      }
     }
   }
 `
@@ -104,27 +224,7 @@ const GotoHome = styled.h1`
     font-size: 2rem;
   }
 `
-const SettingBox = styled.div`
-  position: fixed;
-  width: 100%;
-  height: 100vh;
-  background-color: rgba(0,0,10,0.7);
-  z-index: 999;
-  display: flex;
-  justify-contents: center;
-  
-  .text-box{
-    position: relative;
-    width: 100px;
-    height: 10rem;
-    background-color: var(--gray50);
-    padding: 20px 20px;
-    
-  }
-  .text-box::before {
-    
-  }
-`
+
 
 
 
@@ -132,6 +232,12 @@ const SettingBox = styled.div`
 
 // 회원 정보를 받아와서 프로필 사진을 불러와야 함
 const SearchProfile = () => {
+
+  const [isOpen, setMenu] = useState(false);
+
+  const toggleMenu = () => {
+      setMenu(isOpen => !isOpen);
+  }
 
   return(
     <Main>
@@ -150,25 +256,26 @@ const SearchProfile = () => {
           </SearchBox>
 
           <Profile>
-            <img src={ require('../IMG/profile_test.png')} className='profile-img' alt='profile-img' />
+            <div className='userBox'>
+              <div className='imgBox' img='../IMG/profile_test.png'>
+              </div>
+            </div>
+            <div className={isOpen ? 'menuToggleON' : 'menuToggleOFF'} onClick={toggleMenu}></div>
           </Profile>
-        </SearchWrap>
 
+          <Menu>
+            <div className={isOpen ? 'menuON' : 'menuOFF'}>
+              <p>내 프로필</p>
+              <p>내 코디어리</p>
+              <p>임시글 목록</p>
+              <p>방문&좋아요 목록</p>
+              <p className='logout'>로그아웃</p>
+            </div>
+
+          </Menu>
+        </SearchWrap>
       </Wrap>
 
-      <SettingBox>
-        <Wrap>
-          <div className='text-box'>
-            <p>홈화면</p>
-            <p>내 프로필</p>
-            <p>내 코디어리</p>
-            <p>임시글</p>
-            <p>방문&좋아요</p>
-            <p className='logout'>로그아웃</p>  
-          </div>
-        </Wrap>
-
-      </SettingBox>
     </Main>
 
   )
