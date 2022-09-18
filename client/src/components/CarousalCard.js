@@ -1,119 +1,80 @@
-// import Styles from "./Card.module.css";
-import React, {useState} from "react";
-// import { useSpring } from "react-spring";
+import React from "react";
 import styled from 'styled-components';
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+
+// CSS
+  /* 1680기준 */
+const MainWrap = styled.div`
+  /* position: absolute;
+  width: 1248px;
+  height: 65%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  display: flex;
+  justify-content: space-between;
+
+  @media screen and (max-width: 1250px) {
+    width: 80%;
+  } */
+
+  /* .backThree, .forwardThree{
+    width: 50px;
+    height: 100%;
+    cursor: pointer;
+    transition: 0.3s;
+
+    :hover{
+      background-color: var(--gray200);
+    }
+  } */
+`
+const CardWrap = styled.div`
+  /* width: 90%;
+  height: 100%;
+  display: flex; */
+
+  /* .nonCard{
+    width: 390;
+    height: 50%;
+    background-color: red;
+  } */
+`
+// CSS END
 
 function Card({ id,img, title, body, date, user, img_u }) {
 
-  const CardWrap = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content:center;
-    background-color: #eceff1;
-    width: 20rem;
-    height: 400px;
-    border-radius: 20px;
-    position: relative;
+  // 서버에서 받아온 게시글 리스트들을 저장
+  // const [postList, setList] = useState([]);
 
-    box-shadow: 0 5px 18px -7px rgba(0,0,0,1);
-    transition: 0.2s;
+  // 뒤로 3개 게시글
+  const clickGoBack = (e) => {
+    alert('뒤에있는거 3개 주세요')
+    // 현재 인덱스가 0이면 뒤로가기 버튼 비활성화
+  }
+  // 앞으로 3개 게시글 요청
+  const clickGoFront = (e) => {
+    alert('앞에있는거 3개 주세요')
+    // 서버에 게시글 3개 요청
+  }
 
-    :hover{
-      transform: scale(110%);
-    }
-    .title{ 
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      width: 18rem;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-    .user-wrap{ 
-      position: absolute;
-      display: flex;
-      bottom: 90px;
-      left: 1rem;
-      align-items: center;
-    }
-    .user{
-      margin-left: 1rem;
-      font-size: 1.2rem;
-      color: #263238;
-    }
-    .date{
-      position: absolute;
-      bottom: 1rem; right: 1.3rem;
-      color: #8f8f8f;
-    }
-  `
-  const ThumbnailIMG = styled.div`
-      display: ${(props) => props.img ? 'flex' : 'none'};
-      width: 100%;
-      height: 200px;
-      background: url(${(props) => props.img});
-      background-size: cover;
-      position: absolute;
-      top: 4rem;
-      left: 0;
-  `
-  const PostBody = styled.div`
-    display: ${(props) => props.img ? 'none' : '-webkit-box'};
-    position: absolute;
-    top: 4rem;
-    left: 0;
-    width: 90%;
-    height: 200px;
-    padding: 0 1rem;
-
-    overflow: hidden;
-    word-break: break-word;
-    font-size: 2rem;
-    font-weight: 100;
-
-    background-color: #cfd8dc;
-    color: #eceff1;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-  `
-  const ProfileImg = styled.div`
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-
-    background: url(${(props) => props.img});
-    background-size: cover;
-    background-color: #263238;
-  `
-
-
-  const [center, setCenter] = useState("");
 
   return (
-    <CardWrap id = {id}
+    <MainWrap>
+      {/* 뒤로 3개 */}
+      <IoChevronBack className="backThree" onClick={clickGoBack}></IoChevronBack>
 
-      // 가운데에 있는 게시글을 누르면 이동하라는 alert뜨는 이벤트-ing
-      onClick={
-        (e) => {
-          console.log(e.currentTarget.id);
-          if(e.currentTarget.id === center){
-            alert('가운데에 있는 post가 클릭되었으므로 화면으로 이동합니다.')
-            console.log(center);
-          }
-            setCenter(e.currentTarget.id);
-        }
-      }
-    >
-      <ThumbnailIMG img={img} alt="썸네일" />
-      <h2 className='title'>{title}</h2>
-      <PostBody className='body' img={img}>{body}</PostBody>
-      <div className='user-wrap'>
-        <ProfileImg img={img_u}></ProfileImg>
-        <p className='user'>{user}</p>
-      </div>
-      <p className='date'>{date}</p>
-    </CardWrap>
+      <CardWrap>
+        <div className="nonCard"></div>
+        {/* <Card></Card>
+        <Card></Card>
+        <Card></Card> */}
+        <div className="nonCard"></div>
+      </CardWrap>
+
+      {/* 앞으로 3개 */}
+      <IoChevronForward className='forwardThree' onClick={clickGoFront}></IoChevronForward>
+    </MainWrap>
   );
 }
 
