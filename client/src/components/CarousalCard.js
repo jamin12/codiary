@@ -5,7 +5,7 @@ import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 // CSS
   /* 1680기준 */
 const MainWrap = styled.div`
-  /* position: absolute;
+  position: absolute;
   width: 1248px;
   height: 65%;
   top: 50%;
@@ -16,9 +16,9 @@ const MainWrap = styled.div`
 
   @media screen and (max-width: 1250px) {
     width: 80%;
-  } */
+  }
 
-  /* .backThree, .forwardThree{
+  .backThree, .forwardThree{
     width: 50px;
     height: 100%;
     cursor: pointer;
@@ -27,18 +27,14 @@ const MainWrap = styled.div`
     :hover{
       background-color: var(--gray200);
     }
-  } */
+  }
 `
 const CardWrap = styled.div`
-  /* width: 90%;
+  width: 90%;
   height: 100%;
-  display: flex; */
+  display: flex;
 
-  /* .nonCard{
-    width: 390;
-    height: 50%;
-    background-color: red;
-  } */
+  
 `
 // CSS END
 
@@ -66,9 +62,9 @@ function Card({ id,img, title, body, date, user, img_u }) {
 
       <CardWrap>
         <div className="nonCard"></div>
-        {/* <Card></Card>
         <Card></Card>
-        <Card></Card> */}
+        <Card></Card>
+        <Card></Card>
         <div className="nonCard"></div>
       </CardWrap>
 
