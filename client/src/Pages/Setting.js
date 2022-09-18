@@ -2,8 +2,8 @@ import React from 'react';
 import SearchProfile from '../components/SearchProfile';
 import styled from 'styled-components';
 
-import Myinfo from '../components/SettingMyinfo';
-// import MyCategory from '../components/SettingMycategory';
+// import Myinfo from '../components/SettingMyinfo';
+import MyCategory from '../components/SettingMycategory';
 
 
 
@@ -114,9 +114,9 @@ const Setting = () => {
           </Menu>
 
           <Contents>
-            <Myinfo name=''/>
+            {/* <Myinfo name=''/> */}
             {/* 여기에 서버에서 json타입으로 받아온걸 넣어주면 됨. const로 변수 안에 넣어서. */}
-            {/* <MyCategory categoryList={undefined}/> */}
+            <MyCategory categoryList={undefined}/>
           </Contents>
         </div>
 
