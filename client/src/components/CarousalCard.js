@@ -1,77 +1,100 @@
-import React from "react";
-import styled from 'styled-components';
+import React, { Component } from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import styled from "styled-components";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import PostCard from "./Cards";
 
-// CSS
-  /* 1680기준 */
-const MainWrap = styled.div`
+const CarouselWrap = styled.div`
   position: absolute;
-  width: 1248px;
-  height: 65%;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -40%);
-  display: flex;
-  justify-content: space-between;
-
-  @media screen and (max-width: 1250px) {
-    width: 80%;
-  }
-
-  .backThree, .forwardThree{
-    width: 50px;
-    height: 100%;
-    cursor: pointer;
-    transition: 0.3s;
-
-    :hover{
-      background-color: var(--gray200);
-    }
-  }
+  transform: translate(-50%, -40%);  
+  width: 1248px;
+  height: 400px;
+  perspective: 1500px;
 `
-const CardWrap = styled.div`
-  width: 90%;
+const StyledSlider = styled(Slider)`
+  background-color: pink;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 75%;
   height: 100%;
-  display: flex;
+  transform: translateX(-50%);
+  transform-style: preserve-3d;
 
-  
+  .slick-prev,
+  .slick-next
+  {
+    visibility: hidden;
+  }
 `
-// CSS END
+const Buttons = styled.button`
+  position: absolute;
+  top: 0;
+  width: 50px;
+  height: 100%;
+`
 
-function Card({ id,img, title, body, date, user, img_u }) {
-
-  // 서버에서 받아온 게시글 리스트들을 저장
-  // const [postList, setList] = useState([]);
-
-  // 뒤로 3개 게시글
-  const clickGoBack = (e) => {
-    alert('뒤에있는거 3개 주세요')
-    // 현재 인덱스가 0이면 뒤로가기 버튼 비활성화
-  }
-  // 앞으로 3개 게시글 요청
-  const clickGoFront = (e) => {
-    alert('앞에있는거 3개 주세요')
-    // 서버에 게시글 3개 요청
+export default class PreviousNextMethods extends Component {
+  constructor(props) {
+    super(props);
+    this.next = this.next.bind(this);
+    this.previous = this.previous.bind(this);
+    this.postlist = props.popularList
   }
 
+  // const [currentIndex, setCurrentIndex] = useState(0);
 
-  return (
-    <MainWrap>
-      {/* 뒤로 3개 */}
-      <IoChevronBack className="backThree" onClick={clickGoBack}></IoChevronBack>
+  next() {
+    this.slider.slickNext();
+    console.log(this.postlist.length)
+    // 받아온 리스트의 끝에 다다르면 서버에 post 3개 더 요청
+    // currentIndex+3
+  }
+  previous() {
+    this.slider.slickPrev();
+    // currentIndex-3
+    // totalIndex이 30을 넘어가면 앞에있는 3개씩 지워야함
 
-      <CardWrap>
-        <div className="nonCard"></div>
-        <Card></Card>
-        <Card></Card>
-        <Card></Card>
-        <div className="nonCard"></div>
-      </CardWrap>
+  }
+  render() {
+    const settings = {
+      dots: false,
+      infinite: false,
+      speed: 500,
+      slidesToShow: 3,
+      slidesToScroll: 3,
+      autoplay: false,
+      centerPadding: '0px'
+    };
+    return (
+      <CarouselWrap>
+        <StyledSlider ref={c => (this.slider = c)} {...settings}>
+          {
+            this.postlist.map(({id, user_nickname}) => {
+              return(
+                <PostCard id={id} user_nickname={user_nickname}
+                  style={{
+                    
+                  }}/>
+              )
+            })
+          }
+        </StyledSlider>
 
-      {/* 앞으로 3개 */}
-      <IoChevronForward className='forwardThree' onClick={clickGoFront}></IoChevronForward>
-    </MainWrap>
-  );
+        <div>
+          <Buttons style={{left:0}} className="button" onClick={this.previous}>
+            <IoChevronBack />
+          </Buttons>
+          <Buttons style={{right:0}} className="button" onClick={this.next}>
+            <IoChevronForward/>
+          </Buttons>
+        </div>
+      </CarouselWrap>
+    );
+  }
 }
-
-export default Card;
