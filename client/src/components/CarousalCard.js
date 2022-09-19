@@ -117,6 +117,7 @@ const Carousel = (props) => {
             </button>
             <button className="next" onClick={}>
               <IoChevronForward/>
+              <IoChevronForward/>
             </button> */}
           </Buttons>
       </MainCanvas>
