@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from "styled-components";
 import '../css/reset.css';
 import { devices } from '../css/DeviceSize';
+import { Link } from 'react-router-dom';
 
 // 스타일 설정
 // 1680*900 기준 작성
@@ -252,9 +253,9 @@ const SearchProfile = () => {
     <Main>
       <Wrap>
         <GotoHome>
-          <a href='#none'>
+          <Link to='/'>
             CODIARY
-          </a>
+          </Link>
         </GotoHome>
 
         <SearchWrap>
@@ -279,6 +280,7 @@ const SearchProfile = () => {
               <p>내 코디어리</p>
               <p>임시글 목록</p>
               <p>방문&좋아요 목록</p>
+              <p><Link to='/setting'>설정</Link></p>
               <p className='logout'>로그아웃</p>
             </div>
 
