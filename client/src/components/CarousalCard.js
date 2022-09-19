@@ -1,6 +1,7 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, {useRef} from "react";
+// import React, {useState, useRef, useEffect} from "react";
 import styled, {keyframes} from "styled-components";
-import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+// import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import Cell from "./CardCell";
 
 const MainCanvas = styled.div`
@@ -57,40 +58,40 @@ const Buttons = styled.div`
 `
 
 
-const TOTAL_SLIDES = 29; // 전체 슬라이드 갯수(index라서 0번째 부터)
+// const TOTAL_SLIDES = 29; // 전체 슬라이드 갯수(index라서 0번째 부터)
 
 const Carousel = (props) => {
 
   const postlist = props.popularList;
-  const [currentIndex, setCurrentIndex] = useState(0);
+//   const [currentIndex, setCurrentIndex] = useState(0);
   const slideRef = useRef(null);
 
-  // Next버튼 클릭
-  const NextSlideClick = () => {
-    if(currentIndex >= TOTAL_SLIDES){
-      // 받아온 리스트의 끝에 다다르면 서버에 post 3개 더 요청
-      // 백엔드에 3장의 사진 추가 요청
-      // totalIndex이 30을 넘어가면 앞에있는 3개씩 지워야함
-    }else {
-      setCurrentIndex(currentIndex +1);
-    }
-  }
+//   // Next버튼 클릭
+//   const NextSlideClick = () => {
+//     if(currentIndex >= TOTAL_SLIDES){
+//       // 받아온 리스트의 끝에 다다르면 서버에 post 3개 더 요청
+//       // 백엔드에 3장의 사진 추가 요청
+//       // totalIndex이 30을 넘어가면 앞에있는 3개씩 지워야함
+//     }else {
+//       setCurrentIndex(currentIndex +1);
+//     }
+//   }
   
-  // Prev 버튼 클릭
-  const PrevSlideClick = () => {
-    if(currentIndex === 0){
-      setCurrentIndex(TOTAL_SLIDES);  // 마지막 사진으로 넘어감
-      // 클릭이 작동하지 않도록
-    } else {
-      setCurrentIndex( currentIndex -1);
-    }
-  }
+//   // Prev 버튼 클릭
+//   const PrevSlideClick = () => {
+//     if(currentIndex === 0){
+//       setCurrentIndex(TOTAL_SLIDES);  // 마지막 사진으로 넘어감
+//       // 클릭이 작동하지 않도록
+//     } else {
+//       setCurrentIndex( currentIndex -1);
+//     }
+//   }
 
-  useEffect(() => {
-    slideRef.current.style.trasition = 'all 0.5s ease-in-out';
-    slideRef.current.style.transform = `translateX(-${currentIndex}00%)`; // 백틱을 사용하여 슬라이드로 이동하는 에니메이션을 만듭니다.
-    }, [currentIndex]
-  );
+//   useEffect(() => {
+//     slideRef.current.style.trasition = 'all 0.5s ease-in-out';
+//     slideRef.current.style.transform = `translateX(-${currentIndex}00%)`; // 백틱을 사용하여 슬라이드로 이동하는 에니메이션을 만듭니다.
+//     }, [currentIndex]
+//   );
 
 
     return (
