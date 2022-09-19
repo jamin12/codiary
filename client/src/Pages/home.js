@@ -76,9 +76,10 @@ const ProfileIMG = styled.div`
   background-position: center;
 `
 const Menu = styled.div`
-  position: absolute;
+  position: fixed;
   right: 40px;
-  top: 6rem;
+  top: 110px;
+  z-index: 999;
   .menuOFF{
     transition: 0.5s;
     width: 200px;
@@ -106,7 +107,7 @@ const Menu = styled.div`
       background-color: var(--gray50);
       transform: rotate(45deg);
       top: -15px;
-      right: 10px;
+      right: 8px;
       z-index: -1;
     }
 
@@ -155,6 +156,130 @@ const Home = () => {
       setMenu(isOpen => !isOpen);
   }
 
+  const testList = [
+    {
+      id: '1',
+      user_nickname: '이묘'
+    },
+    {
+      id: '2',
+      user_nickname: '자민'
+    },
+    {
+      id: '3',
+      user_nickname: '파이썬'
+    },
+    {
+      id: '4',
+      user_nickname: '자바스크립트'
+    },
+    {
+      id: '5',
+      user_nickname: '리엑트'
+    },
+    {
+      id: '6',
+      user_nickname: '스프링'
+    },
+    {
+      id: '7',
+      user_nickname: '스프링'
+    },
+    {
+      id: '8',
+      user_nickname: '스프링'
+    },
+    {
+      id: '9',
+      user_nickname: '스프링'
+    },
+    {
+      id: '10',
+      user_nickname: '스프링'
+    },
+    {
+      id: '11',
+      user_nickname: '스프링'
+    },
+    {
+      id: '12',
+      user_nickname: '스프링'
+    },
+    {
+      id: '13',
+      user_nickname: '스프링'
+    },
+    {
+      id: '14',
+      user_nickname: '스프링'
+    },
+    {
+      id: '15',
+      user_nickname: '스프링'
+    },
+    {
+      id: '16',
+      user_nickname: '스프링'
+    },
+    {
+      id: '17',
+      user_nickname: '스프링'
+    },
+    {
+      id: '18',
+      user_nickname: '스프링'
+    },
+    {
+      id: '19',
+      user_nickname: '스프링'
+    },
+    {
+      id: '20',
+      user_nickname: '스프링'
+    },
+    {
+      id: '21',
+      user_nickname: '스프링'
+    },
+    {
+      id: '22',
+      user_nickname: '스프링'
+    },
+    {
+      id: '23',
+      user_nickname: '스프링'
+    },
+    {
+      id: '24',
+      user_nickname: '스프링'
+    },
+    {
+      id: '25',
+      user_nickname: '스프링'
+    },
+    {
+      id: '26',
+      user_nickname: '스프링'
+    },
+    {
+      id: '27',
+      user_nickname: '스프링'
+    },
+    {
+      id: '28',
+      user_nickname: '스프링'
+    },
+    {
+      id: '29',
+      user_nickname: '스프링'
+    },
+    {
+      id: '30',
+      user_nickname: '스프링'
+    },
+
+  ]
+
 
 
   return (
@@ -188,7 +313,7 @@ const Home = () => {
       {/* 인기 게시글 */}
       <div className="container" id="popularity-text">
         <h1 className='home-title-popular'>인기 게시글</h1>
-        <Carousel/>
+        <Carousel popularList={testList}/>
       </div>
 
       {/* 푸터 */}
