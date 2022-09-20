@@ -30,7 +30,6 @@ const httpStatus = require("http-status"),
 	myDate = require("../utils/myDate"),
 	myMath = require("../utils/myMath");
 
-// TODO:생성할때 userID 나오는거 생각좀 해보자구
 class PersonalService {
 	constructor() {
 		this.paging = new Paging();
@@ -208,12 +207,13 @@ class PersonalService {
 				);
 			}
 		}
-		return await category.update(categoryBody, {
+		await category.update(categoryBody, {
 			where: {
 				user_id: userId,
 				category_id: categoryId,
 			},
 		});
+		return;
 	}
 
 	/**
@@ -223,7 +223,7 @@ class PersonalService {
 	 * @returns {Object}
 	 */
 	async deletePersonalCategory(userId, categoryId) {
-		const result = await this.checkCategoryExists(userId, categoryId);
+		await this.checkCategoryExists(userId, categoryId);
 		try {
 			await sequelize.transaction(async (t1) => {
 				await category.destroy({
@@ -249,7 +249,7 @@ class PersonalService {
 			);
 		}
 
-		return result;
+		return;
 	}
 
 	/**

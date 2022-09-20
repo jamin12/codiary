@@ -20,6 +20,6 @@ describe("mainService", () => {
   // 메인페이지 게시글 검색
   it("searchContentsInMain", async () => {
     const searchedContents = await mService.searchPostsInMain("qwer",0);
-    expect(searchedContents.length).toEqual(2);
+    expect(searchedContents.length).toEqual(1);
   });
 });

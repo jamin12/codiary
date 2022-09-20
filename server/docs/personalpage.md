@@ -103,15 +103,11 @@
     {
         "status": 200,
         "message": "update success",
-        "result_data": [
-            1
-        ]
     }
 - |속성|타입|설명|
     |---|---|---|
     |status|int|상태코드|
     |message|string|메시지|
-    |**result_data**|json[]|결과 값(변경된 수)|
 
 ## __<span style="color:#9999ff">사용자 카테고리 삭제</span>__
 ## __<span style="color:#ff9933">요청</span>__ __[DELETE] /category/:categoryid__
@@ -125,25 +121,10 @@
     {
         "status": 200,
         "message": "delete success",
-        "result_data": {
-            "category_id": 1,
-            "sub_category_id": 2,
-            "category_name": "update test",
-            "created_at": "2022-08-15 12:08",
-            "updated_at": "2022-08-30 22:40"
-        }
     }
 - |속성|타입|설명|
     |---|---|---|
     |status|int|상태코드|
-    |message|string|메시지|
-    |**result_data**|json|결과 값|
-    |||
-    |category_id|int|카테고리 아이디|
-    |sub_category_id|int|상위 카테고리 아이디|
-    |category_name|string|카테고리 이름|
-    |createdAt|string|생성 날짜|
-    |updatedAt|string|업데이트 날짜|
 
 ## __<span style="color:#9999ff">사용자 포스트 목록 조회</span>__
 ## __<span style="color:#ff9933">요청</span>__ __[GET] /posts/:uniqueid/:categoryid?offset=0&limit=0__
