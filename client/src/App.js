@@ -4,11 +4,12 @@ import React from "react";
 
 import './css/reset.css'
 import './App.css'
+import Routers from "./router/Routers";
 
 const App = () => {
   return (
     <>
-      {/* <FrontTest /> */}
+      <Routers/>
     </>
   );
 };

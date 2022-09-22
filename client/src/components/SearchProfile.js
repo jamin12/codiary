@@ -169,7 +169,7 @@ const Menu = styled.div`
     transition: 0.5s;
     width: 200px;
     height: 0;
-    p{
+    .tagP{
       display: none;
     }
   }
@@ -196,7 +196,8 @@ const Menu = styled.div`
       z-index: -1;
     }
 
-    p{
+    .tagP{
+      display: block;
       font-size: 1.1rem;
       width: 100%;
       margin-bottom: 1px;
@@ -276,12 +277,12 @@ const SearchProfile = () => {
 
           <Menu>
             <div className={isOpen ? 'menuON' : 'menuOFF'}>
-              <p>내 프로필</p>
-              <p>내 코디어리</p>
-              <p>임시글 목록</p>
-              <p>방문&좋아요 목록</p>
-              <p><Link to='/setting'>설정</Link></p>
-              <p className='logout'>로그아웃</p>
+              <Link className='tagP' to='/:userId'>내 글 목록</Link>
+              <Link className='tagP' to='/:userId/calender'>내 코디어리</Link>
+              <Link className='tagP' to='/:userId/presave'>임시글 목록</Link>
+              <Link className='tagP' to='/:userId/visite'>방문&좋아요 목록</Link>
+              <Link className='tagP' to='/setting'>설정</Link>
+              <p className='logout tagP'>로그아웃</p>
             </div>
 
           </Menu>

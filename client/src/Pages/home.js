@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Carousel from "../components/CarousalCard";
+import {Link} from 'react-router-dom'
 
 const MainWrap = styled.div`
   .container {
@@ -294,10 +295,11 @@ const Home = () => {
         {/* 메뉴창 */}
         <Menu>
           <div className={isOpen ? 'menuON' : 'menuOFF'}>
-            <p>내 프로필</p>
-            <p>내 코디어리</p>
-            <p>임시글 목록</p>
-            <p>방문&좋아요 목록</p>
+            <p><Link to='/:userId'>내 글 목록</Link></p>
+            <p><Link to='/:userId/calender'>내 코디어리</Link></p>
+            <p><Link to='/:userId/presave'>임시글 목록</Link></p>
+            <p><Link to='/:userId/visite'>방문&좋아요 목록</Link></p>
+            <p><Link to='/setting'>설정</Link></p>
             <p className='logout'>로그아웃</p>
           </div>
         </Menu>

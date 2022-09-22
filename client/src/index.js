@@ -1,35 +1,12 @@
-import React from "react";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
 
-import { render } from 'react-dom';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
-
-import Post from "./Pages/Post";
-import Setting from "./Pages/Setting";
-import MyCategory from "./components/SettingMycategory";
-import MyInfo from "./components/SettingMyinfo";
-
-
-const rootElement =document.getElementById("root");
-render(
-  <BrowserRouter>
-  <Routes>
-    {/* <Route path="/" element={<Home />} /> */}
-    {/* <Route path="/:userid" element={<Mypage />}> */}
-      {/* <Route path="home" element={<Mypage />} /> */}
-      {/* <Route path=":postNum" element={<Post/>} /> */}
-    {/* </Route> */}
-    <Route path="/post" element={<Post/>}/>
-    <Route path="/setting" element={<Setting/>}>
-      <Route path="category" element={<MyCategory/>}/>
-      <Route path="info" element={<MyInfo/>}/>
-    </Route>
-  </Routes>
-  </BrowserRouter>,
-  rootElement
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

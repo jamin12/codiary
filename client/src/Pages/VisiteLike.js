@@ -3,19 +3,15 @@ import React from 'react';
 
 import SearchProfile from "../components/SearchProfile";
 import Card from "../components/CarousalCard";
-import Carousel from '../components/3DCarousal'
+// import Carousel from '../components/3DCarousal'
 import styled from "styled-components";
 
 const VisitLike = () => {
 
-  const Wrap = styled.div`
-    width: 1500px;
-    height: 700px;
-    margin: 200px auto 0 auto;
-  `
+
 
   // card 컴포넌트에 보낼 파라미터
-  // 안에 들어가는 배열의 갯수는 경민오빠한테 받을 데이터
+  // 안에 들어가는 배열의 갯수는 백엔드한테 받을 데이터
   let cards = [
     {
       key: 1,  // 중복되지 않는 키 값 지정 // 값은 post_id
@@ -82,14 +78,7 @@ const VisitLike = () => {
       {/* 버튼을 누르면 각각 요청을 보내야함 */}
       {/* 파라미터를 바꿔주는게 */}
       <Wrap>
-        <Carousel
-          cards={cards}
-          height="100%"
-          width="90%"
-          margin="0 auto"
-          offset={2}
-          showArrows={false}
-        />
+        <Carousel/>
       </Wrap>
 
 
@@ -98,3 +87,15 @@ const VisitLike = () => {
 }
 
 export default VisitLike;
+
+const Wrap = styled.div`
+width: 1500px;
+height: 700px;
+margin: 200px auto 0 auto;
+`
+
+const Carousel = styled.div`
+  width: 90%;
+  height: 100%;
+  background-color: red;
+`
