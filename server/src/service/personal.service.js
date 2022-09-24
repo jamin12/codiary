@@ -109,17 +109,20 @@ class PersonalService {
 	/**
 	 * 댓글 존재 유무 체크
 	 * @param {number} commentId
+	 * @param {String} userId
 	 * @returns {Object}
 	 */
-	async checkCommentExists(commentId) {
+	async checkCommentExists(commentId, userId) {
+		const whereOptions = {
+			comments_id: commentId,
+		};
+		if (userId) whereOptions.user_id = userId;
 		const result = await comments.findOne({
 			attributes: commentsDto.filter((data) => {
 				const excludeColumn = ["user_id"];
 				if (!excludeColumn.includes(data)) return data;
 			}),
-			where: {
-				comments_id: commentId,
-			},
+			where: whereOptions,
 		});
 		if (!result)
 			throw new CustomError(httpStatus.BAD_REQUEST, "comment not found");
@@ -174,8 +177,8 @@ class PersonalService {
 					"sub category already exists"
 				);
 		}
-		await category.create(categoryBody);
-		return;
+		const createdCategory = await category.create(categoryBody);
+		return { category_id: createdCategory.category_id };
 	}
 
 	/**
@@ -321,6 +324,7 @@ class PersonalService {
 	async getPersonalPost(uniqueId, postId, userId) {
 		let user = await this.uService.getUserByUniqueId(uniqueId);
 		let checkLike = false;
+		// 좋아요를 했는지 안했는지 체크
 		if (userId) {
 			const checkLiked = await like_record.findOne({
 				where: {
@@ -429,7 +433,7 @@ class PersonalService {
 		await this.checkPostExists(postId, userId);
 		if (body.post.category_id)
 			await this.checkCategoryExists(userId, body.post.category_id);
-		return await sequelize.transaction(async (t1) => {
+		await sequelize.transaction(async (t1) => {
 			await posts.update(body.post, {
 				where: {
 					user_id: userId,
@@ -454,6 +458,7 @@ class PersonalService {
 				update_history: this.myDate.getDatetime(),
 			});
 		});
+		return;
 	}
 
 	/**
@@ -550,15 +555,6 @@ class PersonalService {
 				tmppost_id: tmpPostId,
 			},
 		});
-		await temporary_posts.findOne({
-			attributes: tmppostsDto.filter((data) => {
-				const excludeColumn = ["user_id"];
-				if (!excludeColumn.includes(data)) return data;
-			}),
-			where: {
-				tmppost_id: tmpPostId,
-			},
-		});
 		return;
 	}
 
@@ -639,11 +635,11 @@ class PersonalService {
 					post_id: visitRecordBody.post_id,
 				},
 			});
-			return;
+			return { visit_record_id: result.visit_record_id };
 		}
 		visitRecordBody.user_id = userId;
-		await visit_record.create(visitRecordBody);
-		return;
+		const createdVisitRecord = await visit_record.create(visitRecordBody);
+		return { visit_record_id: createdVisitRecord.visit_record_id };
 	}
 
 	/**
@@ -664,7 +660,10 @@ class PersonalService {
 			},
 		});
 		if (!result)
-			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+			throw new CustomError(
+				httpStatus.BAD_REQUEST,
+				"visit record not found"
+			);
 		await visit_record.destroy({
 			where: {
 				visit_record_id: visitRecordId,
@@ -701,7 +700,7 @@ class PersonalService {
 	/**
 	 * 좋아요 기록 저장
 	 * @param {string} userId
-	 * @param {object} likeRecordBody visit_record 테이블에 들어갈 정보
+	 * @param {object} likeRecordBody like_record 테이블에 들어갈 정보
 	 * @returns {Object}
 	 */
 	async createPersonalLikeRecord(userId, likeRecordBody) {
@@ -723,21 +722,25 @@ class PersonalService {
 					post_id: likeRecordBody.post_id,
 				},
 			});
-			return;
+			return {
+				like_record_id: result.like_record_id,
+			};
 		}
 		await posts.increment(
 			{ like_count: 1 },
 			{ where: { post_id: likeRecordBody.post_id } }
 		);
 		likeRecordBody.user_id = userId;
-		await like_record.create(likeRecordBody);
-		return;
+		const createdLikeRecord = await like_record.create(likeRecordBody);
+		return {
+			like_record_id: createdLikeRecord.like_record_id,
+		};
 	}
 
 	/**
 	 * 좋아요 기록 포스트 아이디로 삭제
 	 * @param {string} userId
-	 * @param {object} likeRecordBody visit_record 테이블에 들어갈 정보
+	 * @param {int} postId
 	 * @returns {Object}
 	 */
 	async deletePersonalLikeRecordByPostId(userId, postId) {
@@ -769,10 +772,10 @@ class PersonalService {
 	/**
 	 * 좋아요 기록 삭제
 	 * @param {string} userId
-	 * @param {number} likePostId
+	 * @param {number} likeRecordId
 	 * @returns {Object}
 	 */
-	async deletePersonalLikeRecord(userId, likePostId) {
+	async deletePersonalLikeRecord(userId, likeRecordId) {
 		const result = await like_record.findOne({
 			attributes: likeRecordDto.filter((data) => {
 				const excludeColumn = ["user_id"];
@@ -780,18 +783,18 @@ class PersonalService {
 			}),
 			where: {
 				user_id: userId,
-				like_record_id: likePostId,
+				like_record_id: likeRecordId,
 			},
 		});
-		if (!result)
-			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+		// if (!result)
+		// 	throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
 		await posts.decrement(
 			{ like_count: 1 },
 			{ where: { post_id: result.post_id } }
 		);
 		await like_record.destroy({
 			where: {
-				like_record_id: likePostId,
+				like_record_id: likeRecordId,
 			},
 		});
 		return;
@@ -818,57 +821,50 @@ class PersonalService {
 				);
 			}
 		}
-		await comments.create(commentBody);
-		return;
+		const createdComment = await comments.create(commentBody);
+		return {
+			comments_id: createdComment.comments_id,
+		};
 	}
 
 	/**
 	 * 댓글 수정
 	 * @param {string} uniqueId
-	 * @param {number} commnetId
+	 * @param {number} commentId
 	 * @param {Object} commentBody
 	 * @returns {Object}
 	 */
-	async updateCommnet(userId, commnetId, commentBody) {
-		const updatedComment = await comments.findOne({
-			where: {
-				user_id: userId,
-				comments_id: commnetId,
-			},
-		});
-
-		if (!updatedComment) {
-			throw new CustomError(httpStatus.BAD_REQUEST, "comment not found");
+	async updateCommnet(userId, commentId, commentBody) {
+		await this.checkCommentExists(commentId, userId);
+		/* const user = this.uService.getUserByUniqueId(commentBody.unique_id);
+		if (user.user_id !== userId) {
+			throw new CustomError(
+				httpStatus.BAD_REQUEST,
+				"can not update comment, have no authority"
+			);
 		}
-		// const user = this.uService.getUserByUniqueId(commentBody.unique_id);
-		// if (user.user_id !== userId) {
-		// 	throw new CustomError(
-		// 		httpStatus.BAD_REQUEST,
-		// 		"can not update comment, have no authority"
-		// 	);
-		// }
-		// if (commentBody.sub_comments_id) {
-		// 	if (commentBody.comments_id === commentBody.sub_comments_id) {
-		// 		throw new CustomError(
-		// 			httpStatus.BAD_REQUEST,
-		// 			"comments  and sub comments are the same"
-		// 		);
-		// 	}
-		// 	const checkComment = this.checkCommentExists(
-		// 		commentBody.postId,
-		// 		commentBody.sub_comments_id
-		// 	);
-		// 	if (checkComment.sub_comments_id) {
-		// 		throw new CustomError(
-		// 			httpStatus.BAD_REQUEST,
-		// 			"sub commnet already exists"
-		// 		);
-		// 	}
-		// }
+		if (commentBody.sub_comments_id) {
+			if (commentBody.comments_id === commentBody.sub_comments_id) {
+				throw new CustomError(
+					httpStatus.BAD_REQUEST,
+					"comments  and sub comments are the same"
+				);
+			}
+			const checkComment = this.checkCommentExists(
+				commentBody.postId,
+				commentBody.sub_comments_id
+			);
+			if (checkComment.sub_comments_id) {
+				throw new CustomError(
+					httpStatus.BAD_REQUEST,
+					"sub commnet already exists"
+				);
+			}
+		}*/
 		await comments.update(commentBody, {
 			where: {
 				user_id: userId,
-				comments_id: commnetId,
+				comments_id: commentId,
 			},
 		});
 		return;
@@ -881,15 +877,7 @@ class PersonalService {
 	 * @returns {Object}
 	 */
 	async deleteCommnet(userId, commentId) {
-		const deletedComment = comments.findOne({
-			where: {
-				user_id: userId,
-				comments_id: commentId,
-			},
-		});
-		if (!deletedComment) {
-			throw new CustomError(httpStatus.BAD_REQUEST, "comment not found");
-		}
+		await this.checkCommentExists(commentId, userId);
 		try {
 			await sequelize.transaction(async (t1) => {
 				await comments.destroy({
@@ -1052,7 +1040,7 @@ class PersonalService {
 	 * @returns {Object}
 	 */
 	async searchCommonPosts(uniqueId, searchWord, searchType, ...paging) {
-		const user = await this.uService.getUserByUniqueId(uniqueId);
+		const getUser = await this.uService.getUserByUniqueId(uniqueId);
 	}
 	/**
 	 * 연관 포스트 조회

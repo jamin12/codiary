@@ -75,12 +75,18 @@
 - ``` json
     {
         "status": 201,
-        "message": "create success"
+        "message": "create success",
+        "result_data" : {
+            "category_id" : 1
+        }
     }
 - |속성|타입|설명|
     |---|---|---|
     |status|int|상태코드|
     |message|string|메시지|
+    |**result_data**|json[]|결과 값|
+    |||
+    |category_id|int|카테고리 아이디|
 
 ## __<span style="color:#9999ff">사용자 카테고리 수정</span>__
 ## __<span style="color:#ff9933">요청</span>__ __[PATCH] /category/:categoryid__
@@ -131,7 +137,7 @@
 - |속성|타입|설명|
     |---|---|---|
     |uniqueid *|string|사용자 유니크 아이디 (필수)|
-    |categoryid *|int|카테고리 아이디 (필수)|
+    |categoryid *|int|카테고리 아이디 (필수)</br> 0 : 카테고리 상관없이 날짜 순으로 가져옴|
     |offset *|int|현재 페이지 번호 (필수)|
     |limit|int|보여줄 개수|
 ## __<span style="color:#ff9933">응답</span>__
@@ -689,13 +695,18 @@
 - ``` json
     {
         "status": 201,
-        "message": "create success"
+        "message": "create success",
+        "result_data": {
+            "visit_record_id" : 2
+        }
     }
 - |속성|타입|설명|
     |---|---|---|
     |status|int|상태코드|
     |message|string|메시지|
-
+    |**result_data**|json[]|결과 값|
+    |||
+    |visit_record_id|int|생성된 방문 기록 아이디|
 ## __<span style="color:#9999ff">방문 기록 삭제</span>__
 ## __<span style="color:#ff9933">요청</span>__ __[DELETE] /visitrecord/:visitrecordid__
 
@@ -788,12 +799,18 @@
 - ``` json
     {
         "status": 201,
-        "message": "create success"
+        "message": "create success",
+        "result_data": {
+            "like_record_id": 1
+        }
     }
 - |속성|타입|설명|
     |---|---|---|
     |status|int|상태코드|
     |message|string|메시지|
+    |**result_data**||
+    |||
+    |like_record_id|int|좋아요 기록 아이디|
 
 ## __<span style="color:#9999ff">좋아요 기록 삭제</span>__
 ## __<span style="color:#ff9933">요청</span>__ __[DELETE] /likerecord/:likerecordid__
@@ -849,12 +866,18 @@
 - ``` json
     {
         "status": 201,
-        "message": "create success"
+        "message": "create success",
+        "result_data": {
+            "comment_id" : 1,
+        }
     }
 - |속성|타입|설명|
     |---|---|---|
     |status|int|상태코드|
     |message|string|메시지|
+    |**result_data**||
+    ||||
+    |comment_id|int|댓글 아이디|
 
 ## __<span style="color:#9999ff">댓글 수정</span>__
 ## __<span style="color:#ff9933">요청</span>__ __[PATCH] /comments/:commentid__
