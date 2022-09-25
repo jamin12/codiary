@@ -1,5 +1,7 @@
 const { personalService } = require("../../../src/service/index");
 const logger = require("../../../src/config/logger");
+const CustomError = require("../../../src/utils/Error/customError");
+const httpStatus = require("http-status");
 
 const pService = new personalService();
 
@@ -336,7 +338,7 @@ describe("PersonalService", () => {
 				1,
 				10
 			);
-			expect(getVisitRecord.length).toEqual(2);
+			expect(getVisitRecord.length).toEqual(3);
 		});
 
 		// 방문 기록 저장 에러 : 포스트 없음
@@ -353,7 +355,7 @@ describe("PersonalService", () => {
 
 		// 방문 기록 저장
 		it("createPersonalVisitRecord", async () => {
-			visitRecordBody.post_id = 1;
+			visitRecordBody.post_id = 6;
 			const createdVisitRecord = await pService.createPersonalVisitRecord(
 				"100625979022689944834",
 				visitRecordBody
@@ -489,10 +491,88 @@ describe("PersonalService", () => {
 		// 댓글 삭제
 		it("deleteCommnet error : comment not founds", async () => {
 			await pService
-				.deleteCommnet("100625979022689944834", 151)
+				.deleteCommnet("100625979022689944834", 150)
 				.catch((err) => {
 					expect(err.message).toEqual("comment not found");
 				});
+		});
+	});
+
+	// 개인 검색 테스트
+	describe("personal search", () => {
+		// 개인 포스트 페이지에서 검색
+		it("personal post", async () => {
+			const searchedPost = await pService.searchPersonalposts(
+				"qwer",
+				0,
+				"100625979022689944834",
+				1,
+				10
+			);
+			expect(searchedPost.length).toEqual(1);
+		});
+
+		// 개인 임시 포스트에서 검색
+		it("personal tmp post", async () => {
+			const searchedPost = await pService.searchPersonalposts(
+				"qwer",
+				1,
+				"100625979022689944834",
+				1,
+				10
+			);
+			expect(searchedPost.length).toEqual(1);
+		});
+
+		// 개인 방문 목록에서 조회
+		it("personal visit post", async () => {
+			const searchedPost = await pService.searchPersonalposts(
+				"qwer",
+				2,
+				"100625979022689944834",
+				1,
+				10
+			);
+			expect(searchedPost.length).toEqual(1);
+		});
+
+		// 개인 좋아요 목록에서 조회
+		it("personal like post", async () => {
+			const searchedPost = await pService.searchPersonalposts(
+				"qwer",
+				3,
+				"100625979022689944834",
+				1,
+				10
+			);
+			expect(searchedPost.length).toEqual(1);
+		});
+	});
+
+	// 공용 검색 테스트
+	describe("Common search", () => {
+		it("common searches", async () => {
+			const searchedCommonPostawait = await pService.searchCommonPosts(
+				"test",
+				"qwer",
+				0,
+				10
+			);
+			expect(searchedCommonPostawait.length).toEqual(1);
+		});
+	});
+
+	//연관 포스트 조회
+	describe("associatePost", () => {
+		// 연관 포스트 조회
+		// 항상 랜덤으로 나와서 예측 불가능
+		it("associatePost", async () => {
+			await pService.associatePost(1).catch((err) => {
+				throw new CustomError(
+					httpStatus.INTERNAL_SERVER_ERROR,
+					err.message
+				);
+			});
 		});
 	});
 });

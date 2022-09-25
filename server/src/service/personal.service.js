@@ -1035,13 +1035,51 @@ class PersonalService {
 	 * 공용 검색기능
 	 * @param {string} uniqueId
 	 * @param {string} searchWord
-	 * @param {number} searchType 어느 페이지에서 검색 할 것인지
 	 * @param {number[]} paging
 	 * @returns {Object}
 	 */
-	async searchCommonPosts(uniqueId, searchWord, searchType, ...paging) {
+	async searchCommonPosts(uniqueId, searchWord, ...paging) {
 		const getUser = await this.uService.getUserByUniqueId(uniqueId);
+		const pageResult = this.paging.pageResult(paging[0], paging[1]);
+		// 아무 검색어도 안 들어 왔을경우 모든 포스트 검색
+		if (searchWord === ":searchword") {
+			searchWord = "";
+		}
+		let myAttributes = [];
+		let whereOptions = {};
+		let includeOptions = [];
+		// 개인 포스트 페이지에서 검색
+		myAttributes = postsDto.filter((data) => {
+			const excludeColumn = ["category_id", "user_id", "like_count"];
+			if (!excludeColumn.includes(data)) return data;
+		});
+		whereOptions = {
+			user_id: getUser.user_id,
+			[Op.or]: [
+				{
+					post_title: {
+						[Op.substring]: searchWord,
+					},
+				},
+				{
+					post_txt: {
+						[Op.substring]: searchWord,
+					},
+				},
+			],
+		};
+		includeOptions.push(this.userJoin);
+
+		return await posts.findAll({
+			attributes: myAttributes,
+			include: includeOptions,
+			where: whereOptions,
+			order: [["updated_at", "DESC"]],
+			offset: pageResult.offset,
+			limit: pageResult.limit,
+		});
 	}
+
 	/**
 	 * 연관 포스트 조회
 	 * @param {number} postId
@@ -1055,6 +1093,7 @@ class PersonalService {
 				post_id: postId,
 			},
 		});
+		logger.info(tagList);
 		// 조합을 이용후 랜덤으로 태그 리스트 가져오기
 		const tagCombis = this.myMath.getCombinations(
 			tagList,
