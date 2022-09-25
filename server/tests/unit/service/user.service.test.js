@@ -75,12 +75,6 @@ describe("userService", () => {
 		});
 	});
 
-	// 전체 유저 조회
-	it("getUsers", async () => {
-		const userList = await uService.getUsers();
-		expect(userList.length).toEqual(3);
-	});
-
 	// 유저 삭제
 	it("deleteUser", async () => {
 		const deletedUser = await uService.deleteUser(userModel.id);

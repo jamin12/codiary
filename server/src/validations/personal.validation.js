@@ -84,6 +84,16 @@ const output = {
 			searchtype: joi.number().required().valid(0, 1, 2, 3),
 		}),
 	},
+	searchCommonContents: {
+		query: joi.object().keys({
+			offset: joi.number().required(),
+			limit: joi.number(),
+		}),
+		params: joi.object().keys({
+			uniqueid: joi.string().required(),
+			searchword: joi.string().required(),
+		}),
+	},
 	/**
 	 * 연관 게시물
 	 */

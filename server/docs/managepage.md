@@ -46,8 +46,8 @@
 ## __<span style="color:#ff9933">요청</span>__ **[GET] /:reporttype/:reporttargettype?startDate=datetime&endDate=datetime&offset=1&limit=5**
 - |속성|타입|설명|
     |---|---|---|
-    |reporttype *|int|신고 타입</br>0. 욕설</br>1. 음란물</br>2.개인정보 노출</br>3. 불법 정보</br>4. 기타</br>(필수)|
-    |reporttargettype *|int|신고 타겟 타입</br>0. 게시글</br>1. 댓글</br>(필수)|
+    |reporttype *|int|신고 타입</br>-1. 타입 없음</br>0. 욕설</br>1. 음란물</br>2.개인정보 노출</br>3. 불법 정보</br>4. 기타</br>(필수)|
+    |reporttargettype *|int|신고 타겟 타입</br>-1. 타입 없음</br>0. 게시글</br>1. 댓글</br>(필수)|
     |startdate *|datetime|시작 날짜 (필수)|
     |enddate|datetime|마지막 날짜|
     |offset *|int|현재 페이지 번호 (필수)|
