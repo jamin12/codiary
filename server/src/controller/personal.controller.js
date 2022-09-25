@@ -114,12 +114,22 @@ const output = {
 		res.send(resultDto(httpStatus.OK, "searchContents", result_contents));
 	}),
 	/**
+	 * 공용 검색
+	 */
+	searchCommonposts: catchAsync(async (req, res) => {
+		const result_contents = await pService.searchCommonPosts(
+			req.params.uniqueid,
+			req.params.searchword,
+			req.query.offset,
+			req.query.limit
+		);
+		res.send(resultDto(httpStatus.OK, "searchContents", result_contents));
+	}),
+	/**
 	 * 연관 게시물
 	 */
 	associatePersonalposts: catchAsync(async (req, res) => {
-		const result_contents = await pService.associatePost(
-			req.params.postid
-		);
+		const result_contents = await pService.associatePost(req.params.postid);
 		res.send(
 			resultDto(httpStatus.OK, "associateContents", result_contents)
 		);

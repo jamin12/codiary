@@ -192,7 +192,7 @@
     |uniqueid *|string|사용자 유니크 아이디 (필수)|
     |startdate *|datetime|시작 날짜 (필수)|
     |enddate *|datetime|마지막 날짜 (필수)|
-- 
+
 ## __<span style="color:#ff9933">응답</span>__
 - ``` json
     {
@@ -921,10 +921,10 @@
     |message|string|메시지|
 
 ## __<span style="color:#9999ff">개인 페이지 검색</span>__
-## __<span style="color:#ff9933">요청</span>__ __[GET] /:searchword/:searchtype?offset=1&limit=0__
+## __<span style="color:#ff9933">요청</span>__ __[GET] /search/personal/:searchword/:searchtype?offset=1&limit=0__
 - |속성|타입|설명|
     |---|---|---|
-    |searchword *|int|검색 단어(필수)|
+    |searchword *|int|검색 단어(필수)</br>없으면 날짜순으로 전송됨|
     |searchtype *|int|검색 타입(필수)</br>0 : 개인 포스트 페이지에서 검색</br>1 : 개인 임시저장 페이지에서 검색</br>2 : 개인 방문 목록에서 검색</br>3 : 개인 좋아요 목록에서 검색|
     |offset *|int|현재 페이지 번호 (필수)|
     |limit|int|보여줄 개수|
@@ -1062,6 +1062,60 @@
     |user_nickname|string|유저 닉네임|
     |user_img|string|유저 이미지|
     |sns_name|string|sns상 유저 이름|
+    |created_at|string|생성 날짜|
+    |updated_at|string|업데이트 날짜|
+
+## __<span style="color:#9999ff">공용 검색</span>__
+## __<span style="color:#ff9933">요청</span>__ __[GET] /search/common/:uniqueid/:searchword?offset=1&limit=0__
+- |속성|타입|설명|
+    |---|---|---|
+    |uniqueid *|String|사용자 유니크 아이디(필수)|
+    |searchword *|int|검색 단어(필수)</br>없으면 날짜순으로 전송됨|
+    |offset *|int|현재 페이지 번호 (필수)|
+    |limit|int|보여줄 개수|
+## __<span style="color:#ff9933">응답</span>__
+- ``` json
+    {
+        "status": 200,
+        "message": "associateContents",
+        "result_data": [
+            {
+                "post_id": 2,
+                "post_title": "test5",
+                "post_body_md": null,
+                "post_body_html": null,
+                "post_txt": "wsx",
+                "created_at": "2022-08-15 12:12",
+                "updated_at": "2022-09-01 21:01",
+                "users": {
+                    "user_email": "rudals951004@gmail.com",
+                    "user_detail": {
+                        "user_name": "min ja",
+                        "user_unique_id": "test",
+                        "user_nickname": "",
+                        "user_img": "이미지가 없다링"
+                    }
+                }
+            },
+        ]
+    }
+- |속성|타입|설명|
+    |---|---|---|
+    |status|int|상태코드|
+    |message|string|메시지|
+    |**result_data**|json|결과 값|
+    |||
+    |post_id|int|포스트 아이디|
+    |post_title|string|포스트 제목|
+    |post_body_md|string|포스트 md 텍스트|
+    |post_body_html|string|포스트 html 텍스트|
+    |post_txt|string|포스트 html 태그를 제외한 텍스트|
+    |user_email|string|유저 이메일|
+    |user_name|string|유저 이름|
+    |user_unique_id|string|유저 유니크 아이디|
+    |user_introduce|string|유저 소개|
+    |user_nickname|string|유저 닉네임|
+    |user_img|string|유저 이미지|
     |created_at|string|생성 날짜|
     |updated_at|string|업데이트 날짜|
 
