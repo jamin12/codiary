@@ -1,7 +1,13 @@
 import { baseUrl } from ".";
 
-const auth = { 
+const auth = {
+  /**
+   * 로그인 URL
+   */
   login: baseUrl + "/login",
+  /**
+   * 로그아웃 URL
+   */
   logout: baseUrl + "/logout"
 };
 

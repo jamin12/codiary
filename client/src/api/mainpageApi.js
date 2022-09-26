@@ -3,6 +3,9 @@ import { baseUrl } from ".";
 let mainUrl = baseUrl + "/main";
 
 const main = {
+  /**
+   * 메인 페이지 URL
+   */
 	mainPage: mainUrl,
 	/**
 	 * 메인 페이지 검색 URL 반환
