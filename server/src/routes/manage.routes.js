@@ -19,4 +19,5 @@ router
   .route('/:reporttype/:reporttargettype')
   .get(auth('admin'), validate(manageValidation.output.getReports), manageController.output.getReports);
 
+// TODO: delete user
 module.exports = router;
