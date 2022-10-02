@@ -20,4 +20,5 @@ const user = {
 	deleteUser: userUrl,
 };
 
+
 export default user;
