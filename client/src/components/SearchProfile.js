@@ -7,9 +7,10 @@ import { Link } from 'react-router-dom';
 // 스타일 설정
 // 1680*900 기준 작성
 const Main = styled.div`
-  width: 100vw;
-  height: 100%;
+  width: 100%;
+  height: 120px;
   position: relative;
+  z-index: 999;
 `
 const Wrap = styled.div`
   position: absolute;
