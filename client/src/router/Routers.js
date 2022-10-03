@@ -3,6 +3,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import Main from '../Pages/home';
 import Post from '../Pages/Post';
+import Write from '../Pages/WritePost.jsx';
 import Setting from '../Pages/Setting'
 import MyCategory from "../components/SettingMycategory";
 import MyInfo from "../components/SettingMyinfo";
@@ -21,7 +22,8 @@ const Routers = () => {
                     <Route path="category" element={<MyCategory/>}/>
                     <Route path="info" element={<MyInfo/>}/>
                 </Route>
-                
+                <Route path="/write" element={<Write/>}></Route>
+
                 <Route path="/:userId" element={<MyPage/>}></Route>
                 <Route path="/:userId/calender" element={<MyCalender/>}></Route>
                 <Route path="/:userId/presave" element={<Presave/>}></Route>
