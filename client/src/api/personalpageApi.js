@@ -1,7 +1,5 @@
 import { baseUrl } from ".";
 
-let personalUrl = baseUrl + "/personal";
-
 /**
  * url 만들기
  * @param {string} startUrl
@@ -9,6 +7,7 @@ let personalUrl = baseUrl + "/personal";
  * @returns
  */
 const createUrl = (startUrl, params) => {
+	var personalUrl = baseUrl + "/personal";
 	personalUrl += startUrl;
 	for (let index = 0; index < params.length; index++) {
 		personalUrl = personalUrl + "/" + params[index];

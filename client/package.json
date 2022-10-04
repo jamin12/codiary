@@ -10,6 +10,7 @@
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",
     "@toast-ui/editor-plugin-color-syntax": "^3.1.0",
     "@toast-ui/react-editor": "^3.2.0",
+    "axios": "^0.27.2",
     "holderjs": "^2.9.9",
     "jquery": "^3.6.1",
     "moment": "^2.29.4",
@@ -31,7 +32,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start" : "set \"GENERATE_SOURCEMAP=false\" && react-scripts start",
+    "start": "set \"GENERATE_SOURCEMAP=false\" && react-scripts start",
     "build": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
