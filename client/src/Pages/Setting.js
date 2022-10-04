@@ -1,21 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SearchProfile from '../components/SearchProfile';
 import styled from 'styled-components';
 
 import Myinfo from '../components/SettingMyinfo';
-// import MyCategory from '../components/SettingMycategory';
-
-
-
-const Setting = () => {
+import MyCategory from '../components/SettingMycategory';
 
   // css
-  const Header = styled.div`
-    position: relative;
-    width: 100%;
-    height: 100%; 
-    padding-bottom: 50px;
-  `
+const Header = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%; 
+  padding-bottom: 50px;
+`
   const ContentsWrap = styled.div`
     display: flex;
     position: relative;
@@ -62,7 +58,7 @@ const Setting = () => {
     li button{
       width: 100%;
       height: 3.5rem;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       border: none;
       border-radius: 30px;
       margin: 10px auto;
@@ -98,6 +94,24 @@ const Setting = () => {
 
 
 
+
+const Setting = () => {
+
+
+  const [content, setContent] = useState();
+
+  const ClickButton = e => {
+    const { name } = e.target;
+    setContent(name)
+  }
+
+  const selectComponent = {
+    info: <Myinfo name=''/>,
+    category: <MyCategory categoryList={undefined}/>,
+  };
+
+  console.log(content);
+
   return (
     <>
       <Header style={{zIndex: '999'}}>
@@ -108,16 +122,20 @@ const Setting = () => {
         <div> 
           <Title>Setting</Title>
           <Menu>
-            <li><button>내 정보 수정</button></li>
-            <li><button>카테고리 수정</button></li>
+            <li><button onClick={ClickButton} name='info'>내 정보 수정</button></li>
+            <li><button onClick={ClickButton} name='category'>카테고리 수정</button></li>
             <li><button>회원정보 관리</button></li>
           </Menu>
 
-          <Contents>
-            <Myinfo name=''/>
+          {
+            content && <Contents>{selectComponent[content]}</Contents>
+          }
+          {/* <Contents> */}
+            {/* <Link to='/setting/info'></Link> */}
+            {/* <Myinfo name=''/> */}
             {/* 여기에 서버에서 json타입으로 받아온걸 넣어주면 됨. const로 변수 안에 넣어서. */}
             {/* <MyCategory categoryList={undefined}/> */}
-          </Contents>
+          {/* </Contents> */}
         </div>
 
 
