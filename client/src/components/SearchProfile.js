@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import styled from "styled-components";
 import '../css/reset.css';
 import { devices } from '../css/DeviceSize';
+import { Link } from 'react-router-dom';
 
 // 스타일 설정
 // 1680*900 기준 작성
 const Main = styled.div`
-  width: 100vw;
-  height: 100%;
+  width: 100%;
+  height: 120px;
   position: relative;
+  z-index: 999;
 `
 const Wrap = styled.div`
   position: absolute;
@@ -73,7 +75,7 @@ const Search = styled.input`
 `
 const Profile = styled.div`
   width: 100px;
-  height: 50px;
+  height: 40px;
   margin-left: 30px;
 
   display: flex;
@@ -81,14 +83,14 @@ const Profile = styled.div`
 
   .userBox{
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
 
     // 현재 이미지 안들어감 해결 해야함.
     .imgBox{
       position: relative;
-      min-width: 50px;
-      height: 50px;
+      min-width: 40px;
+      height: 40px;
       /* background-image: url(${(props) => props.img || '../IMG/KAKAO.png.png'}); */
       background-color: orange;
       background-size: cover;
@@ -102,8 +104,8 @@ const Profile = styled.div`
 
   .menuToggleOFF{
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -132,8 +134,8 @@ const Profile = styled.div`
 
   .menuToggleON{
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -168,7 +170,7 @@ const Menu = styled.div`
     transition: 0.5s;
     width: 200px;
     height: 0;
-    p{
+    .tagP{
       display: none;
     }
   }
@@ -195,7 +197,8 @@ const Menu = styled.div`
       z-index: -1;
     }
 
-    p{
+    .tagP{
+      display: block;
       font-size: 1.1rem;
       width: 100%;
       margin-bottom: 1px;
@@ -234,25 +237,35 @@ const GotoHome = styled.h1`
 const SearchProfile = () => {
 
   const [isOpen, setMenu] = useState(false);
+  const [searchWord, setSearch] = useState('');
 
   const toggleMenu = () => {
       setMenu(isOpen => !isOpen);
+  }
+
+  const changeSearch = (e) => {
+    setSearch(e.target.value);
+  }
+  const clickSearch = () => {
+    console.log(searchWord);
+    // 백엔드에 searchWord전송
   }
 
   return(
     <Main>
       <Wrap>
         <GotoHome>
-          <a href='#none'>
+          <Link to='/'>
             CODIARY
-          </a>
-
+          </Link>
         </GotoHome>
 
         <SearchWrap>
           <SearchBox className='search-box'>
-            <Search type='text' className='search' placeholder='SEARCH'></Search>
-            <ion-icon size='small' name="search-outline"></ion-icon>
+            <Search type='text' className='search' 
+              placeholder='SEARCH' onChange={changeSearch} value={searchWord}></Search>
+            <ion-icon size='small' name="search-outline"
+              onClick={clickSearch}></ion-icon>
           </SearchBox>
 
           <Profile>
@@ -265,11 +278,12 @@ const SearchProfile = () => {
 
           <Menu>
             <div className={isOpen ? 'menuON' : 'menuOFF'}>
-              <p>내 프로필</p>
-              <p>내 코디어리</p>
-              <p>임시글 목록</p>
-              <p>방문&좋아요 목록</p>
-              <p className='logout'>로그아웃</p>
+              <Link className='tagP' to='/:userId'>내 글 목록</Link>
+              <Link className='tagP' to='/:userId/calender'>내 코디어리</Link>
+              <Link className='tagP' to='/:userId/presave'>임시글 목록</Link>
+              <Link className='tagP' to='/:userId/visite'>방문&좋아요 목록</Link>
+              <Link className='tagP' to='/setting'>설정</Link>
+              <p className='logout tagP'>로그아웃</p>
             </div>
 
           </Menu>

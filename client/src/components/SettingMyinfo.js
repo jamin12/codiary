@@ -14,37 +14,34 @@ const InputField = styled.input`
   background-color: transparent;
   overflow: hidden;
 `
-
-const Myinfo = () => {
-  // css
-  const MainWrap = styled.div`
-    position: relative;
-    width: 100%;
-    height: 100%;
-    float: left;
-  `
-  const ImgBox = styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 221px;
-    height: 204px;
-    background-color: var(--gray100);
-    box-sizing: border-box;
-    border: 1px solid var(--gray900);
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 0.89rem;
-    
-    @media screen and (max-width: 1300px) {
-      width: 201px;
-      height: 184px;
-    }
-  `
-  const InputGroup = styled.div`
+const MainWrap = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  float: left;
+`
+const ImgBox = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 221px;
+  height: 204px;
+  background-color: var(--gray100);
+  box-sizing: border-box;
+  border: 1px solid var(--gray900);
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.89rem;
+  
+  @media screen and (max-width: 1300px) {
+    width: 201px;
+    height: 184px;
+  }
+`
+const InputGroup = styled.div`
   div{
     display: flex;
     position: absolute;
@@ -101,96 +98,97 @@ const Myinfo = () => {
     }
   }
 `
-  const Btn = styled.button`
-    position: absolute;
-    width: 130px;
-    height: 40px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
+const Btn = styled.button`
+  position: absolute;
+  width: 130px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  bottom: ${props => props.bottom};
+  right: ${props => props.right};
+  background-color: ${props => props.color};
+  color: #fff;
+  :hover{
+  background-color: ${props => props.hoverColor};
+  }
+`
+const CheckBox = styled.div`
+  position: fixed;
+  z-index: 999;
+  display: ${props => (!props.isLoaded ? 'none' : 'flex')};
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,10,0.7);
+
+  >div{
+    position: relative;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    margin:0 auto;
+    margin-top: 10%;
+    width: 40%;
+    height: 40%;
+    background-color: var(--gray100);
+    border-radius: 12px;
+    justify-content: space-between;
+    padding: 20px;
 
-    bottom: ${props => props.bottom};
-    right: ${props => props.right};
-    background-color: ${props => props.color};
-    color: #fff;
-    :hover{
-    background-color: ${props => props.hoverColor};
+    h1{
+      text-align: center;
     }
-  `
-  const CheckBox = styled.div`
-    position: fixed;
-    z-index: 999;
-    display: ${props => (!props.isLoaded ? 'none' : 'flex')};
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0,0,10,0.7);
+    p{
+      text-align: center;
+      margin: -20px auto 20px auto;
+      line-height: 2.5rem;
+      color: #d06565;
+    }
 
-    >div{
-      position: relative;
+    .btn-cancel{
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 2.5rem;
+      color: var(--gray600);
+      cursor: pointer;
+    }
+
+    input{
+      border-radius: 50px;
+      padding: 5px 10px;
+      width: 50%;
+      margin: 10px auto;
+    }
+    div{
+      width: 100%;
       display: flex;
       flex-direction: column;
-      margin:0 auto;
-      margin-top: 10%;
-      width: 40%;
-      height: 40%;
-      background-color: var(--gray100);
-      border-radius: 12px;
-      justify-content: space-between;
-      padding: 20px;
-
-      h1{
-        text-align: center;
-      }
-      p{
-        text-align: center;
-        margin: -20px auto 20px auto;
-        line-height: 2.5rem;
-        color: #d06565;
-      }
-
-      .btn-cancel{
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-size: 2.5rem;
-        color: var(--gray600);
-        cursor: pointer;
-      }
-
-      input{
-        border-radius: 50px;
-        padding: 5px 10px;
-        width: 50%;
-        margin: 10px auto;
-      }
-      div{
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        margin: 0 auto;
-      }
+      margin: 0 auto;
     }
-  `
-  const BtnWithdraw = styled.button`
-    background-color: #8a2020;
-    color: #fff;
-    width: 140px;
-    height: 40px;
-    border: none;
-    border-radius: 12px;
-    margin: 0 auto;
+  }
+`
+const BtnWithdraw = styled.button`
+  background-color: #8a2020;
+  color: #fff;
+  width: 140px;
+  height: 40px;
+  border: none;
+  border-radius: 12px;
+  margin: 0 auto;
 
-    :hover{
-      background-color:#771313;
-    }
-  `
-  // css End
+  :hover{
+    background-color:#771313;
+  }
+`
+
+const Myinfo = () => {
 
   const [isLoaded, setLoad] = useState(false);
   const [nameValue, setName] = useState('');
@@ -204,10 +202,12 @@ const Myinfo = () => {
   const MyName = '이묘';
   const {user_name, user_nickname, user_info} = inputInfo;
 
+  // 회원탈퇴(setting에서) 버튼 클릭
   const clickWithdraw = () => {
     setLoad((prev) => !prev)
   }
 
+  // 내 정보 수정 onChange
   const onChange = (e) => {
     const {name, value} = e.target;
     const nextInputs = {
@@ -217,10 +217,11 @@ const Myinfo = () => {
     setInfo(nextInputs);
   }
 
+  // 적용 버튼 클릭 이벤트
   const clickSubmit = () =>{
     // 적어놓은 정보 백엔드에 전달
     if(window.confirm("적용하시겠습니까?")) {
-      if(user_nickname==='' || user_info===''){
+      if(user_nickname!=='' || user_info!==''){
         alert('빈칸을 모두 채운 후에 적용 버튼을 눌러주세요.');
       }else{
         alert("적용되었습니다.");
@@ -232,10 +233,12 @@ const Myinfo = () => {
     }
   }
 
+  // 회원 탈퇴 이름 확인 onChange
   const withdrawNameChange = (e) => {
     setName(e.target.value);
   }
 
+  // 회원탈퇴 확인 버튼
   const realWithdraw = () => {
     if(nameValue === MyName){   // 백엔드에서 받아온 내 이름 확인
       alert('계정이 삭제되었습니다');
@@ -246,6 +249,7 @@ const Myinfo = () => {
     }
   }
 
+  // 회원탈퇴창 취소(닫기)버튼
   const withdrawCancle = () => {
     setLoad(false);
   }
