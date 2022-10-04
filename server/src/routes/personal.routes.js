@@ -195,11 +195,17 @@ router
  * search
  */
 router
-	.route("/search/:searchword/:searchtype")
+	.route("/search/personal/:searchword/:searchtype")
 	.get(
 		auth("user"),
 		validate(personalValidation.output.searchPersonalContents),
 		personalController.output.searchPersonalposts
+	);
+router
+	.route("/search/common/:uniqueid/:searchword")
+	.get(
+		validate(personalValidation.output.searchCommonContents),
+		personalController.output.searchCommonposts
 	);
 
 /**
