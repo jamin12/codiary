@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -7,16 +8,37 @@ import SimilarPost from "../components/SimilarPost";
 import { personal } from "../api/index";
 
 const WritePage = () => {
-  const [post, setPost] = useState({});
-	useEffect(() => {
-    async function getPostFuntion(){
-      const getPost = await axios.get(personal.getPersonalPost("test", 1));
-      setPost(getPost.data.result_data);
-    }
-    getPostFuntion();
-	}, []);
+	// 가변 인수 가져오기
+	const { userId, postId } = useParams();
+	const [post, setPost] = useState({});
+	const [associatePost, setAssociatePost] = useState({});
 
-  console.log(post);
+	/**
+	 * 포스트 가져오기
+	 */
+	useEffect(() => {
+		async function getPostFuntion() {
+			const getPost = await axios.get(
+				personal.getPersonalPost(userId, parseInt(postId))
+			);
+			setPost(getPost.data.result_data);
+		}
+		getPostFuntion();
+	}, [postId, userId]);
+
+	/**
+	 * 연관 포스트 가져오기
+	 */
+	useEffect(() => {
+		async function getAssociatePostFuntion() {
+			const getAssociatePost = await axios.get(
+				personal.associatePersonalposts(postId)
+			);
+			setAssociatePost(getAssociatePost.data.result_data);
+		}
+		getAssociatePostFuntion();
+	}, [postId]);
+
 	// HTML
 	return (
 		<>
