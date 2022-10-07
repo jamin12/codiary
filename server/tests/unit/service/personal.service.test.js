@@ -509,7 +509,7 @@ describe("PersonalService", () => {
 				1,
 				10
 			);
-			expect(searchedPost.length).toEqual(1);
+			expect(searchedPost.length).toEqual(2);
 		});
 
 		// 개인 임시 포스트에서 검색
@@ -558,7 +558,7 @@ describe("PersonalService", () => {
 				0,
 				10
 			);
-			expect(searchedCommonPostawait.length).toEqual(1);
+			expect(searchedCommonPostawait.length).toEqual(2);
 		});
 	});
 
