@@ -10,9 +10,6 @@ router
   .get(auth('user'), userController.output.getMyInfo)
   .patch(auth('user'), userController.input.updateUser)
   .delete(auth('user'), userController.input.deleteUser);
-  
-router.
-  route('/manage')
-  .get(auth('manageUsers'), userController.output.getUsers)
+
 
 module.exports = router;
