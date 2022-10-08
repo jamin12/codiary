@@ -9,13 +9,9 @@
     "@testing-library/user-event": "^13.5.0",
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",
     "@toast-ui/editor-plugin-color-syntax": "^3.1.0",
-<<<<<<< HEAD
     "@toast-ui/react-editor": "^3.2.2",
     "history": "^5.3.0",
-=======
-    "@toast-ui/react-editor": "^3.2.0",
     "axios": "^0.27.2",
->>>>>>> front_datainsert
     "holderjs": "^2.9.9",
     "jquery": "^3.6.1",
     "moment": "^2.29.4",
