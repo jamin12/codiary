@@ -3,6 +3,7 @@ import styled from "styled-components";
 import '../css/reset.css';
 import { devices } from '../css/DeviceSize';
 import { Link } from 'react-router-dom';
+import Login from './Login';
 
 // 스타일 설정
 // 1680*900 기준 작성
@@ -10,7 +11,7 @@ const Main = styled.div`
   width: 100%;
   height: 120px;
   position: relative;
-  z-index: 999;
+  z-index: 900;
 `
 const Wrap = styled.div`
   position: absolute;
@@ -233,11 +234,13 @@ const GotoHome = styled.h1`
 
 
 
+
 // 회원 정보를 받아와서 프로필 사진을 불러와야 함
 const SearchProfile = () => {
 
   const [isOpen, setMenu] = useState(false);
   const [searchWord, setSearch] = useState('');
+  const [loginOpen, setLogin] = useState(false);
 
   const toggleMenu = () => {
       setMenu(isOpen => !isOpen);
@@ -251,8 +254,19 @@ const SearchProfile = () => {
     // 백엔드에 searchWord전송
   }
 
+  const loginModal = () => {
+    alert('로그인 페이지 열어')
+    setLogin(true);
+    alert(loginOpen);
+  }
+
   return(
     <Main>
+
+      {
+        loginOpen && <Login setLogin={setLogin} />
+      }
+
       <Wrap>
         <GotoHome>
           <Link to='/'>
@@ -283,7 +297,7 @@ const SearchProfile = () => {
               <Link className='tagP' to='/:userId/presave'>임시글 목록</Link>
               <Link className='tagP' to='/:userId/visite'>방문&좋아요 목록</Link>
               <Link className='tagP' to='/setting'>설정</Link>
-              <p className='logout tagP'>로그아웃</p>
+              <p className='logout tagP' onClick={loginModal}>로그인</p>
             </div>
 
           </Menu>
