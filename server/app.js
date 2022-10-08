@@ -19,7 +19,6 @@ const { authLimiter } = require("./src/middleware/rateLimiter");
 const CustomError = require("./src/utils/Error/customError");
 const httpStatus = require("http-status");
 
-
 const app = express();
 dotenv.config();
 
@@ -53,8 +52,11 @@ app.use(xss());
 // enable cors
 app.use(
 	cors({
-		origin: true, // 출처 허용 옵션
+		origin: ["http://127.0.0.1:3001", "http://localhost:3001"], // 출처 허용 옵션
 		credential: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
+		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+		preflightContinue: false,
+		optionsSuccessStatus: 204,
 	})
 );
 // app.options('*', cors());
