@@ -255,9 +255,7 @@ const SearchProfile = () => {
   }
 
   const loginModal = () => {
-    alert('로그인 페이지 열어')
     setLogin(true);
-    alert(loginOpen);
   }
 
   return(
