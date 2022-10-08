@@ -19,7 +19,11 @@ const MainWrap = styled.div`
 			padding: 100px 0 50px 0;
 		}
 	}
-	.home-search {
+  #popularity-text{
+
+  }
+
+  .home-search {
 		background-color: #38393d;
 		/* background-image: linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.0) ),
           url(../../IMG/얼룩무늬.svg); */
