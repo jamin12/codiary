@@ -4,7 +4,6 @@ import '../css/reset.css';
 import {IoClose} from 'react-icons/io5';
 
 
-
 const Login = ({ setLogin }) => {
 
   const closeModal = () => {
@@ -28,7 +27,7 @@ const Login = ({ setLogin }) => {
         </TextBox>
 
         <LoginBtn onClick={loginGoogle}>
-          <img src="img/google-logo.png" alt="구글 로그인" />
+          <img src="/img/google-logo.png" alt="구글 로그인" />
         </LoginBtn>
       </div>
 
@@ -95,9 +94,10 @@ const LoginBtn = styled.div`
     overflow: hidden;
     border: 2px solid var(--gray200);
     margin-top: 40px;
+    cursor: pointer;
+    background-image: url();
     > img{
         width:100%;
         height:100%;
-        cursor:pointer;
     }
 `
