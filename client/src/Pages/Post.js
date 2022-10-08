@@ -17,26 +17,26 @@ const WritePage = () => {
 	 * 포스트 가져오기
 	 */
 	useEffect(() => {
-		async function getPostFuntion() {
+		const getPostFun = async () => {
 			const getPost = await axios.get(
 				personal.getPersonalPost(userId, parseInt(postId))
 			);
 			setPost(getPost.data.result_data);
-		}
-		getPostFuntion();
+		};
+		getPostFun();
 	}, [postId, userId]);
 
 	/**
 	 * 연관 포스트 가져오기
 	 */
 	useEffect(() => {
-		async function getAssociatePostFuntion() {
+		const getAssociatePostFun = async () => {
 			const getAssociatePost = await axios.get(
 				personal.associatePersonalposts(postId)
 			);
 			setAssociatePost(getAssociatePost.data.result_data);
-		}
-		getAssociatePostFuntion();
+		};
+		getAssociatePostFun();
 	}, [postId]);
 
 	// HTML
