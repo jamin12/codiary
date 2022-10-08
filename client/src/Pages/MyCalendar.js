@@ -7,133 +7,10 @@ import styled from 'styled-components';
 import moment from 'moment';
 
 const MyCalendar = () => {
-  const Main = styled.div`
-    display: flex;
-    position: relative;
-  `
-
-  const Wrap = styled.div`
-    display: flex;
-    position: absolute;
-    width: 1500px;
-    height: 533px;
-    top: 50vh;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* margin: 160px auto 0 auto; */
-    margin: auto;
-    justify-content: space-between;
-  `
-
-  const CalendarWrap = styled.div`
-    display: flex;
-    top: 100px;
-    /* left: 250px; */
-    /* transform: translateY(-40vh); */
-    border-radius: 10px;
-    box-shadow: 0 16px 20px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-  `
-
-  const PostWrap = styled.div`
-    width: 35%;
-    height: 97%;
-    margin-top: 20px;
-    overflow-y: scroll;
-    position: relative;
-    &::-webkit-scrollbar{
-      width: 10px;
-      background-color:white;
-    }
-    &::-webkit-scrollbar-thumb{
-      background-color: #ccc;
-      border-radius: 50px;
-    }
-    .menu{
-      display: flex;
-      justify-content: space-between;
-      position: sticky;
-      top: -1px;
-      width: 98%;
-      background-color: white;
-      padding: 0 5px;
-      z-index: 999;
-    }
-    .menu > ion-icon{
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-    }
-  `
-
-  const Post  = styled.div`
-    width: 98%;
-    height: 230px;
-    background-color: rgb(235, 235, 235);
-    border-radius: 20px;
-    margin: 10px 0;
-    justify-content: space-between;
-    display: flex;
-    cursor: pointer;
-
-    .text-box{ 
-      flex-grow: 1;
-      flex-basis: 50%;
-      position: relative;
-    }
-    .title{
-      position: absolute;
-      top: 10px;
-      left: 20px;
-    }
-    .text{ 
-      position: absolute;
-      width: 80%;
-      top: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      overflow: hidden;
-      color: rgba(0,0,0,0.7);
-      font-size: 1rem;
-
-      display: -webkit-box;
-      word-break: break-word;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      text-overflow: ellipsis;
-    }
-    .user{
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      font-weight: bold;
-    }
-  `
-  // 썸네일
-  const ThumbnailIMG = styled.div`
-    display: ${(props) => props.img ? 'flex' : 'none'};
-    width: 50%;
-    height: 100%;
-    background: url(${(props) => props.img});
-    background-size: cover;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    flex-grow: 1;
-  `
-
-  const HightLight = styled.div`
-    /* display: flex; */
-    /* position: absolute; */
-    /* background-color: rgba(0, 0, 0, 0, 0.2); */
-    background-color: red;
-  `
-
   const [value, onChange] = useState(new Date());
 
   // 받은 날짜에 대한 포스팅 기록 저장해서 표시
   // const [mark, setMark] = useState([]);
-
 
   const mark = [
     {
@@ -214,9 +91,6 @@ const MyCalendar = () => {
   const test = mark.map(date => date.created_at);
   console.log(test);
 
-
-
-
   return (
     <Main>
       <SearchProfile/> 
@@ -295,3 +169,126 @@ const MyCalendar = () => {
   );
 }
 export default MyCalendar;
+
+
+const Main = styled.div`
+display: flex;
+position: relative;
+`
+
+const Wrap = styled.div`
+display: flex;
+position: absolute;
+width: 1500px;
+height: 533px;
+top: 50vh;
+left: 50%;
+transform: translate(-50%, -50%);
+/* margin: 160px auto 0 auto; */
+margin: auto;
+justify-content: space-between;
+`
+
+const CalendarWrap = styled.div`
+display: flex;
+top: 100px;
+/* left: 250px; */
+/* transform: translateY(-40vh); */
+border-radius: 10px;
+box-shadow: 0 16px 20px rgba(0, 0, 0, 0.1);
+padding: 20px;
+`
+
+const PostWrap = styled.div`
+width: 35%;
+height: 97%;
+margin-top: 20px;
+overflow-y: scroll;
+position: relative;
+&::-webkit-scrollbar{
+  width: 10px;
+  background-color:white;
+}
+&::-webkit-scrollbar-thumb{
+  background-color: #ccc;
+  border-radius: 50px;
+}
+.menu{
+  display: flex;
+  justify-content: space-between;
+  position: sticky;
+  top: -1px;
+  width: 98%;
+  background-color: white;
+  padding: 0 5px;
+  z-index: 999;
+}
+.menu > ion-icon{
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+`
+
+const Post  = styled.div`
+width: 98%;
+height: 230px;
+background-color: rgb(235, 235, 235);
+border-radius: 20px;
+margin: 10px 0;
+justify-content: space-between;
+display: flex;
+cursor: pointer;
+
+.text-box{ 
+  flex-grow: 1;
+  flex-basis: 50%;
+  position: relative;
+}
+.title{
+  position: absolute;
+  top: 10px;
+  left: 20px;
+}
+.text{ 
+  position: absolute;
+  width: 80%;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow: hidden;
+  color: rgba(0,0,0,0.7);
+  font-size: 1rem;
+
+  display: -webkit-box;
+  word-break: break-word;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+.user{
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-weight: bold;
+}
+`
+// 썸네일
+const ThumbnailIMG = styled.div`
+display: ${(props) => props.img ? 'flex' : 'none'};
+width: 50%;
+height: 100%;
+background: url(${(props) => props.img});
+background-size: cover;
+border-top-right-radius: 20px;
+border-bottom-right-radius: 20px;
+flex-grow: 1;
+`
+
+const HightLight = styled.div`
+/* display: flex; */
+/* position: absolute; */
+/* background-color: rgba(0, 0, 0, 0, 0.2); */
+background-color: red;
+`
