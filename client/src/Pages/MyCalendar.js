@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import SearchProfile from '../components/SearchProfile'
 import Calendar from 'react-calendar';
 import '../css/Calendar.css'; // css import
 import '../css/reset.css'
 import styled from 'styled-components';
 import moment from 'moment';
+import { personal } from '../api';
+import axios from 'axios';
 
 const MyCalendar = () => {
   const [value, onChange] = useState(new Date());
@@ -87,10 +89,25 @@ const MyCalendar = () => {
 
   // const [markDate, setMarkDate] = useState([]);
 
+  const [postsByDate, setPostByDate] = useState({});	/**
+	 *  사용자 날짜 별 포스트 목록 조회
+	 */
+	useEffect(() => {
+		const getPostsByDateFun = async () => {
+			const getPostsByDate = await axios.get(
+				personal.getPersonalPostsByDate("test"),
+        //TODO: value로 바꿔야하는데 value(날짜) 타입이 YYYY-MM-DD HH:mm:ss가 아님 수정 바람
+				{ params: { startdate: "2022-08-01 00:00:00"/** value */, enddate: "2022-08-30 00:00:00"/** value */ } }
+			);
+			setPostByDate(getPostsByDate.data.result_data);
+		};
+		getPostsByDateFun();
+    //TODO: 변수 이름 변경 바람(value)
+	}, [value]);
   // 배열 안에 있는 날짜 뽑아오는 함수 구현해야함.
   const test = mark.map(date => date.created_at);
   console.log(test);
-
+  console.log(value);
   return (
     <Main>
       <SearchProfile/> 

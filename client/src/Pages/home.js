@@ -159,6 +159,7 @@ const Home = () => {
 		const getSearchPostInMainFun = async () => {
 			const getSearchPostInMain = await axios.get(
 				main.searchPostInMain(searchWord),
+				// TODO: queryParams 설정 해야함
 				{ params: { offset: 1, limit: 4 } }
 			);
 			setSearchPostInMain(getSearchPostInMain.data.result_data);

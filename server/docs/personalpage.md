@@ -150,7 +150,7 @@
 - |속성|타입|설명|
     |---|---|---|
     |uniqueid *|string|사용자 유니크 아이디 (필수)|
-    |categoryid *|int|카테고리 아이디 (필수)|
+    |categoryid *|int|카테고리 아이디 (필수)</br>0: 카테고리 없이 업데이트 날짜 순으로 정렬|
     |offset *|int|현재 페이지 번호 (필수)|
     |limit|int|보여줄 개수|
 ## __<span style="color:#ff9933">응답</span>__
@@ -199,7 +199,7 @@
     |updated_at|string|업데이트 날짜|
 
 ## __<span style="color:#9999ff">사용자 날짜 별 포스트 목록 조회</span>__
-## __<span style="color:#ff9933">요청</span>__ __[GET] /posts/:uniqueid?startdate=2022:01:01 00:00:00&enddate=2022:01:01 00:00:00__
+## __<span style="color:#ff9933">요청</span>__ __[GET] /posts/:uniqueid?startdate=2022-01-01 00:00:00&enddate=2022-01-01 00:00:00__
 - |속성|타입|설명|
     |---|---|---|
     |uniqueid *|string|사용자 유니크 아이디 (필수)|
