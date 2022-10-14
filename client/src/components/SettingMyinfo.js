@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { IoClose } from "react-icons/io5";
 import '../App.css'
+import axios from 'axios';
+import { personal, user } from '../api';
 
 // 글자를 입력하면 하나씩 밖에 입력되는 현상 해결해야함.
 
@@ -195,12 +197,12 @@ const Myinfo = () => {
   // 기본 정보
   const [inputInfo, setInfo] = useState({
     user_name: "임효현",  // 백엔드에서 받아온 기본 정보를 넣어줌
-    nick_name: "",  
+    nick_name: "",
     info_line: ""
   })
   // 내 이름
   const MyName = '이묘';
-  const {user_name, user_nickname, user_info} = inputInfo;
+  const { user_name, user_nickname, user_info } = inputInfo;
 
   // 회원탈퇴(setting에서) 버튼 클릭
   const clickWithdraw = () => {
@@ -209,7 +211,7 @@ const Myinfo = () => {
 
   // 내 정보 수정 onChange
   const onChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     const nextInputs = {
       ...inputInfo,
       [name]: value
@@ -218,14 +220,26 @@ const Myinfo = () => {
   }
 
   // 적용 버튼 클릭 이벤트
-  const clickSubmit = () =>{
+  const clickSubmit = async () => {
     // 적어놓은 정보 백엔드에 전달
-    if(window.confirm("적용하시겠습니까?")) {
-      if(user_nickname!=='' || user_info!==''){
+    if (window.confirm("적용하시겠습니까?")) {
+      // TODO: 이거 적용 안됨...ㅜㅜ
+      if (user_nickname === '' || user_info === '') {
         alert('빈칸을 모두 채운 후에 적용 버튼을 눌러주세요.');
-      }else{
-        alert("적용되었습니다.");
-        // 백엔드에 정보 전달
+      } else {
+        // TODO: body 부분 넣으세요
+        await axios.patch(user.updateUser(),
+          {
+            "user_unique_id": "front test unique id1",
+            "user_nickname": "front test nickname",
+            "user_introduce": "front test introduce",
+            "user_img": "front test img url"
+          },
+          {
+            withCredentials: true
+          })
+          alert("적용되었습니다.");
+          // 백엔드에 정보 전달
       }
     } else {
       alert("취소합니다.");
@@ -239,12 +253,15 @@ const Myinfo = () => {
   }
 
   // 회원탈퇴 확인 버튼
-  const realWithdraw = () => {
-    if(nameValue === MyName){   // 백엔드에서 받아온 내 이름 확인
-      alert('계정이 삭제되었습니다');
-      // 백엔드로 계정 삭제 요청
+  const realWithdraw = async () => {
+
+    if (nameValue === MyName) {   // 백엔드에서 받아온 내 이름 확인
+      // 유저 삭제
+      await axios.delete(user.deleteUser(), {
+        withCredentials: true
+      });
       // codiary 메인화면으로 이동
-    }else{
+    } else {
       alert('이름이 올바르지 않습니다. 다시 확인해주세요.')
     }
   }
@@ -259,26 +276,26 @@ const Myinfo = () => {
 
   return (
     <MainWrap>
-      <ImgBox> 클릭해서 <br/> 이미지 변경 </ImgBox>
+      <ImgBox> 클릭해서 <br /> 이미지 변경 </ImgBox>
 
       <InputGroup>
         <div className="user-name">
           <p>이름</p>
-          <InputField disabled type="text" id="user_name" 
+          <InputField disabled type="text" id="user_name"
             name='user_name'
             onChange={onChange} value={user_name}></InputField>
         </div>
 
         <div className="user-nickname">
           <p>닉네임</p>
-          <InputField type="text" id="user_nickname" 
+          <InputField type="text" id="user_nickname"
             name='user_nickname' placeholder="이묘"
             onChange={onChange} value={user_nickname}></InputField>
         </div>
 
         <div className="user-info">
           <p>한줄소개</p>
-          <InputField type="text" id="user_info" 
+          <InputField type="text" id="user_info"
             name='user_info' placeholder="프론트엔드 개발자가 될거야"
             onChange={onChange} value={user_info}></InputField>
         </div>
@@ -291,12 +308,12 @@ const Myinfo = () => {
       <CheckBox isLoaded={isLoaded}>
         <div>
           <h1>회원탈퇴</h1>
-          <IoClose className='btn-cancel' onClick={withdrawCancle}/>
+          <IoClose className='btn-cancel' onClick={withdrawCancle} />
           <div>
-            <p>회원 탈퇴를 하시면 현재까지 작성된 게시물 및 댓글이 모두 삭제되며, 복구하실 수 없습니다. <br/>
+            <p>회원 탈퇴를 하시면 현재까지 작성된 게시물 및 댓글이 모두 삭제되며, 복구하실 수 없습니다. <br />
               위 사항을 확인하신 후, 탈퇴를 원하시면 가입하실 때 입력하신 성함을 입력해주세요.
             </p>
-            <input type='text' className='withdraw-name' 
+            <input type='text' className='withdraw-name'
               onChange={withdrawNameChange} value={nameValue}></input>
           </div>
           <BtnWithdraw onClick={realWithdraw}>회원탈퇴</BtnWithdraw>

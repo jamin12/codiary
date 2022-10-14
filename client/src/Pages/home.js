@@ -171,6 +171,7 @@ const Home = () => {
 	/**
 	 * 인기 게시글 가져오기
 	 */
+	// TODO: 이거 그냥 enterSeacrhPress 함수에 넣어두댐
 	useEffect(() => {
 		const getPopularPostFun = async () => {
 			const getPopularPost = await axios.get(main.mainPage(), {
