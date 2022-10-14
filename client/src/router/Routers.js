@@ -18,6 +18,7 @@ const Routers = () => {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Main/>}></Route>
+
                 <Route path="/setting" element={<Setting/>}>
                     <Route path="category" element={<MyCategory/>}/>
                     <Route path="info" element={<MyInfo/>}/>
