@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    contents_id: {
+    post_id: {
       type: DataTypes.BIGINT,
       allowNull: false
     },
