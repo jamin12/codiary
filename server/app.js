@@ -58,7 +58,7 @@ app.use(xss());
 // enable cors
 app.use(
 	cors({
-		origin: ["http://127.0.0.1:3001", "http://localhost:3001"], // 출처 허용 옵션
+		origin: ["http://127.0.0.1:4000", "http://localhost:4000"], // 출처 허용 옵션
 		credential: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
 		methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
 		preflightContinue: false,
