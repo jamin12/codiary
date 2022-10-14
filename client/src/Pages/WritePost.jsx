@@ -79,10 +79,34 @@ const WritePost = () => {
     setModal(true);
     console.log(modal)
   }
+
   const onClickPresave = () => {
     // 서버에 임시저장 파일로 전송
     alert('서버에 임시저장 파일 전송 기능 추가 필요')
   }
+
+  /**
+   * 컴파일 플러그인
+   */
+  const compilePlugin = () => {
+    const toHTMLRenderers = {
+      compile(node) {
+        return [
+          {type: 'openTag', tagName: 'div', outerNewLine: true},
+          {type: 'html', },
+          {type: 'closeTag', tagName: 'div', outerNewLine: true}
+        ]
+      }
+    }
+    return { toHTMLRenderers }
+  }
+  // const content = [
+  //   '$$compile',
+  //   '',
+  //   '',
+  //   '',
+  //   '$$'
+  // ].join('\n');
 
   return(
     <div style={{height:'100vh', scrollbarWidth:'none'}}>
@@ -103,7 +127,7 @@ const WritePost = () => {
               initialEditType='markdown'  // 처음 언어 설정을 마크다운으로 설정
               useCommandShortcut={true}  // 키보드 입력 컨트롤 방지
               hideModeSwitch= {true}// 한 가지 타입(마크다운)만 사용하고싶으면 설정
-              plugins={[colorSyntax, [codeSyntaxHighlight, { highlighter: Prism }]]}
+              plugins={[colorSyntax, [codeSyntaxHighlight, { highlighter: Prism }], compilePlugin]}
               language="ko-KR"  // 초기 언어 세팅: 한글
               toolbarItems={[
                 ['heading', 'bold', 'italic', 'strike'],
@@ -135,18 +159,6 @@ const WritePost = () => {
               //     }
               //   }
               // }}
-              exts={[
-                {name: 'chart',
-                minWidth: 100,
-                maxWidth: 600,
-                minHeight: 100,
-                maxHeight: 300},
-                'scrollSync',
-                'colorSyntax',
-                'uml',
-                'mark',
-                'table'
-              ]}
             />
         </WriteBox>
 
