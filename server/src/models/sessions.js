@@ -1,24 +1,23 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('tag', {
-    tag_id: {
-      autoIncrement: true,
-      type: DataTypes.BIGINT,
+  return sequelize.define('sessions', {
+    session_id: {
+      type: DataTypes.STRING(128),
       allowNull: false,
       primaryKey: true
     },
-    post_id: {
-      type: DataTypes.BIGINT,
+    expires: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false
     },
-    tag_name: {
-      type: DataTypes.STRING(64),
+    data: {
+      type: DataTypes.TEXT,
       allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'tag',
-    timestamps: true,
+    tableName: 'sessions',
+    timestamps: false,
     underscored: true,
     indexes: [
       {
@@ -26,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "tag_id" },
+          { name: "session_id" },
         ]
       },
     ]
