@@ -25,7 +25,7 @@ const input = {
 
 	// TODO: 성공 실패 url 수정
 	oauth2callback: passport.authenticate('google', {
-		successRedirect: 'http://127.0.0.1:3001',
+		successRedirect: 'http://127.0.0.1:4000',
 		failureRedirect: '/fail',
 	}),
 };

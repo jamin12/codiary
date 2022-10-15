@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import "../css/reset.css";
 import { IoClose } from "react-icons/io5";
-import { useEffect } from "react";
 import { auth } from "../api/index";
 import axios from "axios";
 
