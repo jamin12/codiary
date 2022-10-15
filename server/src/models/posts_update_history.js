@@ -19,6 +19,8 @@ module.exports = function(sequelize, DataTypes) {
     sequelize,
     tableName: 'posts_update_history',
     timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
     underscored: true,
     indexes: [
       {

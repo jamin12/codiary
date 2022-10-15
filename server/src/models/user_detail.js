@@ -35,6 +35,8 @@ module.exports = function(sequelize, DataTypes) {
     sequelize,
     tableName: 'user_detail',
     timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
     underscored: true,
     indexes: [
       {

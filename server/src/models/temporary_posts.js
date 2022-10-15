@@ -31,6 +31,8 @@ module.exports = function(sequelize, DataTypes) {
     sequelize,
     tableName: 'temporary_posts',
     timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
     underscored: true,
     indexes: [
       {

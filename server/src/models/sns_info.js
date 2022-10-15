@@ -26,6 +26,8 @@ module.exports = function(sequelize, DataTypes) {
     sequelize,
     tableName: 'sns_info',
     timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
     underscored: true,
     indexes: [
       {
