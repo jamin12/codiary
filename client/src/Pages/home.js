@@ -5,6 +5,7 @@ import Carousel from "../components/CarousalCard";
 import { Link } from "react-router-dom";
 import { main } from "../api/index";
 import axios from "axios";
+import Login from "../components/Login.jsx";
 
 const MainWrap = styled.div`
 	.container {
@@ -18,7 +19,11 @@ const MainWrap = styled.div`
 			padding: 100px 0 50px 0;
 		}
 	}
-	.home-search {
+  #popularity-text{
+
+  }
+
+  .home-search {
 		background-color: #38393d;
 		/* background-image: linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.0) ),
           url(../../IMG/얼룩무늬.svg); */
@@ -74,9 +79,7 @@ const ProfileIMG = styled.div`
 	cursor: pointer;
 
 	/* background-color: red; */
-	background-image: url(${(props) =>
-		props.img ||
-		"https://images.unsplash.com/photo-1662581871665-f299ba8ace07?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80"});
+	background-image: url(${(props) => props.img || "https://images.unsplash.com/photo-1662581871665-f299ba8ace07?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80"});
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -146,6 +149,17 @@ const Home = () => {
 	const [searchPostInMain, setSearchPostInMain] = useState({});
 	const [popularPost, setPopularPost] = useState({});
 	const [enterCount, setEnterCount] = useState(0);
+
+  const [loginOpen, setLogin] = useState(false);
+
+
+  /**
+   * 로그인 모달 여는 onClick
+   */
+  const loginModal = () => {
+    setLogin(true);
+  }
+
 
 	// 검색창 onChange
 	const changeSearch = (e) => {
@@ -324,6 +338,11 @@ const Home = () => {
 
 	return (
 		<MainWrap>
+
+      {
+        loginOpen && <Login setLogin={setLogin} />
+      }
+
 			{/* 메인 검색 화면 */}
 			<div className="container home-search">
 				{/* 프로필 이미지 */}
@@ -350,7 +369,7 @@ const Home = () => {
 						<p>
 							<Link to="/setting">설정</Link>
 						</p>
-						<p className="logout">로그아웃</p>
+						<p className="logout" onClick={loginModal}>로그아웃</p>
 					</div>
 				</Menu>
 
