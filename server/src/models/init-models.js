@@ -3,9 +3,11 @@ var _category = require("./category");
 var _comments = require("./comments");
 var _like_record = require("./like_record");
 var _measurement = require("./measurement");
+var _measurement_date = require("./measurement_date");
 var _posts = require("./posts");
 var _posts_update_history = require("./posts_update_history");
 var _report = require("./report");
+var _sessions = require("./sessions");
 var _sns_info = require("./sns_info");
 var _tag = require("./tag");
 var _temporary_posts = require("./temporary_posts");
@@ -18,9 +20,11 @@ function initModels(sequelize) {
   var comments = _comments(sequelize, DataTypes);
   var like_record = _like_record(sequelize, DataTypes);
   var measurement = _measurement(sequelize, DataTypes);
+  var measurement_date = _measurement_date(sequelize, DataTypes);
   var posts = _posts(sequelize, DataTypes);
   var posts_update_history = _posts_update_history(sequelize, DataTypes);
   var report = _report(sequelize, DataTypes);
+  var sessions = _sessions(sequelize, DataTypes);
   var sns_info = _sns_info(sequelize, DataTypes);
   var tag = _tag(sequelize, DataTypes);
   var temporary_posts = _temporary_posts(sequelize, DataTypes);
@@ -78,15 +82,16 @@ function initModels(sequelize) {
 
   posts.belongsTo(category, { foreignKey: "category_id", as: "category" });
   category.hasMany(posts, { foreignKey: "category_id", as: "posts" });
-
   return {
     category,
     comments,
     like_record,
     measurement,
+    measurement_date,
     posts,
     posts_update_history,
     report,
+    sessions,
     sns_info,
     tag,
     temporary_posts,

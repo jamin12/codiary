@@ -1,31 +1,23 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('comments', {
-    comments_id: {
+  return sequelize.define('measurement_date', {
+    measurement_date_id: {
       autoIncrement: true,
       type: DataTypes.BIGINT,
       allowNull: false,
       primaryKey: true
     },
-    sub_comments_id: {
-      type: DataTypes.BIGINT,
-      allowNull: true
-    },
     post_id: {
       type: DataTypes.BIGINT,
       allowNull: false
     },
-    user_id: {
-      type: DataTypes.STRING(255),
+    visit_count: {
+      type: DataTypes.INTEGER,
       allowNull: false
-    },
-    comments_body: {
-      type: DataTypes.STRING(255),
-      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'comments',
+    tableName: 'measurement_date',
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "updated_at",
@@ -36,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "comments_id" },
+          { name: "measurement_date_id" },
         ]
       },
     ]
