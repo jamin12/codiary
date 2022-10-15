@@ -16,7 +16,7 @@ router
 
 router
   .route('/graph/:graphtype/:postid')
-  .get(auth("user"), validate(measurementValidation.getGraphData), measurementController.output.getGraphData)
+  .get(auth("user"), validate(measurementValidation.output.getGraphData), measurementController.output.getGraphData)
 
 router
   .route('/myposts/:posttype/:criterion')
