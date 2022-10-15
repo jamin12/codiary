@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import "../css/reset.css";
 import { IoClose } from "react-icons/io5";
@@ -7,9 +7,33 @@ import { auth } from "../api/index";
 import axios from "axios";
 
 const Login = ({ setLogin }) => {
+
+	/**
+	 * 모달 취소버튼 onClick
+	 */
 	const closeModal = () => {
 		setLogin(false);
-	};
+	}
+
+	/**
+	 * 구글 로그인 버튼 onClick
+	 */
+	const loginGoogle = () => {
+		alert('로그인 기능 추가해야함')
+	}
+
+	useEffect(() => {
+		document.body.style.cssText = `
+		position: fixed; 
+		top: -${window.scrollY}px;
+		overflow-y: none;
+		width: 100%;`;
+		return () => {
+			const scrollY = document.body.style.top;
+			document.body.style.cssText = '';
+			window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+		};
+	}, []);
 
 	return (
 		<MainWrap>
@@ -41,7 +65,9 @@ const MainWrap = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	position: relative;
+	position: fixed;
+    top: 0;
+    left: 0;
 
 	> div {
 		background-color: var(--gray50);
@@ -84,15 +110,15 @@ const TextBox = styled.div`
 `;
 
 const LoginBtn = styled.div`
-	width: 100px;
-	height: 100px;
-	border-radius: 50%;
-	overflow: hidden;
-	border: 2px solid var(--gray200);
-	margin-top: 40px;
-	> img {
-		width: 100%;
-		height: 100%;
-		cursor: pointer;
-	}
-`;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--gray200);
+    margin-top: 40px;
+    > img{
+        width:100%;
+        height:100%;
+        cursor:pointer;
+    }
+`
