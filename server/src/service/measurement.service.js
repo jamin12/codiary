@@ -10,53 +10,18 @@ class measurementService {
 	constructor() {
 		this.paging = new Paging();
 	}
-
-	// 인기 게시글 조회
-	async getPopularPosts(...params) {
-		const pageResult = this.paging.pageResult(params[0], params[1]);
-		const result_contents = await posts.findAll({
-			attributes: postDto.filter((data) => {
-				const excludeColumn = ["user_id", "like_count", "category_id"];
-				if (!excludeColumn.includes(data)) return data;
-			}),
-			include: [
-				{
-					model: users,
-					as: "users",
-					attributes: ["user_email"],
-					include: [
-						{
-							model: user_detail,
-							as: "user_detail",
-							attributes: [
-								"user_name",
-								"user_unique_id",
-								"user_nickname",
-								"user_img",
-							],
-						}
-					]
-				}
-			],
-			order: [["like_count", "DESC"]],
-			offset: pageResult.offset,
-			limit: pageResult.limit,
-		});
-		if (result_contents.length === 0) {
-			throw new CustomError(httpStatus.BAD_REQUEST, "not found posts");
-		}
-		return result_contents;
-	}
 	/**
 	 * 게시물 그래프 조회
 	 * @param {number} periodType
 	 * @param {number} postId
 	 */
 	async getGraphData(periodType, postId) {
-		logger.info(postId)
 		let dateFormat = "%Y-%m-%d";
+		// 일 단위
 		if (periodType === 0) dateFormat = "%Y-%m-%d";
+		// 주 단위
 		else if (periodType === 1) dateFormat = "%Y-%v";
+		// 월 단위
 		else if (periodType === 2) dateFormat = "%Y-%m";
 		return await measurement_date.findAll({
 			attributes: {
@@ -96,6 +61,7 @@ class measurementService {
 	}
 	/**
 	 * 최고의 게시물 리스트
+	 * @param {string} userId}
 	 * @return {object}
 	 */
 	async getBestPosts(userId) {
@@ -150,7 +116,73 @@ class measurementService {
 			getBestTotalVisit
 		}
 	}
-
+	/**
+	 * 내 게시물 리스트
+	 * @param {string} userId
+	 * @param {number} postType
+	 * @param {number} criterion
+	 * @param {number[]} paging
+	 * @returns {object}
+	 */
+	async getMyPosts(userId, postType, criterion, ...paging) {
+		const pageResult = this.paging.pageResult(paging[0], paging[1]);
+		let criterionStr;
+		if (criterion === 0) criterionStr = "ASC";
+		else if (criterion === 1) criterionStr = "DESC";
+		let orderOption = [];
+		// 총 방문자 수 기준
+		if (postType === 0) {
+			orderOption.push("total_visit_count");
+			orderOption.push(criterionStr);
+		}
+		// 일일 방문자 기중
+		else if (postType === 1) {
+			orderOption.push("today_visit_count");
+			orderOption.push(criterionStr);
+		}
+		// 좋아요 개수 기준
+		else if (postType === 2) {
+			return await posts.findAll({
+				include: [
+					{
+						model: measurement,
+						as: "measurement",
+						attributes: {
+							exclude: ["createdAt", "updatedAt"]
+						}
+					}
+				],
+				attributes: postDto.filter((data) => {
+					const excludeColumn = ["user_id"];
+					if (!excludeColumn.includes(data)) return data;
+				}),
+				where: {
+					user_id: userId
+				},
+				order: [["like_count", criterionStr]],
+				offset: pageResult.offset,
+				limit: pageResult.limit,
+			})
+		}
+		return await measurement.findAll({
+			include: [
+				{
+					model: posts,
+					as: "posts",
+					attributes: postDto.filter((data) => {
+						const excludeColumn = ["user_id"];
+						if (!excludeColumn.includes(data)) return data;
+					}),
+					where: {
+						user_id: userId
+					},
+				}
+			],
+			order: [orderOption],
+			offset: pageResult.offset,
+			limit: pageResult.limit,
+		})
+	}
 
 }
 
