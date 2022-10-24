@@ -18,6 +18,25 @@ class MainService {
 				const excludeColumn = ["user_id", "like_count", "category_id"];
 				if(!excludeColumn.includes(data)) return data;
 			}),
+			include: [
+				{
+					model: users,
+					as: "users",
+					attributes: ["user_email"],
+					include: [
+						{
+							model: user_detail,
+							as: "user_detail",
+							attributes: [
+								"user_name",
+								"user_unique_id",
+								"user_nickname",
+								"user_img",
+							],
+						}
+					]
+				}
+			],
 			order: [["like_count", "DESC"]],
 			offset: pageResult.offset,
 			limit: pageResult.limit,
