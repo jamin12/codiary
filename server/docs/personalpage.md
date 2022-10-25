@@ -200,31 +200,29 @@
         "message": "getPost",
         "result_data": [
             {
-                "post_id": 4,
-                "post_title": "test4",
-                "post_body_md": null,
-                "post_body_html": null,
-                "post_txt": "qaz",
-                "created_at": "2022-08-15 12:12",
-                "updated_at": "2022-08-15 12:12",
-                "users": {
-                    "user_email": "rudals951004@gmail.com",
-                    "user_detail": {
-                        "user_name": "min ja",
-                        "user_unique_id": "test",
-                        "user_nickname": "",
-                        "user_img": "이미지가 없다링"
+                "post_update_history_id": 1,
+                "post_id": 1,
+                "update_history": "2022-08-15 12:12",
+                "created_at": "2022-10-25 10:20",
+                "updated_at": "2022-10-25 10:20",
+                "posts": {
+                    "post_id": 1,
+                    "post_title": "test1",
+                    "post_body_md": null,
+                    "post_body_html": null,
+                    "post_txt": "qwer",
+                    "created_at": "2022-08-15 12:12",
+                    "updated_at": "2022-08-15 12:12",
+                    "users": {
+                        "user_email": "rudals951004@gmail.com",
+                        "user_detail": {
+                            "user_name": "min ja",
+                            "user_unique_id": "test",
+                            "user_nickname": "",
+                            "user_img": "https://lh3.googleusercontent.com/a/AItbvmkab50Pb4HAnuwMI-UWHJ5YXnMAbAh5zYR2aRy5=s96-c"
+                        }
                     }
-                },
-                "posts_update_history": [
-                    {
-                        "post_update_history_id": 6,
-                        "post_id": 4,
-                        "update_history": "2022-08-29 12:03",
-                        "created_at": "2022-08-29 12:03",
-                        "updated_at": "2022-08-30 23:51"
-                    },
-                ]
+                }
             },
         ]
     }

@@ -292,26 +292,21 @@ class PersonalService {
 	async getPersonalPostsByDate(uniqueId, startDate, endDate) {
 		const user = await this.uService.getUserByUniqueId(uniqueId);
 		const whereOptions = {
-			user_id: user.user_id,
-			created_at: {
+			update_history: {
 				[Op.between]: [startDate, endDate],
 			},
 		};
-		return await posts.findAll({
-			attributes: postsDto.filter((data) => {
-				const excludeColumn = ["category_id", "user_id", "like_count"];
-				if (!excludeColumn.includes(data)) return data;
-			}),
+		this.postJoin.where = {
+			user_id: user.user_id,
+		}
+		this.postJoin.include = [this.userJoin];
+		return await posts_update_history.findAll({
+			attributes: postupdatehistoryDto,
 			include: [
-				this.userJoin,
-				{
-					model: posts_update_history,
-					as: "posts_update_history",
-					attributes: postupdatehistoryDto,
-				},
+				this.postJoin
 			],
-			where: whereOptions,
-		});
+			where: whereOptions
+		})
 	}
 
 	/**
@@ -418,6 +413,10 @@ class PersonalService {
 			await measurement.create({
 				post_id: createdPost.post_id,
 			});
+			await posts_update_history.create({
+				post_id: createdPost.post_id,
+				update_history: this.myDate.getDatetime(),
+			})
 		});
 		return { post_id: createdPost.post_id };
 	}
