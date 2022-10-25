@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { personal } from "../api/index";
+import '../css/reset.css';
 
 // bootstrap
 import Button from 'react-bootstrap/Button';
@@ -41,6 +42,8 @@ function OptionModal(props) {
   const onChangeSelect = (e) => {
     setSelected(e.target.value);
   }
+
+  const testList = [];
 
   /**
    * 서버에서 유저의 카테고리들을 받아와야 함

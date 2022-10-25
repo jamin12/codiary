@@ -223,6 +223,12 @@ const Menu = styled.div`
 `
 const GotoHome = styled.h1`
   font-size: 2.5rem;
+  color: var(--gray900);
+
+  span{
+    color: var(--gray900);
+    text-decoration: none;
+  }
 
   @media ${devices.laptopL}{
     font-size: 2rem;
@@ -268,7 +274,9 @@ const SearchProfile = () => {
       <Wrap>
         <GotoHome>
           <Link to='/'>
-            CODIARY
+            <span>
+              CODIARY
+            </span>
           </Link>
         </GotoHome>
 

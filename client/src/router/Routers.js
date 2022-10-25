@@ -11,6 +11,7 @@ import MyCalender from "../Pages/MyCalendar";
 import MyPage from '../Pages/Mypage';
 import Presave from '../Pages/Presave';
 import VisiteLike from '../Pages/VisiteLike';
+import VisiterStats from "../Pages/VisiterStats";
 import NotFound from '../Pages/NotFound';
 
 const Routers = () => {
@@ -27,9 +28,10 @@ const Routers = () => {
 
                 <Route path="/:userId" element={<MyPage/>}></Route>
                 <Route path="/:userId/calender" element={<MyCalender/>}></Route>
-                <Route path="/presave" element={<Presave/>}></Route>
-                <Route path="/visite" element={<VisiteLike/>}></Route>
+                <Route path="/:userId/presave" element={<Presave/>}></Route>
+                <Route path="/:userId/visite" element={<VisiteLike/>}></Route>
                 <Route path="/:userId/:postId" element={<Post/>}></Route>
+                <Route path="/:userId/visiterstat" element={<VisiterStats/>}></Route>
                 <Route path="*" element={<NotFound/>}></Route>
             </Routes>        
         </BrowserRouter>

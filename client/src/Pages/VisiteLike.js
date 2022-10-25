@@ -7,6 +7,7 @@ import SearchProfile from "../components/SearchProfile";
 import styled from "styled-components";
 import { personal } from "../api/index";
 import axios from "axios";
+import Carousel from '../components/CarouselSlick';
 
 const VisitLike = () => {
 	// card 컴포넌트에 보낼 파라미터
@@ -69,6 +70,7 @@ const VisitLike = () => {
 	//     )
 	//   }
 	// ];
+	
 	/**
 	 * 0 : visit records 조회
 	 * 1 : like records 조회
@@ -107,12 +109,14 @@ const VisitLike = () => {
   console.log(visitLikeRecords);
 	return (
 		<div>
-			<SearchProfile />
+			<Header>
+				<SearchProfile />
+			</Header>
 
 			{/* 버튼을 누르면 각각 요청을 보내야함 */}
 			{/* 파라미터를 바꿔주는게 */}
 			<Wrap>
-				<Carousel />
+				<Carousel visitLikeSelected={visitLikeSelected} visitLikeRecords={visitLikeRecords}/>
 			</Wrap>
 		</div>
 	);
@@ -121,13 +125,14 @@ const VisitLike = () => {
 export default VisitLike;
 
 const Wrap = styled.div`
-	width: 1500px;
-	height: 700px;
-	margin: 200px auto 0 auto;
+	width: 90%;
+	height: 80vh;
+	background-color: red;
+	margin: 0px auto 0 auto;
 `;
 
-const Carousel = styled.div`
-	width: 90%;
-	height: 100%;
-	background-color: red;
-`;
+const Header = styled.div`
+	display: flex;
+	justify-content: center;
+`
+

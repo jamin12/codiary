@@ -50,7 +50,7 @@ const WritePost = () => {
 	 * 모달창 open
 	 */
 	const onClickModalOpen = () => {
-		if (title === null) {
+		if (!title) {
 			alert("제목을 먼저 입력해주세요")
 		} else {
 			setModalShow(true);
@@ -62,7 +62,7 @@ const WritePost = () => {
 	 * 포스트 임시 저장
 	 */
 	const onClickPresave = async () => {
-		if (title !== null) {
+		if (!title) {
 			alert("제목을 먼저 입력해주세요")
 		}
 		// TODO: body부분 값 변경
