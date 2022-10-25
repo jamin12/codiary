@@ -3,7 +3,8 @@ const express = require("express"),
 	mainRoutes = require("./main.routes"),
 	userRoutes = require("./user.routes"),
 	personalRoutes = require("./personal.routes"),
-	manageRoutes = require("./manage.routes");
+	manageRoutes = require("./manage.routes"),
+	measurementRoutes = require("./measurement.routes");
 
 const router = express.Router();
 
@@ -27,6 +28,10 @@ const defaultRoutes = [
 	{
 		path: "/manage",
 		route: manageRoutes
+	},
+	{
+		path: "/measurement",
+		route: measurementRoutes
 	},
 ];
 

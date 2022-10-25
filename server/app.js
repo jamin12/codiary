@@ -22,7 +22,7 @@ const httpStatus = require("http-status");
 const app = express();
 dotenv.config();
 
-const home = require("./src/routes");
+const routes = require("./src/routes");
 
 // Access-Control-Allow-Credentials에러 해결
 app.use((req, res, next) => {
@@ -49,7 +49,6 @@ app.use(
 	})
 );
 
-// TODO: 이것도 공부
 // gzip compression(보내는 데이터 압축을 통해 빠른 데이터 전송이 가능하게 해준다)
 app.use(compression());
 
@@ -74,7 +73,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // 라우팅
-app.use("/", home); // use -> 미들웨어를 등록해주는 메서드.
+app.use("/", routes); // use -> 미들웨어를 등록해주는 메서드.
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
