@@ -28,6 +28,15 @@ const output = {
 		);
 		res.send(resultDto(httpStatus.OK, "getPost", result_contents));
 	}),
+	// 사용자 날짜 별 포스트 갯수 조회
+	getPersonalPostCountByDate: catchAsync(async (req, res) => {
+		const result_contents = await pService.getPersonalPostCountByDate(
+			req.params.uniqueid,
+			req.query.startdate,
+			req.query.enddate
+		);
+		res.send(resultDto(httpStatus.OK, "getPersonalPostCountByDate", result_contents));
+	}),
 	// 사용자 날짜 별 포스트 목록 조회
 	getPersonalPostsByDate: catchAsync(async (req, res) => {
 		const result_contents = await pService.getPersonalPostsByDate(
@@ -35,7 +44,7 @@ const output = {
 			req.query.startdate,
 			req.query.enddate
 		);
-		res.send(resultDto(httpStatus.OK, "getPost", result_contents));
+		res.send(resultDto(httpStatus.OK, "getPersonalPostsByDate", result_contents));
 	}),
 
 	/**

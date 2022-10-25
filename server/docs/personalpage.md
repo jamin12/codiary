@@ -247,6 +247,44 @@
     |post_update_history_id|string|포스트 업데이트 기록 아이디|
     |update_history|datetime|포스트 업데이트 기록 날짜|
 
+## __<span style="color:#9999ff">사용자 날짜 별 포스트 갯수 조회</span>__
+## __<span style="color:#ff9933">요청</span>__ __[GET] /posts/count/:uniqueid?startdate=2022-01-01 00:00:00&enddate=2022-01-01 00:00:00__
+- |속성|타입|설명|
+    |---|---|---|
+    |uniqueid *|string|사용자 유니크 아이디 (필수)|
+    |startdate *|datetime|시작 날짜 (필수)|
+    |enddate *|datetime|마지막 날짜 (필수)|
+
+## __<span style="color:#ff9933">응답</span>__
+- ``` json
+    {
+        "status": 200,
+        "message": "getPersonalPostCountByDate",
+        "result_data": [
+            {
+                "count": 1,
+                "date": "2022-08-10"
+            },
+            {
+                "count": 2,
+                "date": "2022-08-16"
+            },
+            {
+                "count": 1,
+                "date": "2022-08-17"
+            }
+        ]
+    }
+- |속성|타입|설명|
+    |---|---|---|
+    |status|int|상태코드|
+    |message|string|메시지|
+    |**result_data**|json[]|결과 값|
+    |||
+    |count|int|날짜|
+    |date|int|포스트 업데이트 갯수|
+
+
 ## __<span style="color:#9999ff">사용자 포스트 조회</span>__
 ## __<span style="color:#ff9933">요청</span>__ __[GET] /post/:uniqueid/:postid__
 - |속성|타입|설명|

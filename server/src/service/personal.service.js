@@ -310,6 +310,63 @@ class PersonalService {
 	}
 
 	/**
+	 * 사용자 날짜 별 포스트 업데이트 갯수
+	 * @param {string} uniqueId
+	 * @param {datetime} startDate
+	 * @param {datetime} endDate
+	 * @returns {Object}
+	 */
+	async getPersonalPostCountByDate(uniqueId, startDate, endDate) {
+		const user = await this.uService.getUserByUniqueId(uniqueId);
+		this.postJoin.where = {
+			user_id: user.user_id
+		};
+		this.postJoin.attributes = [];
+		return await posts_update_history.findAll({
+			attributes: {
+				include: [
+					[
+						sequelize.fn
+							(
+								"count",
+								sequelize.col("*"),
+							),
+						"count",
+					],
+					[
+						sequelize.fn
+							(
+								"DATE_FORMAT",
+								sequelize.col("update_history"),
+								"%Y-%m-%d"
+							),
+						"date",
+					],
+				],
+				exclude: [
+					"post_update_history_id", "post_id", "update_history", "created_at", "updated_at"
+				]
+			},
+			include: [
+				this.postJoin
+			],
+			where: {
+				update_history: {
+					[Op.between]: [startDate, endDate],
+				},
+			},
+			group: [
+				sequelize.fn
+					(
+						"DATE_FORMAT",
+						sequelize.col("update_history"),
+						"%Y-%m-%d"
+					)
+			],
+		});
+	}
+
+	/**
 	 * 사용자 포스트 조회
 	 * @param {string} uniqueId
 	 * @param {number} postId
