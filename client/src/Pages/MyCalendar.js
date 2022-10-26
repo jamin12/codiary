@@ -84,7 +84,6 @@ const MyCalendar = () => {
             formatShortWeekday={(locale, date) => moment(date).format('ddd')}
             showNeighboringMonth={false}  // 이전 이후 달의 날짜는 안보이도록 설정하는 명령어
 
-            // TODO(이묘->경민): 서버에서 월에 포스트가 있는 날짜별 포스트 갯수 전송해주세요.
             // TODO(이묘): 날짜 받으면 배경색 진하게 넣는 부분 진행해야함
             tileContent={({ date, view }) => {  // 날짜 타일에 갯수만큼 tile추가
               // 현재 날짜가 mark에 있다면 tile div 추가
