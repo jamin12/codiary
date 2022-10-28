@@ -9,55 +9,77 @@ import { personal } from '../api';
 import axios from 'axios';
 
 const MyCalendar = () => {
-  const [postData, changeDate] = useState(new Date());
 
+  const date = new Date();
+  const [postData, changeDate] = useState(date);
+  const sendDate = new Date(+postData + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '').substring(0, 10)+" 00:00:00"
+
+  const [postsByDate, setPostByDate] = useState({});	
   // 받은 날짜에 대한 포스팅 기록 저장해서 표시
-  // const [mark, setMark] = useState([]);
-
-  const mark = [
-    {
-      "post_id": 4,
-      "post_title": "test4",
-      "post_body_md": null,
-      "post_body_html": null,
-      "post_txt": "qaz",
-      "created_at": "2022-08-15 12:12",
-      "updated_at": "2022-08-15 12:12",
-      "users": {
-        "user_email": "rudals951004@gmail.com",
-        "user_detail": {
-          "user_name": "min ja",
-          "user_unique_id": "test",
-          "user_nickname": "testemyo",
-          "user_img": "이미지가 없다링"
-        }
-      },
-      "posts_update_history": [
-        {
-          "post_update_history_id": 6,
-          "post_id": 4,
-          "update_history": "2022-08-29 12:03",
-          "created_at": "2022-08-29 12:03",
-          "updated_at": "2022-08-30 23:51"
+  const [mark, setMark] = useState(
+    [
+      {
+        "post_id": 4,
+        "post_title": "test4",
+        "post_body_md": null,
+        "post_body_html": null,
+        "post_txt": "qaz",
+        "created_at": "2022-08-15 12:12",
+        "updated_at": "2022-08-15 12:12",
+        "users": {
+          "user_email": "rudals951004@gmail.com",
+          "user_detail": {
+            "user_name": "min ja",
+            "user_unique_id": "test",
+            "user_nickname": "testemyo",
+            "user_img": "이미지가 없다링"
+          }
         },
-      ]
-    },
-  ]
+        "posts_update_history": [
+          {
+            "post_update_history_id": 6,
+            "post_id": 4,
+            "update_history": "2022-08-29 12:03",
+            "created_at": "2022-08-29 12:03",
+            "updated_at": "2022-08-30 23:51"
+          },
+        ]
+      },
+    ]
+  );
+
+  /**
+   * 요청 데이터에서 endDate의 일 포멧을 01로 바꾸는 함수
+   * @param {String} date 
+   * @returns 두자리 숫자
+   */
+  function sendDateGetDate(date){
+    if (date.toString.length === 1){
+      return "0"+date;
+    }else{
+      return date
+    }
+  }
 
   // const [markDate, setMarkDate] = useState([]);
 
-  // TODO(이묘): mark에서 text에서 이미지 태그만 뽑아서 가장 첫번째 있는 이미지 태그만 뽑아서 넣기
-  const postImg = "";
+  // TODO(이묘): mark에서 text에서 이미지 태그만 뽑아서 가장 첫번째 있는 이미지 태그만 뽑아서 넣기 - 함수구현
+  /**
+   * 가장 첫번째 이미지 태그 안에 주소를 postImg에 저장하는 함수
+   */
+  const setPostImg = (htmlCode) => {
 
-  const [postsByDate, setPostByDate] = useState({});	/**
+  }
+  const postImg = setPostImg(mark.post_body_html)
+
+  /**
 	 *  사용자 날짜 별 포스트 목록 조회
 	 */
   useEffect(() => {
     const getPostsByDateFun = async () => {
       const getPostsByDate = await axios.get(
         personal.getPersonalPostsByDate("test"),
-        //TODO: postData로 바꿔야하는데 postData(날짜) 타입이 YYYY-MM-DD HH:mm:ss가 아님 수정 바람
-        { params: { startdate: "2022-08-01 00:00:00"/** postData */, enddate: "2022-08-30 00:00:00"/** postData */ } }
+        { params: { startdate: sendDate/** postData */, enddate: sendDate.substring(0,8) + sendDateGetDate(Number(sendDate.substring(9,10))+1) + " " + sendDate.substring(11,)/** postData에서 하루 뒤 */ } }
       );
       setPostByDate(getPostsByDate.data.result_data);
     };
