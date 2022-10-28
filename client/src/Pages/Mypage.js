@@ -148,7 +148,6 @@ const Mypage = () => {
           </div>
 
           <div className="category-folder-box">
-            {/* TODO(이묘): 서버에서 받아온 카테고리를 map 함수로 뿌려줘야함 */}
             {
               category.map((category) => {
                 return(
