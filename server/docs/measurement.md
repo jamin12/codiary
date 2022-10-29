@@ -119,8 +119,6 @@
     |---|---|---|
     |graphtype *|int|그래프 집계 단위 </br> 0 : 하루 </br> 1 : 주 </br> 2: 월 </br>(필수)|
     |postid *|int|포스트 아이디 (필수)|
-    |offset *|int|페이지 번호 (필수)|
-    |limit|int|한번에 가져올 개수|
 - authentication 쿠키 필요
 ## __<span style="color:#ff9933">응답</span>__
 - ``` json
@@ -231,7 +229,7 @@
 ## __<span style="color:#ff9933">요청</span>__ **[GET] /myposts/:porttype/:criterion?offset=1&limit=5**
 - |속성|타입|설명|
     |---|---|---|
-    |porttype *|int|집계 기준 </br> 0 : 총 방문자 </br> 1 : 일일 방문자 </br> 2: 좋아요 </br>(필수)|
+    |porttype *|int|집계 기준 </br> 0 : 총 방문자 </br> 1 : 일일 방문자 </br> 2: 좋아요 </br>3: 업데이트 시간</br>(필수)|
     |criterion *|int|정리 기준 </br> 0 : asc </br> 1 : desc </br>(필수)|
     |offset *|int|페이지 번호 (필수)|
     |limit|int|한번에 가져올 개수|
@@ -265,7 +263,7 @@
         ]
     }
     {
-        // porttype이 2일 떄
+        // porttype이 2, 3일 떄
         "status": 200,
         "message": "getMyPosts",
         "result_data": [

@@ -1,5 +1,5 @@
 const passport = require("passport");
-const google = require("./GoogleStrategy");
+const google = require("./googleStrategy");
 const logger = require("../logger");
 const model = require("../../models/index");
 const { sequelize } = require("../../models/index");
