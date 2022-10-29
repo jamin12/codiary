@@ -47,8 +47,11 @@ const Login = ({ setLogin }) => {
 				</TextBox>
 
 				<LoginBtn>
-					<a href="/auth/login">구글 로그인</a>
-					<img src="img/google-logo.png" alt="구글 로그인" />
+                    
+					<a href="/auth/login">
+                        <img src="img/google-logo.png" alt="구글 로그인" />
+                    </a>
+					
 				</LoginBtn>
 			</div>
 		</MainWrap>
