@@ -16,7 +16,7 @@ const MainWrap = styled.div`
 
 		.home-title-popular {
 			text-align: center;
-			padding: 100px 0 50px 0;
+			padding: 70px 0 50px 0;
 		}
 	}
   #popularity-text{
@@ -102,7 +102,7 @@ const Menu = styled.div`
 		transition: 0.5s;
 		display: inline-block;
 		width: 200px;
-		height: 250px;
+		height: 280px;
 		background-color: var(--gray50);
 		box-shadow: 0 25px 35px rgba(0, 0, 0, 0.1);
 		box-sizing: border-box;
@@ -147,7 +147,80 @@ const Home = () => {
 	const [isOpen, setMenu] = useState(false);
 	const [searchWord, setSearch] = useState("");
 	const [searchPostInMain, setSearchPostInMain] = useState({});
-	const [popularPost, setPopularPost] = useState({});
+	const [popularPost, setPopularPost] = useState([   // 인기 게시글
+    {
+      "post_id": 9,
+      "post_title": "test9",
+      "post_body_md": null,
+      "post_body_html": null,
+      "post_txt": "123",
+      "created_at": "2022-08-15 12:12",
+      "updated_at": "2022-08-15 12:12",
+      "users": {
+        "user_email": "kmeoung@gmail.com",
+        "user_detail": {
+          "user_name": "test2",
+          "user_unique_id": "11f7d65e-720e-45e1-82ef-d16b001585de",
+          "user_nickname": "태웅",
+          "user_img": "https://lh3.googleusercontent.com/a/AItbvmkcEhowVpW6ELAAfVG8ZxJH90ca4GQT0ghVaVpi380=s96-c"
+        }
+      }
+    },
+    {
+      "post_id": 10,
+      "post_title": "test10",
+      "post_body_md": null,
+      "post_body_html": null,
+      "post_txt": "123",
+      "created_at": "2022-08-15 12:12",
+      "updated_at": "2022-08-15 12:12",
+      "users": {
+        "user_email": "kmeoung@gmail.com",
+        "user_detail": {
+          "user_name": "test2",
+          "user_unique_id": "11f7d65e-720e-45e1-82ef-d16b001585de",
+          "user_nickname": "이묘",
+          "user_img": "https://lh3.googleusercontent.com/a/AItbvmkcEhowVpW6ELAAfVG8ZxJH90ca4GQT0ghVaVpi380=s96-c"
+        }
+      }
+    },
+    {
+      "post_id": 234,
+      "post_title": "test234",
+      "post_body_md": null,
+      "post_body_html": null,
+      "post_txt": "123",
+      "created_at": "2022-08-15 12:12",
+      "updated_at": "2022-08-15 12:12",
+      "users": {
+        "user_email": "kmeoung@gmail.com",
+        "user_detail": {
+          "user_name": "test2",
+          "user_unique_id": "11f7d65e-720e-45e1-82ef-d16b001585de",
+          "user_nickname": "나비",
+          "user_img": "https://lh3.googleusercontent.com/a/AItbvmkcEhowVpW6ELAAfVG8ZxJH90ca4GQT0ghVaVpi380=s96-c"
+        }
+      }
+    },
+    {
+      "post_id": 1234,
+      "post_title": "test1234",
+      "post_body_md": null,
+      "post_body_html": null,
+      "post_txt": "123",
+      "created_at": "2022-08-15 12:12",
+      "updated_at": "2022-08-15 12:12",
+      "users": {
+        "user_email": "kmeoung@gmail.com",
+        "user_detail": {
+          "user_name": "test2",
+          "user_unique_id": "11f7d65e-720e-45e1-82ef-d16b001585de",
+          "user_nickname": "자민",
+          "user_img": "https://lh3.googleusercontent.com/a/AItbvmkcEhowVpW6ELAAfVG8ZxJH90ca4GQT0ghVaVpi380=s96-c"
+        }
+      }
+    }
+  ]); 
 	const [enterCount, setEnterCount] = useState(0);
 
   const [loginOpen, setLogin] = useState(false);
@@ -213,129 +286,6 @@ const Home = () => {
 		setMenu((isOpen) => !isOpen);
 	};
 
-	const testList = [
-		{
-			id: "1",
-			user_nickname: "이묘",
-		},
-		{
-			id: "2",
-			user_nickname: "자민",
-		},
-		{
-			id: "3",
-			user_nickname: "파이썬",
-		},
-		{
-			id: "4",
-			user_nickname: "자바스크립트",
-		},
-		{
-			id: "5",
-			user_nickname: "리엑트",
-		},
-		{
-			id: "6",
-			user_nickname: "스프링",
-		},
-		{
-			id: "7",
-			user_nickname: "스프링",
-		},
-		{
-			id: "8",
-			user_nickname: "스프링",
-		},
-		{
-			id: "9",
-			user_nickname: "스프링",
-		},
-		{
-			id: "10",
-			user_nickname: "스프링",
-		},
-		{
-			id: "11",
-			user_nickname: "스프링",
-		},
-		{
-			id: "12",
-			user_nickname: "스프링",
-		},
-		{
-			id: "13",
-			user_nickname: "스프링",
-		},
-		{
-			id: "14",
-			user_nickname: "스프링",
-		},
-		{
-			id: "15",
-			user_nickname: "스프링",
-		},
-		{
-			id: "16",
-			user_nickname: "스프링",
-		},
-		{
-			id: "17",
-			user_nickname: "스프링",
-		},
-		{
-			id: "18",
-			user_nickname: "스프링",
-		},
-		{
-			id: "19",
-			user_nickname: "스프링",
-		},
-		{
-			id: "20",
-			user_nickname: "스프링",
-		},
-		{
-			id: "21",
-			user_nickname: "스프링",
-		},
-		{
-			id: "22",
-			user_nickname: "스프링",
-		},
-		{
-			id: "23",
-			user_nickname: "스프링",
-		},
-		{
-			id: "24",
-			user_nickname: "스프링",
-		},
-		{
-			id: "25",
-			user_nickname: "스프링",
-		},
-		{
-			id: "26",
-			user_nickname: "스프링",
-		},
-		{
-			id: "27",
-			user_nickname: "스프링",
-		},
-		{
-			id: "28",
-			user_nickname: "스프링",
-		},
-		{
-			id: "29",
-			user_nickname: "스프링",
-		},
-		{
-			id: "30",
-			user_nickname: "스프링",
-		},
-	];
-
 	return (
 		<MainWrap>
 
@@ -369,6 +319,9 @@ const Home = () => {
 						<p>
 							<Link to="/setting">설정</Link>
 						</p>
+            <p>
+              <Link to="/:userId/visiterstat">방문자 통계</Link>
+            </p>
 						<p className="logout" onClick={loginModal}>로그아웃</p>
 					</div>
 				</Menu>
@@ -387,8 +340,12 @@ const Home = () => {
 
 			{/* 인기 게시글 */}
 			<div className="container" id="popularity-text">
-				<h1 className="home-title-popular">인기 게시글</h1>
-				<Carousel popularList={testList} />
+				<h2 className="home-title-popular">인기 게시글</h2>
+        <CarouselWrap>
+          <Carousel
+            posts={popularPost}
+          />
+        </CarouselWrap>
 			</div>
 
 			{/* 푸터 */}
@@ -404,3 +361,13 @@ const Home = () => {
 };
 
 export default Home;
+
+
+const CarouselWrap = styled.div`
+  width: 80%;
+  height: 50%;
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+`
