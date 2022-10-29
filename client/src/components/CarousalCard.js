@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Slider from "react-slick";
 import styled from "styled-components";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 // const MainCanvas = styled.SliderItem`
 //   position: relative;
@@ -39,7 +41,6 @@ export default class Carousel extends Component {
   render() {
     const posts = this.props.posts; // props로 post들을 받아옴
     console.log(posts);
-
     // TODO(이묘): text에서 가장 첫 번째 이미지 태그 갖고와야함
     /**
      * text에서 가장 첫 번째 이미지 태그 찾는 함수
@@ -48,13 +49,12 @@ export default class Carousel extends Component {
     const ImgSearch = (text) => { 
       return "https://images.unsplash.com/photo-1664575196079-9ac04582854b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
     }
-
     const settings = {
       className: "center",
       centerMode: true,
       infinite: true,
       centerPadding: "50px",
-      slidesToShow: 3,
+      slidesToShow: 5,
       speed: 500,
     };
     return (
@@ -72,10 +72,10 @@ export default class Carousel extends Component {
                   <div className="user">
                     <img
                       className="user-profile"
-                      src={post.users.user_detail.user_img}
+                      src={post.users?.user_detail.user_img}
                       alt="사용자 프로필 이미지"
                     ></img>
-                    <span>{post.users.user_detail.user_nickname}</span>
+                    <span>{post.users?.user_detail.user_nickname}</span>
                   </div>
                   
                   <p className="date">{post.updated_at.substring(0,10)}</p>
