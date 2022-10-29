@@ -144,7 +144,7 @@ const Menu = styled.div`
     transition: 0.5s;
     display: inline-block;
     width: 200px;
-    height: 250px;
+    height: 280px;
     background-color: var(--gray50);
     box-shadow: 0 25px 35px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
@@ -271,6 +271,10 @@ const SearchProfile = () => {
               <Link className="tagP" to="/setting">
                 설정
               </Link>
+              <Link className="tagP" to="/:userId/visiterstat">
+                방문자 통계
+              </Link>
+
               <p className="logout tagP" onClick={loginModal}>
                 로그인
               </p>
