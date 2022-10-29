@@ -67,16 +67,19 @@ export default HeaderNoSearchBar;
 
 const Main = styled.div`
   width: 100%;
-  height: 120px;
-  position: relative;
+  height: 80px;
+  position: fixed;
+  top: 0;
+  left: 0;
   z-index: 900;
+  background-color: #fff;
 `
 const Wrap = styled.div`
   position: absolute;
   display: flex;
-  top: 40px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%,-50%);
 
   width: 1536px; //80% 
   height: 50px;
