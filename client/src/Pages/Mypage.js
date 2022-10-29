@@ -20,79 +20,80 @@ const Mypage = () => {
       "category_name": "알고리즘"
     },
   ]);
+  const [categoryId, setCategoryId] = useState(0);
   const [posts, setPosts] = useState([
-    {
-      "post_id": 25,
-      "post_title": "테스으 생성",
-      "post_body_md": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-      "post_body_html": "<p><h1>Lorem Ipsum</h1> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>",
-      "post_txt": "qwer12v",
-      "created_at": "2022-08-29 03:52",
-      "updated_at": "2022-08-29 19:45",
-      "users": {
-          "user_email": "rudals951004@gmail.com",
-          "user_detail": {
-              "user_name": "min ja",
-              "user_unique_id": "test",
-              "user_nickname": "",
-              "user_img": "이미지가 없다링"
-          }
-      }
-    },
-    {
-      "post_id": 26,
-      "post_title": "이묘이묘",
-      "post_body_md": "123",
-      "post_body_html": "<p>123</p>",
-      "post_txt": "qwer12v",
-      "created_at": "2022-08-29 03:52",
-      "updated_at": "2022-08-29 19:45",
-      "users": {
-          "user_email": "rudals951004@gmail.com",
-          "user_detail": {
-              "user_name": "min ja",
-              "user_unique_id": "test",
-              "user_nickname": "코딩하는사람",
-              "user_img": "https://images.unsplash.com/photo-1666616328135-ad1b7e62a25c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
-          }
-      }
-    },
-    {
-      "post_id": 27,
-      "post_title": "진자 존나",
-      "post_body_md": "null",
-      "post_body_html": "null",
-      "post_txt": "qwer12v",
-      "created_at": "2022-08-29 03:52",
-      "updated_at": "2022-08-29 19:45",
-      "users": {
-          "user_email": "rudals951004@gmail.com",
-          "user_detail": {
-              "user_name": "min ja",
-              "user_unique_id": "test",
-              "user_nickname": "이묘ㅛ",
-              "user_img": "https://images.unsplash.com/photo-1666526320369-a1e3fcd69253?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
-          }
-      }
-    },
-    {
-      "post_id": 28,
-      "post_title": "귀찮아",
-      "post_body_md": "null",
-      "post_body_html": "null",
-      "post_txt": "qwer12v",
-      "created_at": "2022-08-29 03:52",
-      "updated_at": "2022-08-29 19:45",
-      "users": {
-          "user_email": "rudals951004@gmail.com",
-          "user_detail": {
-              "user_name": "min ja",
-              "user_unique_id": "test",
-              "user_nickname": "이묘",
-              "user_img": "https://images.unsplash.com/photo-1666473574975-fd909b53dd4d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
-          }
-      }
-    },
+    // {
+    //   "post_id": 25,
+    //   "post_title": "테스으 생성",
+    //   "post_body_md": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    //   "post_body_html": "<p><h1>Lorem Ipsum</h1> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>",
+    //   "post_txt": "qwer12v",
+    //   "created_at": "2022-08-29 03:52",
+    //   "updated_at": "2022-08-29 19:45",
+    //   "users": {
+    //       "user_email": "rudals951004@gmail.com",
+    //       "user_detail": {
+    //           "user_name": "min ja",
+    //           "user_unique_id": "test",
+    //           "user_nickname": "",
+    //           "user_img": "이미지가 없다링"
+    //       }
+    //   }
+    // },
+    // {
+    //   "post_id": 26,
+    //   "post_title": "이묘이묘",
+    //   "post_body_md": "123",
+    //   "post_body_html": "<p>123</p>",
+    //   "post_txt": "qwer12v",
+    //   "created_at": "2022-08-29 03:52",
+    //   "updated_at": "2022-08-29 19:45",
+    //   "users": {
+    //       "user_email": "rudals951004@gmail.com",
+    //       "user_detail": {
+    //           "user_name": "min ja",
+    //           "user_unique_id": "test",
+    //           "user_nickname": "코딩하는사람",
+    //           "user_img": "https://images.unsplash.com/photo-1666616328135-ad1b7e62a25c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
+    //       }
+    //   }
+    // },
+    // {
+    //   "post_id": 27,
+    //   "post_title": "진자 존나",
+    //   "post_body_md": "null",
+    //   "post_body_html": "null",
+    //   "post_txt": "qwer12v",
+    //   "created_at": "2022-08-29 03:52",
+    //   "updated_at": "2022-08-29 19:45",
+    //   "users": {
+    //       "user_email": "rudals951004@gmail.com",
+    //       "user_detail": {
+    //           "user_name": "min ja",
+    //           "user_unique_id": "test",
+    //           "user_nickname": "이묘ㅛ",
+    //           "user_img": "https://images.unsplash.com/photo-1666526320369-a1e3fcd69253?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
+    //       }
+    //   }
+    // },
+    // {
+    //   "post_id": 28,
+    //   "post_title": "귀찮아",
+    //   "post_body_md": "null",
+    //   "post_body_html": "null",
+    //   "post_txt": "qwer12v",
+    //   "created_at": "2022-08-29 03:52",
+    //   "updated_at": "2022-08-29 19:45",
+    //   "users": {
+    //       "user_email": "rudals951004@gmail.com",
+    //       "user_detail": {
+    //           "user_name": "min ja",
+    //           "user_unique_id": "test",
+    //           "user_nickname": "이묘",
+    //           "user_img": "https://images.unsplash.com/photo-1666473574975-fd909b53dd4d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
+    //       }
+    //   }
+    // },
   ]);
 
   /**
@@ -114,17 +115,24 @@ const Mypage = () => {
   useEffect(() => {
     const getPostsFun = async () => {
       const getPost = await axios.get(
-        //TODO: 카테고리 아이디 파라미터로 가져와야함
-        personal.getPsersonalPosts(userId, 2),
+        personal.getPsersonalPosts(userId, categoryId),
         {
-          //TODO: queryParams로 가져와야함
-          params: { offset: 1, limit: 4 },
+          //TODO(이묘): 급한거 아님 - 리미트 몇 개로 걸어서 페이징 처리해줄 건지 결정해서 처리
+          params: { offset: 1, limit: 50 },
         }
       );
       setPosts(getPost.data.result_data);
     };
     getPostsFun();
-  }, [userId]);
+  }, [userId, categoryId]);
+
+  const clickFolder = (e) => {
+    setCategoryId(e.target.id)
+  }
+  const openAllPost = () => {
+    console.log("전체보기")
+    setCategoryId(0)
+  }
 
   console.log(category);
   console.log(posts);
@@ -140,10 +148,10 @@ const Mypage = () => {
           <h1>CODIARY</h1>
         </div>
 
-        <div></div>
-
         <Folders>
-          <div className="folder full-view">
+          <div className="folder full-view"
+          onClick={openAllPost}
+          >
             전체보기
           </div>
 
@@ -151,10 +159,13 @@ const Mypage = () => {
             {
               category.map((category) => {
                 return(
-                  <div className="folder">
-                  <span>{category.category_name}</span>
-                  <ion-icon name="chevron-down-outline"></ion-icon>
-                </div>
+                  <div className="folder"
+                  id={category.category_id}
+                  onClick={clickFolder}
+                  >
+                    <span>{category.category_name}</span>
+                    <ion-icon name="chevron-down-outline"></ion-icon>
+                  </div>
                 )
               })
             }
@@ -173,10 +184,7 @@ const Mypage = () => {
             className={'center'}
           />
         </CarouselWrap>
-
-
       </Contents>
-
     </MainWrap>
   );
 };
@@ -197,7 +205,6 @@ const MainWrap = styled.div`
     cursor: pointer;
   }
 `
-
 const Contents = styled.div`
   position: relative;
   width: 88%;
@@ -205,7 +212,6 @@ const Contents = styled.div`
   height: 80%;
   margin: 0 auto;
 `
-
 const Folders = styled.div`
   position: absolute;
   width: 35%;
