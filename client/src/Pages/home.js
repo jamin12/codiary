@@ -48,6 +48,8 @@ const MainSearchBar = styled.input`
 	transform: translate(-45%, -50%);
 	border-radius: 15px;
 	border: 1px solid #a5a5a5;
+  text-align: left;
+  color: var(--gray300)
 `;
 const HomeTitle = styled.div`
 	font-size: 2.5rem;
@@ -237,12 +239,12 @@ const Home = () => {
     setLogin(true);
   }
 
+  /**
+   * search page 로 이동하는 onClick
+   */
+  const goToSearchPage = () => {
 
-	// 검색창 onChange
-	const changeSearch = (e) => {
-		setSearch(e.target.value);
-	};
-
+  } 
 
 
 
@@ -327,13 +329,14 @@ const Home = () => {
 				{/* 홈화면 */}
 				<HomeTitle>CODIARY</HomeTitle>
 				{/* 검색창 */}
-				<MainSearchBar
-					type="text"
-					placeholder="SEARCH"
-					onKeyPress={enterSearchPress}
-					onChange={changeSearch}
-					value={searchWord}
-				></MainSearchBar>
+        <Link to="/search">
+				  <MainSearchBar
+				  	type="button"
+				  	onClick={goToSearchPage}
+            value="SEARCH"
+				  ></MainSearchBar>
+        </Link>
+
 			</div>
 
 			{/* 인기 게시글 */}
