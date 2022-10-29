@@ -18,6 +18,7 @@
                 "post_body_md": null,
                 "post_body_html": null,
                 "post_txt": "123",
+                "like_count": 8,
                 "created_at": "2022-08-15 12:12",
                 "updated_at": "2022-08-15 12:12",
                 "users": {
@@ -68,6 +69,7 @@
                 "post_txt": "string",
                 "post_body_md": null,
                 "post_body_html": "string",
+                "like_count": 8,
                 "created_at": "2022-08-15 12:12",
                 "updated_at": "2022-08-15 12:12",
                 "user": {
