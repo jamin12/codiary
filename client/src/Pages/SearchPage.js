@@ -15,12 +15,14 @@ const Searchpage = () => {
    */
   const changeSearch = async () => {
     // TODO: (경민 -> 이묘) 검색할 단어 어딧어요?
-    const getSearch = await axios.get(main.searchPostInMain("qwer"), {
+    let getSearch
+    getSearch = await axios.get(main.searchPostInMain("qwer"), {
       params: {
         offset: 1,
         limit: 10
       }
     })
+    // TODO: (경민 -> 이묘) 검색 위치에 따라서 검색하는 url달라지는거 구현(axios 써야해요 doc파일 보고 하면 됩니다.)
     setSearchResult(getSearch.data.result_data);
   };
 
