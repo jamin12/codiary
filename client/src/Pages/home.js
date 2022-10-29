@@ -149,102 +149,24 @@ const Home = () => {
 	const [isOpen, setMenu] = useState(false);
 	const [searchWord, setSearch] = useState("");
 	const [searchPostInMain, setSearchPostInMain] = useState({});
-	const [popularPost, setPopularPost] = useState([   // 인기 게시글
-    {
-      "post_id": 9,
-      "post_title": "test9",
-      "post_body_md": null,
-      "post_body_html": null,
-      "post_txt": "123",
-      "like_count": 200,
-      "created_at": "2022-08-15 12:12",
-      "updated_at": "2022-08-15 12:12",
-      "users": {
-        "user_email": "kmeoung@gmail.com",
-        "user_detail": {
-          "user_name": "test2",
-          "user_unique_id": "11f7d65e-720e-45e1-82ef-d16b001585de",
-          "user_nickname": "태웅",
-          "user_img": "https://lh3.googleusercontent.com/a/AItbvmkcEhowVpW6ELAAfVG8ZxJH90ca4GQT0ghVaVpi380=s96-c"
-        }
-      }
-    },
-    {
-      "post_id": 10,
-      "post_title": "test10",
-      "post_body_md": null,
-      "post_body_html": null,
-      "post_txt": "123",
-      "like_count": 5,
-      "created_at": "2022-08-15 12:12",
-      "updated_at": "2022-08-15 12:12",
-      "users": {
-        "user_email": "kmeoung@gmail.com",
-        "user_detail": {
-          "user_name": "test2",
-          "user_unique_id": "11f7d65e-720e-45e1-82ef-d16b001585de",
-          "user_nickname": "이묘",
-          "user_img": "https://lh3.googleusercontent.com/a/AItbvmkcEhowVpW6ELAAfVG8ZxJH90ca4GQT0ghVaVpi380=s96-c"
-        }
-      }
-    },
-    {
-      "post_id": 234,
-      "post_title": "test234",
-      "post_body_md": null,
-      "post_body_html": null,
-      "post_txt": "123",
-      "like_count": 8,
-      "created_at": "2022-08-15 12:12",
-      "updated_at": "2022-08-15 12:12",
-      "users": {
-        "user_email": "kmeoung@gmail.com",
-        "user_detail": {
-          "user_name": "test2",
-          "user_unique_id": "11f7d65e-720e-45e1-82ef-d16b001585de",
-          "user_nickname": "나비",
-          "user_img": "https://lh3.googleusercontent.com/a/AItbvmkcEhowVpW6ELAAfVG8ZxJH90ca4GQT0ghVaVpi380=s96-c"
-        }
-      }
-    },
-    {
-      "post_id": 1234,
-      "post_title": "test1234",
-      "post_body_md": null,
-      "post_body_html": null,
-      "post_txt": "123",
-      "like_count": 8,
-      "created_at": "2022-08-15 12:12",
-      "updated_at": "2022-08-15 12:12",
-      "users": {
-        "user_email": "kmeoung@gmail.com",
-        "user_detail": {
-          "user_name": "test2",
-          "user_unique_id": "11f7d65e-720e-45e1-82ef-d16b001585de",
-          "user_nickname": "자민",
-          "user_img": "https://lh3.googleusercontent.com/a/AItbvmkcEhowVpW6ELAAfVG8ZxJH90ca4GQT0ghVaVpi380=s96-c"
-        }
-      }
-    }
-  ]); 
-	const [enterCount, setEnterCount] = useState(0);
+	const [popularPost, setPopularPost] = useState([]);
 
-  const [loginOpen, setLogin] = useState(false);
+	const [loginOpen, setLogin] = useState(false);
 
 
-  /**
-   * 로그인 모달 여는 onClick
-   */
-  const loginModal = () => {
-    setLogin(true);
-  }
+	/**
+	 * 로그인 모달 여는 onClick
+	 */
+	const loginModal = () => {
+		setLogin(true);
+	}
 
-  /**
-   * search page 로 이동하는 onClick
-   */
-  const goToSearchPage = () => {
+	/**
+	 * search page 로 이동하는 onClick
+	 */
+	const goToSearchPage = () => {
 
-  } 
+	}
 
 
 
@@ -254,32 +176,31 @@ const Home = () => {
 	useEffect(() => {
 		const getPopularPostFun = async () => {
 			const getPopularPost = await axios.get(main.mainPage(), {
-        // offset 으로 페이징 하세요
+				// offset 으로 페이징 하세요
 				params: { offset: 0, limit: 50 },
 			});
 			setPopularPost(getPopularPost.data.result_data);
 		};
 		getPopularPostFun();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [enterCount]);
+	}, []);
 
 
 
-	// 검색창에서 엔터키 쳤을 때 검색
-	const enterSearchPress = async (e) => {
-		if (e.key === "Enter") {
-			// 백엔드에 검색어 전송
-      /**
-	      * 검색 키워트 게시글 가져오기
-	    */
-      const getSearchPostInMain = await axios.get(
-				main.searchPostInMain(searchWord),
-				// TODO: queryParams 설정 해야함
-				{ params: { offset: 0, limit: 9 } }
-			);
-			setSearchPostInMain(getSearchPostInMain.data.result_data);
-		}
-	};
+	// // 검색창에서 엔터키 쳤을 때 검색
+	// const enterSearchPress = async (e) => {
+	// 	if (e.key === "Enter") {
+	// 		// 백엔드에 검색어 전송
+	//     /**
+	//       * 검색 키워트 게시글 가져오기
+	//     */
+	//     const getSearchPostInMain = await axios.get(
+	// 			main.searchPostInMain(searchWord),
+	// 			// TODO: queryParams 설정 해야함
+	// 			{ params: { offset: 0, limit: 9 } }
+	// 		);
+	// 		setSearchPostInMain(getSearchPostInMain.data.result_data);
+	// 	}
+	// };
 
 	// 프로필 이미지 클릭했을 때 메뉴 on off
 	const toggleMenu = () => {
@@ -289,9 +210,9 @@ const Home = () => {
 	return (
 		<MainWrap>
 
-      {
-        loginOpen && <Login setLogin={setLogin} />
-      }
+			{
+				loginOpen && <Login setLogin={setLogin} />
+			}
 
 			{/* 메인 검색 화면 */}
 			<div className="container home-search">
@@ -319,9 +240,9 @@ const Home = () => {
 						<p>
 							<Link to="/setting">설정</Link>
 						</p>
-            <p>
-              <Link to="/:userId/visiterstat">방문자 통계</Link>
-            </p>
+						<p>
+							<Link to="/:userId/visiterstat">방문자 통계</Link>
+						</p>
 						<p className="logout" onClick={loginModal}>로그아웃</p>
 					</div>
 				</Menu>
@@ -329,24 +250,24 @@ const Home = () => {
 				{/* 홈화면 */}
 				<HomeTitle>CODIARY</HomeTitle>
 				{/* 검색창 */}
-        <Link to="/search">
-				  <MainSearchBar
-				  	type="button"
-				  	onClick={goToSearchPage}
-            value="SEARCH"
-				  ></MainSearchBar>
-        </Link>
+				<Link to="/search">
+					<MainSearchBar
+						type="button"
+						onClick={goToSearchPage}
+						value="SEARCH"
+					></MainSearchBar>
+				</Link>
 
 			</div>
 
 			{/* 인기 게시글 */}
 			<div className="container" id="popularity-text">
 				<h2 className="home-title-popular">인기 게시글</h2>
-        <CarouselWrap>
-          <Carousel
-            posts={popularPost}
-          />
-        </CarouselWrap>
+				<CarouselWrap>
+					<Carousel
+						posts={popularPost}
+					/>
+				</CarouselWrap>
 			</div>
 
 			{/* 푸터 */}

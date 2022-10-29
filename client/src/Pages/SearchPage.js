@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CardCell from "../components/CardCell";
+import { main } from "../api";
 
 import HeaderNoSearchBar from "../components/HeaderNoSearchBar";
 import PostRowCard from "../components/PostRowCard";
@@ -12,8 +13,17 @@ const Searchpage = () => {
   /**
    * text가 바뀔 때마다 검색을 하게 해주는 함수
    */
-  const changeSearch = () => {
-    //TODO(이묘->경민): 구현해주세용
+  const changeSearch = async () => {
+    // TODO: (경민 -> 이묘) 검색할 단어 어딧어요?
+    let getSearch
+    getSearch = await axios.get(main.searchPostInMain("qwer"), {
+      params: {
+        offset: 1,
+        limit: 10
+      }
+    })
+    // TODO: (경민 -> 이묘) 검색 위치에 따라서 검색하는 url달라지는거 구현(axios 써야해요 doc파일 보고 하면 됩니다.)
+    setSearchResult(getSearch.data.result_data);
   };
 
   // TODO(이묘): 스크롤 하다가 바닥에 닿으면 몇 개를 더 요청해야하는 함수 구현해야함
@@ -27,7 +37,7 @@ const Searchpage = () => {
         type="text"
         placeholder="SEARCH"
         onChange={changeSearch}
-        // value={searchWord}
+      // value={searchWord}
       ></MainSearchBar>
       <Wrap>
         <PostWrap>
@@ -37,10 +47,6 @@ const Searchpage = () => {
               <PostRowCard />
             );
           })}
-            <PostRowCard />
-            <PostRowCard />
-            <PostRowCard />
-            <PostRowCard />
         </PostWrap>
       </Wrap>
     </Main>
@@ -48,7 +54,7 @@ const Searchpage = () => {
 };
 export default Searchpage;
 
-const Main =styled.div`
+const Main = styled.div`
   width: 100%;
   min-height: 100vh;
 `
