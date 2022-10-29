@@ -64,9 +64,11 @@ export default class Carousel extends Component {
             return (
                 <PostWrap>
                   <h3>{post.post_title}</h3>
+                  
                   <div className="thumbnail">
                     <img src={ImgSearch(post.post_txt)} alt="" />
                   </div>
+                  
                   <div className="user">
                     <img
                       className="user-profile"
@@ -75,7 +77,13 @@ export default class Carousel extends Component {
                     ></img>
                     <span>{post.users.user_detail.user_nickname}</span>
                   </div>
+                  
                   <p className="date">{post.updated_at.substring(0,10)}</p>
+                  
+                  <div className="like-box">
+                    <span>❤️</span>
+                    <span>{post.like_count}</span>
+                  </div>
                 </PostWrap>
             );
           })}
@@ -122,7 +130,14 @@ const PostWrap = styled.div`
     font-size: 0.8rem;
     color: var(--gray500);
   }
-
+  .like-box{
+    display: flex;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 1.3rem;
+    color: var(--gray700);
+  }
 `;
 
 const Main = styled.div`

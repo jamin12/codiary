@@ -154,6 +154,7 @@ const Home = () => {
       "post_body_md": null,
       "post_body_html": null,
       "post_txt": "123",
+      "like_count": 200,
       "created_at": "2022-08-15 12:12",
       "updated_at": "2022-08-15 12:12",
       "users": {
@@ -172,6 +173,7 @@ const Home = () => {
       "post_body_md": null,
       "post_body_html": null,
       "post_txt": "123",
+      "like_count": 5,
       "created_at": "2022-08-15 12:12",
       "updated_at": "2022-08-15 12:12",
       "users": {
@@ -190,6 +192,7 @@ const Home = () => {
       "post_body_md": null,
       "post_body_html": null,
       "post_txt": "123",
+      "like_count": 8,
       "created_at": "2022-08-15 12:12",
       "updated_at": "2022-08-15 12:12",
       "users": {
@@ -208,6 +211,7 @@ const Home = () => {
       "post_body_md": null,
       "post_body_html": null,
       "post_txt": "123",
+      "like_count": 8,
       "created_at": "2022-08-15 12:12",
       "updated_at": "2022-08-15 12:12",
       "users": {
@@ -239,45 +243,39 @@ const Home = () => {
 		setSearch(e.target.value);
 	};
 
-	/**
-	 * 검색 키워트 게시글 가져오기
-	 */
-	useEffect(() => {
-		const getSearchPostInMainFun = async () => {
-			const getSearchPostInMain = await axios.get(
-				main.searchPostInMain(searchWord),
-				// TODO: queryParams 설정 해야함
-				{ params: { offset: 1, limit: 4 } }
-			);
-			setSearchPostInMain(getSearchPostInMain.data.result_data);
-		};
-		getSearchPostInMainFun();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [enterCount]);
+
+
 
 	/**
 	 * 인기 게시글 가져오기
 	 */
-	// TODO: 이거 그냥 enterSeacrhPress 함수에 넣어두댐
 	useEffect(() => {
 		const getPopularPostFun = async () => {
 			const getPopularPost = await axios.get(main.mainPage(), {
         // offset 으로 페이징 하세요
-				params: { offset: 1, limit: 10 },
+				params: { offset: 0, limit: 50 },
 			});
 			setPopularPost(getPopularPost.data.result_data);
 		};
 		getPopularPostFun();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [enterCount]);
+
+
+
 	// 검색창에서 엔터키 쳤을 때 검색
-	const enterSearchPress = (e) => {
+	const enterSearchPress = async (e) => {
 		if (e.key === "Enter") {
 			// 백엔드에 검색어 전송
-			setEnterCount(enterCount + 1);
-			if (enterCount === 100) {
-				setEnterCount(0);
-			}
+      /**
+	      * 검색 키워트 게시글 가져오기
+	    */
+      const getSearchPostInMain = await axios.get(
+				main.searchPostInMain(searchWord),
+				// TODO: queryParams 설정 해야함
+				{ params: { offset: 0, limit: 9 } }
+			);
+			setSearchPostInMain(getSearchPostInMain.data.result_data);
 		}
 	};
 
