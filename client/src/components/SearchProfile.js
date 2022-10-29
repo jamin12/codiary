@@ -214,6 +214,7 @@ const SearchProfile = () => {
   const [isOpen, setMenu] = useState(false);
   const [searchWord, setSearch] = useState("");
   const [loginOpen, setLogin] = useState(false);
+  // TODO(이묘): 쿠키에 authentication에 있는지 확인 후에 로그인이 돼었느냐를 체크해야함
 
   const toggleMenu = () => {
     setMenu((isOpen) => !isOpen);
