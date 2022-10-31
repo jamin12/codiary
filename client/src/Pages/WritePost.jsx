@@ -16,7 +16,6 @@ import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin
 import Prism from "prismjs";
 import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 
-import SearchProfile from "../components/SearchProfile";
 import axios from "axios";
 import { personal } from "../api/index";
 
