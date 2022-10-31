@@ -273,7 +273,7 @@ const VisiterStats = () => {
 			setMyPosts(getMyPosts.data.result_data);
 		};
 		getMyPostsFun();
-	}, []);
+	}, [searchPorttype, searchCriterion, viewMoreOffset]);
 
 	return (
 		<MainWrap>
