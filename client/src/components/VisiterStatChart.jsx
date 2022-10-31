@@ -7,13 +7,11 @@ export default class Chart extends Component {
 
         this.state = {
             series: [{
+                // TODO(이묘): props로 받아온 데이터에 따라 이름, 데이터 바꿔줘야함
                 name: "Desktops",
-                data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+                data: [10, 41, 35, 51, 49, 62, 69, 91, 100]
             },
-            {
-                name: "Data2",
-                data: [1, 4, 15, 41, 69, 32, 39, 31, 48]
-            }],
+        ],
 
             options: {
                 chart: {
@@ -38,6 +36,7 @@ export default class Chart extends Component {
                     },
                 },
                 xaxis: {
+                    //TODO(이묘): 일, 주, 월에 따라 파라미터 바꿔줘야함
                     categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
                 }
             }

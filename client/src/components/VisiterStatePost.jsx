@@ -12,7 +12,9 @@ const MainWrap = styled.div`
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 20px 0;
     transition: 0.2s;
     cursor: pointer;
 
@@ -55,24 +57,21 @@ const CountWrap = styled.div`
 
 const StatePost = (props) => {
 
+    const postId = props.id;
+
     const title = props.title;
     const date = props.date;
-    const tags = props.tags;
     const totalVisiter = props.totalVisiter;
     const todayVisiter = props.todayVisiter;
     const good = props.good;
 
-    console.log(tags)
-
     return(
         <MainWrap>
-            <h3>{title}</h3>
-            <p>{date}</p>
-            <div className="tag-box">
-            {/* {
-                tags.map(tag => (<p>{tag}</p>))
-            } */}
+            <div>
+                <h3>{title}</h3>
+                <p>{date}</p>
             </div>
+            
 
             <CountWrap>
                 <div className="count-box">
