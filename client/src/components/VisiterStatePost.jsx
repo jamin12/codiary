@@ -65,8 +65,15 @@ const StatePost = (props) => {
     const todayVisiter = props.todayVisiter;
     const good = props.good;
 
+    const setChartPostId = props.setChartPostId;
+
+    //TODO: 빨간 에러나는데 왠지 모르겟슴
+    const click = (e) => {
+        setChartPostId(e.tartget.id)
+    }
+
     return(
-        <MainWrap>
+        <MainWrap onClick={click} id={postId}>
             <div>
                 <h3>{title}</h3>
                 <p>{date}</p>

@@ -139,8 +139,6 @@ const PostWrap = styled.div`
 
 const VisiterStats = () => {
 	// 서버에서 받아와야하는 top 게시글 이름 useState
-	// TODO: 서버에서 받아오는 처리 해야함
-	// 여기서 받아오는거 top 그래프 아이디를 받아오는건가?
 	const [topTotalVisiter, setTopTotalVisiter] = useState({});
 	const [topDayVisiter, setTopDayVisiter] = useState({});
 	const [topGood, setGood] = useState({});
@@ -210,15 +208,15 @@ const VisiterStats = () => {
 	 * 게시물 더보기 onClick 함수
 	 */
 	const onClickViewMore = () => {
-		setViewMoreOffset(viewMoreOffset+1)
-		console.log(viewMoreOffset)
+		setViewMoreOffset(viewMoreOffset+9)
 	}
 
 	/**
 	 * 차트에 표시되는 게시물 onClick 함수
 	 */
+	//TODO(emyo): e.target으로 하면 이미지나 다른거 누르면 안됨 수정바람 
 	const onClickShowGraph = (e) => {
-		console.log(e.target.id)
+		setChartPostId(e.target.id)
 	}
 
 	/**
@@ -302,28 +300,32 @@ const VisiterStats = () => {
 							</Button>
 						</ButtonGroup>
 					</div>
-					{/* TODO(이묘): 차트에 props로 정보들을 보내줘야함 */}
 					<Chart 
+						post = {chartPostId}
 						graphtype={graphtype}
-						// graphData={}
+						graphData={graphInfo}
+						
 					/>
 				</ChartWrap>
 
 				{/* top박스들을 뭉쳐놓은 div */}
 				<TopWrap>
 					<div className="top-total-visiter"
+					id={topTotalVisiter.post_id}
 					onClick={onClickShowGraph}>
 						<IoPeopleOutline className="top-icon" />
 						<p>누적 방문자수 TOP</p>
 						{/* <h4>{topTotalVisiter}</h4> */}
 					</div>
 					<div className="top-total-visiter"
+					id={topDayVisiter.post_id}
 					onClick={onClickShowGraph}>
 						<IoPersonOutline className="top-icon" />
 						<p>일일 방문자수 TOP</p>
 						{/* <h4>{topDayVisiter}</h4> */}
 					</div>
 					<div className="top-total-visiter"
+					id={topGood.post_id}
 					onClick={onClickShowGraph}>
 						<IoHeartCircleOutline className="top-icon" />
 						<p>좋아요수 TOP</p>
@@ -363,20 +365,20 @@ const VisiterStats = () => {
 										good={post.posts.like_count}
 
 										id={post.post_id}
-										onClick={onClickShowGraph}
+										setChartPostId={setChartPostId}
 										/>
 									)
 								}
 								else{
 									<StatePost
-									title={post.post_title}
-									date= {post.updated_at}
-									totalVisiter={post.total_visit_count}
-									todayVisiter={post.today_visit_count}
-									good={post.like_count}
+										title={post.post_title}
+										date= {post.updated_at}
+										totalVisiter={post.total_visit_count}
+										todayVisiter={post.today_visit_count}
+										good={post.like_count}
 
-									id={post.post_id}
-									onClick={onClickShowGraph}
+										id={post.post_id}
+										setChartPostId={setChartPostId}
 									/>
 								}
 							})
