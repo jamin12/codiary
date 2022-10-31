@@ -69,17 +69,15 @@ const StatePost = (props) => {
 
     //TODO: 빨간 에러나는데 왠지 모르겟슴
     const click = (e) => {
-        setChartPostId(e.tartget.id)
+        setChartPostId(e.tartget)
     }
 
     return(
-        <MainWrap onClick={click} id={postId}>
+        <MainWrap onClick={click}>
             <div>
                 <h3>{title}</h3>
                 <p>{date}</p>
             </div>
-            
-
             <CountWrap>
                 <div className="count-box">
                     <IoPeopleOutline className="icon"/>

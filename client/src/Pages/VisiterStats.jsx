@@ -149,6 +149,8 @@ const VisiterStats = () => {
 	
 	// 차트에 표시되는 게시물id useState
 	const [chartPostId, setChartPostId] = useState(graphInfo.post_id);
+	// const [chartPostTitle, setChartPostTitle] = useState(topTotalVisiter.posts.post_title);
+	const [chartPostTitle, setChartPostTitle] = useState();
 
 	// 검색시에 사용되는 porttype, criterion
 	const [searchPorttype, setSearchPorttype] = useState(0)
@@ -214,9 +216,9 @@ const VisiterStats = () => {
 	/**
 	 * 차트에 표시되는 게시물 onClick 함수
 	 */
-	//TODO(emyo): e.target으로 하면 이미지나 다른거 누르면 안됨 수정바람 
 	const onClickShowGraph = (e) => {
 		setChartPostId(e.target.id)
+		console.log(e.target.id)
 	}
 
 	/**
@@ -301,10 +303,11 @@ const VisiterStats = () => {
 						</ButtonGroup>
 					</div>
 					<Chart 
+						// title = {}
 						post = {chartPostId}
 						graphtype={graphtype}
 						graphData={graphInfo}
-						
+
 					/>
 				</ChartWrap>
 
@@ -313,23 +316,23 @@ const VisiterStats = () => {
 					<div className="top-total-visiter"
 					id={topTotalVisiter.post_id}
 					onClick={onClickShowGraph}>
-						<IoPeopleOutline className="top-icon" />
-						<p>누적 방문자수 TOP</p>
-						{/* <h4>{topTotalVisiter}</h4> */}
+						<IoPeopleOutline className="top-icon" id={topTotalVisiter.post_id} />
+						<p id={topTotalVisiter.post_id}>누적 방문자수 TOP </p>
+						<h4>{topTotalVisiter.post_title}</h4>
 					</div>
 					<div className="top-total-visiter"
 					id={topDayVisiter.post_id}
 					onClick={onClickShowGraph}>
-						<IoPersonOutline className="top-icon" />
-						<p>일일 방문자수 TOP</p>
-						{/* <h4>{topDayVisiter}</h4> */}
+						<IoPersonOutline className="top-icon" id={topDayVisiter.post_id}/>
+						<p id={topDayVisiter.post_id}>일일 방문자수 TOP</p>
+						<h4>{topDayVisiter.post_title}</h4>
 					</div>
 					<div className="top-total-visiter"
 					id={topGood.post_id}
 					onClick={onClickShowGraph}>
-						<IoHeartCircleOutline className="top-icon" />
-						<p>좋아요수 TOP</p>
-						{/* <h4>{topGood}</h4> */}
+						<IoHeartCircleOutline className="top-icon" id={topGood.post_id}/>
+						<p id={topGood.post_id}>좋아요수 TOP</p>
+						<h4>{topGood.post_title}</h4>
 					</div>
 				</TopWrap>
 
@@ -364,7 +367,7 @@ const VisiterStats = () => {
 										todayVisiter={post.today_visit_count}
 										good={post.posts.like_count}
 
-										id={post.post_id}
+										id={post.posts.post_id}
 										setChartPostId={setChartPostId}
 										/>
 									)
