@@ -48,8 +48,8 @@ const MainSearchBar = styled.input`
 	transform: translate(-45%, -50%);
 	border-radius: 15px;
 	border: 1px solid #a5a5a5;
-  text-align: left;
-  color: var(--gray300)
+  	text-align: left;
+  	color: var(--gray300)
 `;
 const HomeTitle = styled.div`
 	font-size: 2.5rem;
@@ -104,7 +104,7 @@ const Menu = styled.div`
 		transition: 0.5s;
 		display: inline-block;
 		width: 200px;
-		height: 280px;
+		height: 320px;
 		background-color: var(--gray50);
 		box-shadow: 0 25px 35px rgba(0, 0, 0, 0.1);
 		box-sizing: border-box;
@@ -225,6 +225,9 @@ const Home = () => {
 				{/* 메뉴창 */}
 				<Menu>
 					<div className={isOpen ? "menuON" : "menuOFF"}>
+						<p>
+							<Link to="/write">새 글쓰기</Link>
+						</p>
 						<p>
 							<Link to="/:userId">내 글 목록</Link>
 						</p>

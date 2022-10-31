@@ -144,7 +144,7 @@ const Menu = styled.div`
     transition: 0.5s;
     display: inline-block;
     width: 200px;
-    height: 280px;
+    height: 320px;
     background-color: var(--gray50);
     box-shadow: 0 25px 35px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
@@ -257,6 +257,9 @@ const SearchProfile = () => {
 
           <Menu>
             <div className={isOpen ? "menuON" : "menuOFF"}>
+              <Link className="tagP" to="/write">
+                새 글쓰기
+              </Link>
               <Link className="tagP" to="/:userId">
                 내 글 목록
               </Link>
