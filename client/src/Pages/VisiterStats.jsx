@@ -289,15 +289,15 @@ const VisiterStats = () => {
 							aria-label="Basic example"
 							className="button-box"
 						>
-							<Button variant="secondarye" className="buttons" id={0} onClick={onClickGraphType}>							}}>
+							<Button variant="secondarye" className="buttons" id={0} onClick={onClickGraphType}>
 								DATE
 							</Button>
 
-							<Button variant="secondarye" className="buttons" id={1} onClick={onClickGraphType}>							}}>
+							<Button variant="secondarye" className="buttons" id={1} onClick={onClickGraphType}>
 								WEEK
 							</Button>
 
-							<Button variant="secondarye" className="buttons" id={2} onClick={onClickGraphType}>							}}>
+							<Button variant="secondarye" className="buttons" id={2} onClick={onClickGraphType}>
 								MONTH
 							</Button>
 						</ButtonGroup>
