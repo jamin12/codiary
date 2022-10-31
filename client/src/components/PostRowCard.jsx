@@ -4,7 +4,6 @@ import styled from 'styled-components';
 const PostRowCard = (props) => {
 
   const title = props.title;
-  const html = props.html;
   const text = props.text;
   const user = props.user;
   const date = props.date;
