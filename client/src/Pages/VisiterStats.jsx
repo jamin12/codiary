@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-
+import { IoChevronDownOutline } from "react-icons/io5";
 import {
 	IoPeopleOutline,
 	IoPersonOutline,
@@ -35,7 +35,6 @@ const ChartWrap = styled.div`
 		}
 	}
 `;
-
 const TopWrap = styled.div`
 	width: 100%;
 	height: 240px;
@@ -139,31 +138,88 @@ const PostWrap = styled.div`
 `;
 
 const VisiterStats = () => {
-	// 차트에 표시되는 게시물이 어떤건지 확인하는 useState
-	const [chartPost, setChartPost] = useState({});
-
 	// 서버에서 받아와야하는 top 게시글 이름 useState
 	// TODO: 서버에서 받아오는 처리 해야함
+	// 여기서 받아오는거 top 그래프 아이디를 받아오는건가?
 	const [topTotalVisiter, setTopTotalVisiter] = useState({});
 	const [topDayVisiter, setTopDayVisiter] = useState({});
 	const [topGood, setGood] = useState({});
 	const [graphInfo, setgraphInfo] = useState([]);
 	const [myPosts, setMyPosts] = useState([]);
+	const [graphtype, setgraphtype] = useState(0);
+	const [viewMoreOffset, setViewMoreOffset] = useState(1);
+	
+	// 차트에 표시되는 게시물id useState
+	const [chartPostId, setChartPostId] = useState(graphInfo.post_id);
 
-	const [selected, setSelected] = useState("");
+	// 검색시에 사용되는 porttype, criterion
+	const [searchPorttype, setSearchPorttype] = useState(0)
+	const [searchCriterion, setSearchCriterion] = useState(0)
+
+	const [selected, setSelected] = useState("방문자 오름차순");
+	const porttype = {
+		"방문자": 0,
+		"총방문자": 1,
+		"좋아요": 2,
+		"업데이트": 3
+	};
+	const criterion = {
+		"오름차순": 0,
+		"내림차순": 1
+	};
 	const searchOption = [
 		"방문자 오름차순",
 		"방문자 내림차순",
-		"총 방문자 오름차순",
-		"총 방문자 내림차순",
+		"총방문자 오름차순",
+		"총방문자 내림차순",
 		"좋아요 오름차순",
 		"좋아요 내림차순",
-		"최신 업로드",
-		"예전 게시물",
+		"업데이트 오름차순",
+		"업데이트 내림차순",
 	];
+
+	/**
+	 * select box의 value onChange 함수
+	 * @param {*} e 
+	 */
 	const onChangeSelect = (e) => {
-		setSelected(e.target.value);
+		setSelected(e.target.value)
 	};
+	/**
+	 * 검색 버튼을 눌렀을 때 onClick 함수
+	 */
+	const onClickSearch = () => {
+		const word = selected.split(" ");
+		setSearchPorttype(porttype[word[0]])
+		setSearchCriterion(criterion[word[1]])
+
+		// 검색 버튼을 다시 누르면 더보기 눌렀던거 초기화
+		setViewMoreOffset(1);
+	}
+
+	/**
+	 * 그래프 타입(일,주,달)선택 onClick
+	 * @param {*} e 
+	 */
+	const onClickGraphType = (e) => {
+		setSelected(e.target.value);
+		setgraphtype(e.target.id);
+	}
+
+	/**
+	 * 게시물 더보기 onClick 함수
+	 */
+	const onClickViewMore = () => {
+		setViewMoreOffset(viewMoreOffset+1)
+		console.log(viewMoreOffset)
+	}
+
+	/**
+	 * 차트에 표시되는 게시물 onClick 함수
+	 */
+	const onClickShowGraph = (e) => {
+		console.log(e.target.id)
+	}
 
 	/**
 	 * 통계 페이지 초기 데이터 가져오기
@@ -197,15 +253,13 @@ const VisiterStats = () => {
 	useEffect(() => {
 		const getGraphFun = async () => {
 			const getGraph = await axios.get(
-				// TODO: (경민 -> 이묘): 파라미터 변수 설정해서 넣기
-				measurement.getGraphData(0, 1),
+				measurement.getGraphData(graphtype, chartPostId),
 				{ withCredentials: true }
 			);
 			setgraphInfo(getGraph.data.result_data);
 		};
 		getGraphFun();
-		// TODO: (경민 -> 이묘)포스트 아이디가 바뀔 때 마다 변경 하게 하세요
-	}, []);
+	}, [chartPostId, graphtype]);
 
 	/**
 	 * 내 포스트 리스트 가져오기
@@ -213,21 +267,13 @@ const VisiterStats = () => {
 	useEffect(() => {
 		const getMyPostsFun = async () => {
 			const getMyPosts = await axios.get(
-				// TODO: (경민 -> 이묘) 파라미터랑 쿼리 넣으세요
-				measurement.getMyPosts(0, 1),
-				{ withCredentials: true, params: { offset: 1, limit: 2 } }
+				measurement.getMyPosts(searchPorttype, searchCriterion),
+				{ withCredentials: true, params: { offset: viewMoreOffset, limit: 9 } }
 			);
 			setMyPosts(getMyPosts.data.result_data);
 		};
 		getMyPostsFun();
 	}, []);
-
-	// TODO: (경민 -> 이묘) 가져온 데이터 html에 넣기
-	console.log(topDayVisiter);
-	console.log(topTotalVisiter);
-	console.log(topGood);
-	console.log(graphInfo);
-	console.log(myPosts);
 
 	return (
 		<MainWrap>
@@ -243,34 +289,42 @@ const VisiterStats = () => {
 							aria-label="Basic example"
 							className="button-box"
 						>
-							<Button variant="secondary" className="buttons">
+							<Button variant="secondarye" className="buttons" id={0} onClick={onClickGraphType}>							}}>
 								DATE
 							</Button>
-							<Button variant="secondary" className="buttons">
+
+							<Button variant="secondarye" className="buttons" id={1} onClick={onClickGraphType}>							}}>
 								WEEK
 							</Button>
-							<Button variant="secondary" className="buttons">
+
+							<Button variant="secondarye" className="buttons" id={2} onClick={onClickGraphType}>							}}>
 								MONTH
 							</Button>
 						</ButtonGroup>
 					</div>
-					{/* 차트에 props로 정보들을 보내줘야함 */}
-					<Chart />
+					{/* TODO(이묘): 차트에 props로 정보들을 보내줘야함 */}
+					<Chart 
+						graphtype={graphtype}
+						// graphData={}
+					/>
 				</ChartWrap>
 
 				{/* top박스들을 뭉쳐놓은 div */}
 				<TopWrap>
-					<div className="top-total-visiter">
+					<div className="top-total-visiter"
+					onClick={onClickShowGraph}>
 						<IoPeopleOutline className="top-icon" />
 						<p>누적 방문자수 TOP</p>
 						{/* <h4>{topTotalVisiter}</h4> */}
 					</div>
-					<div className="top-total-visiter">
+					<div className="top-total-visiter"
+					onClick={onClickShowGraph}>
 						<IoPersonOutline className="top-icon" />
 						<p>일일 방문자수 TOP</p>
 						{/* <h4>{topDayVisiter}</h4> */}
 					</div>
-					<div className="top-total-visiter">
+					<div className="top-total-visiter"
+					onClick={onClickShowGraph}>
 						<IoHeartCircleOutline className="top-icon" />
 						<p>좋아요수 TOP</p>
 						{/* <h4>{topGood}</h4> */}
@@ -292,90 +346,47 @@ const VisiterStats = () => {
 							))}
 						</select>
 
-						<button>검색</button>
+						<button onClick={onClickSearch}>검색</button>
 					</div>
 
 					<div className="post-box">
-						{/* 
-                        postData리스트? 오브젝트?를 갖고와서 map으로 돌려야함 
-                        title, date, tags, totalVisiter, dayVisiter, good을 뽑아서 넣어줘야함.
-                      */}
-						<StatePost
-							title="게시글TITLE"
-							date="2022.02.07"
-							tags={["태그1", "태그2"]}
-							totalVisiter={10}
-							todayVisiter={0}
-							good={5}
-						/>
-						<StatePost
-							title="게시글TITLE"
-							date="2022.02.07"
-							tags={["태그1", "태그2"]}
-							totalVisiter={10}
-							todayVisiter={0}
-							good={5}
-						/>
-						<StatePost
-							title="게시글TITLE"
-							date="2022.02.07"
-							tags={["태그1", "태그2"]}
-							totalVisiter={10}
-							todayVisiter={0}
-							good={5}
-						/>
-						<StatePost
-							title="게시글TITLE"
-							date="2022.02.07"
-							tags={["태그1", "태그2"]}
-							totalVisiter={10}
-							todayVisiter={0}
-							good={5}
-						/>
-						<StatePost
-							title="게시글TITLE"
-							date="2022.02.07"
-							tags={["태그1", "태그2"]}
-							totalVisiter={10}
-							todayVisiter={0}
-							good={5}
-						/>
-						<StatePost
-							title="게시글TITLE"
-							date="2022.02.07"
-							tags={["태그1", "태그2"]}
-							totalVisiter={10}
-							todayVisiter={0}
-							good={5}
-						/>
-						<StatePost
-							title="게시글TITLE"
-							date="2022.02.07"
-							tags={["태그1", "태그2"]}
-							totalVisiter={10}
-							todayVisiter={0}
-							good={5}
-						/>
-						<StatePost
-							title="게시글TITLE"
-							date="2022.02.07"
-							tags={["태그1", "태그2"]}
-							totalVisiter={10}
-							todayVisiter={0}
-							good={5}
-						/>
-						<StatePost
-							title="게시글TITLE"
-							date="2022.02.07"
-							tags={["태그1", "태그2"]}
-							totalVisiter={10}
-							todayVisiter={0}
-							good={5}
-						/>
-					</div>
+						{
+							// eslint-disable-next-line array-callback-return
+							myPosts.map((post) => {
+								if(searchPorttype===0 || searchPorttype===1){
+									return(
+										<StatePost
+										title={post.posts.post_title}
+										date= {post.posts.updated_at}
+										totalVisiter={post.total_visit_count}
+										todayVisiter={post.today_visit_count}
+										good={post.posts.like_count}
 
-					<div className="pagination-box">1.. 2.. 3..</div>
+										id={post.post_id}
+										onClick={onClickShowGraph}
+										/>
+									)
+								}
+								else{
+									<StatePost
+									title={post.post_title}
+									date= {post.updated_at}
+									totalVisiter={post.total_visit_count}
+									todayVisiter={post.today_visit_count}
+									good={post.like_count}
+
+									id={post.post_id}
+									onClick={onClickShowGraph}
+									/>
+								}
+							})
+						}
+					</div>
 				</PostWrap>
+
+				<div className="btn-postview-more" onClick={onClickViewMore} postLength={myPosts.length}>
+					<IoChevronDownOutline/>
+				</div>
 			</div>
 		</MainWrap>
 	);
@@ -392,5 +403,24 @@ const MainWrap = styled.div`
 		width: 90%;
 		max-width: 1500px;
 		margin: 0 auto;
+		margin-bottom: 60px;
+
+		> .btn-postview-more{
+			display: ${props => props.postLength>9 ? "flex" : "none"};
+			justify-content: center;
+			align-items: center;
+			height: 40px;
+			font-size: 30px;
+			color: var(--gray400);
+			transition: 0.3s;
+			cursor: pointer;
+
+			:hover{
+				color: var(--gray600);
+				background-color: var(--gray50);
+			}
+		}
 	}
+
+
 `;
