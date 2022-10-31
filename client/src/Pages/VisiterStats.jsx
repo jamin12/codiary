@@ -192,7 +192,7 @@ const VisiterStats = () => {
 		const word = selected.split(" ");
 		setSearchPorttype(porttype[word[0]])
 		setSearchCriterion(criterion[word[1]])
-
+		// setMyPosts([]);
 		// 검색 버튼을 다시 누르면 더보기 눌렀던거 초기화
 		setViewMoreOffset(1);
 	}
@@ -270,6 +270,7 @@ const VisiterStats = () => {
 				measurement.getMyPosts(searchPorttype, searchCriterion),
 				{ withCredentials: true, params: { offset: viewMoreOffset, limit: 9 } }
 			);
+
 			setMyPosts(getMyPosts.data.result_data);
 		};
 		getMyPostsFun();
@@ -356,33 +357,34 @@ const VisiterStats = () => {
 
 					<div className="post-box">
 						{
-							// eslint-disable-next-line array-callback-return
 							myPosts.map((post) => {
 								if(searchPorttype===0 || searchPorttype===1){
 									return(
 										<StatePost
-										title={post.posts.post_title}
-										date= {post.posts.updated_at}
+										title={post.posts?.post_title}
+										date= {post.posts?.updated_at}
 										totalVisiter={post.total_visit_count}
 										todayVisiter={post.today_visit_count}
-										good={post.posts.like_count}
+										good={post.posts?.like_count}
 
-										id={post.posts.post_id}
+										id={post.posts?.post_id}
 										setChartPostId={setChartPostId}
 										/>
 									)
 								}
 								else{
-									<StatePost
-										title={post.post_title}
-										date= {post.updated_at}
-										totalVisiter={post.total_visit_count}
-										todayVisiter={post.today_visit_count}
-										good={post.like_count}
+									return(
+										<StatePost
+											title={post.post_title}
+											date= {post.updated_at}
+											totalVisiter={post.measurement?.total_visit_count}
+											todayVisiter={post.measurement?.today_visit_count}
+											good={post.like_count}
 
-										id={post.post_id}
-										setChartPostId={setChartPostId}
-									/>
+											id={post.post_id}
+											setChartPostId={setChartPostId}
+										/>
+									)
 								}
 							})
 						}
