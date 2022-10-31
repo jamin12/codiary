@@ -21,6 +21,7 @@ import axios from "axios";
 import { personal } from "../api/index";
 
 import Modal from '../components/SaveModal'
+import HeaderNoSearchBar from "../components/HeaderNoSearchBar";
 
 
 /**
@@ -84,7 +85,7 @@ const WritePost = () => {
 	return (
 		<div style={{ height: "100vh", scrollbarWidth: "none" }}>
 			{/* header */}
-			<SearchProfile />
+			<HeaderNoSearchBar />
 
 			<WriteWrap>
 				<Title>
@@ -184,6 +185,7 @@ export default WritePost;
 //css
 
 const WriteWrap = styled.div`
+	margin-top: 80px;
 	width: 100%;
 	height: 100%;
 	background-color: var(--gray50);
