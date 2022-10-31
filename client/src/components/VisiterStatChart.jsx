@@ -4,11 +4,20 @@ import ApexCharts from 'react-apexcharts'
 export default class Chart extends Component {
     constructor(props) {
         super(props);
+        const data = props.graphInfo;
+        const postId = props.post;
+        const graphtype = props.graphtype;  //일, 주, 달
+
+        const date = {
+            0: [],
+            1: ["첫째주", " ", " "],
+            3: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+        }
 
         this.state = {
             series: [{
                 // TODO(이묘): props로 받아온 데이터에 따라 이름, 데이터 바꿔줘야함
-                name: "Desktops",
+                name: {postId},
                 data: [10, 41, 35, 51, 49, 62, 69, 91, 100]
             },
         ],
