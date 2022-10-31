@@ -100,6 +100,7 @@ const Mypage = () => {
    *  사용자 카테고리 목록 조회
    */
   useEffect(() => {
+    // TODO: (경민 -> 이묘) 서브 카테고리 표시 안되도록 드롭 다운 해야 나오도록 설정
     const getCategoryFun = async () => {
       const getCategory = await axios.get(
         personal.getPersonalCategory(userId)
