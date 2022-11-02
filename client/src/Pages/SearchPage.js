@@ -18,12 +18,14 @@ const Searchpage = () => {
   /**
    * text가 바뀔 때마다 검색을 하게 해주는 함수
    */
-  const changeSearch = async () => {
+  const changeSearch = async (e) => {
+    
+    setSearchWord(e.target.value)
     let getSearch
     getSearch = await axios.get(main.searchPostInMain(searchWord), {
       params: {
-        offset: 1,
-        limit: 10
+        offset: viewMoreOffset,
+        limit: 11
       }
     })
     // TODO: (경민 -> 이묘) 검색 위치에 따라서 검색하는 url달라지는거 구현(axios 써야해요 doc파일 보고 하면 됩니다.)
@@ -35,7 +37,6 @@ const Searchpage = () => {
   */
   const onClickViewMore = () => {
     setViewMoreOffset(viewMoreOffset + 9)
-    console.log(viewMoreOffset)
   }
 
   return (
