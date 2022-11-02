@@ -255,6 +255,7 @@ const VisiterStats = () => {
 							aria-label="Basic example"
 							className="button-box"
 						>
+							{/* TODO(이묘): 버튼 클릭하면 색 유지되는거 시간나면 넣으셈 */}
 							{
 								btnValue.map((item, idx) => {
 									return (
