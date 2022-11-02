@@ -38,7 +38,7 @@ class measurementService {
 						sequelize.fn
 							(
 								"DATE_FORMAT",
-								sequelize.col("created_at"),
+								sequelize.col("measurement_date.created_at"),
 								dateFormat
 							),
 						"created_at",
@@ -46,6 +46,13 @@ class measurementService {
 				],
 				exclude: ['createdAt', "visit_count"],
 			},
+			include: [
+				{
+					model: posts,
+					as: "posts",
+					attributes: ["post_title"],
+				}
+			],
 			where: {
 				post_id: postId,
 			},
@@ -53,7 +60,7 @@ class measurementService {
 				sequelize.fn
 					(
 						"DATE_FORMAT",
-						sequelize.col("created_at"),
+						sequelize.col("measurement_date.created_at"),
 						dateFormat
 					)
 			],

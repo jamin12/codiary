@@ -82,6 +82,9 @@ function initModels(sequelize) {
 
   posts.belongsTo(category, { foreignKey: "category_id", as: "category" });
   category.hasMany(posts, { foreignKey: "category_id", as: "posts" });
+
+  posts.belongsTo(measurement_date, { foreignKey: "post_id", as: "measurement_date" });
+  measurement_date.hasMany(posts, { foreignKey: "post_id", as: "posts" });
   return {
     category,
     comments,
