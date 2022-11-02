@@ -60,20 +60,12 @@ class measurementService {
 				post_id: postId,
 			},
 			group: [
-<<<<<<< HEAD
 				sequelize.fn
 					(
 						"DATE_FORMAT",
 						sequelize.col("measurement_date.created_at"),
 						dateFormat
 					)
-=======
-				sequelize.fn(
-					"DATE_FORMAT",
-					sequelize.col("created_at"),
-					dateFormat
-				),
->>>>>>> front_datainsert
 			],
 		});
 	}
