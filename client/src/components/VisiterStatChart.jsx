@@ -1,10 +1,9 @@
-import BaseComponent from 'bootstrap/js/dist/base-component';
 import React, {useState, useEffect} from 'react';
 import Chart from 'react-apexcharts';
 
 
 const BasicLineChart = (props) => {
-    const { titleText, 
+    const { 
             graphInfo,    // 데이터 배열
             graphtype,    // 일, 주, 달 구분
         } = props;
@@ -12,7 +11,6 @@ const BasicLineChart = (props) => {
     const [basicData, setBasicData] = useState([])
     const [seriesData, setSeriesData] = useState([]);   // 데이터 배열
     const [category, setCategory] = useState([]);       // 날짜데이터 배열
-    
     //TODO(이묘): 초기 데이터 입력 안되어있음.
 
     /**
@@ -31,7 +29,6 @@ const BasicLineChart = (props) => {
         setCategory(basicData.map(date => (
             date.created_at
         )));
-
     }, [graphInfo, graphtype, basicData]);
 
 
@@ -47,10 +44,6 @@ const BasicLineChart = (props) => {
         stroke: {
             curve: 'straight'
         },
-        title: {
-            text: titleText,
-            align: 'left'
-        },
         grid: {
             row: {
                 colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
@@ -64,7 +57,6 @@ const BasicLineChart = (props) => {
     };
     const series = [
         {
-            name: titleText,
             data: seriesData
         }
     ];
