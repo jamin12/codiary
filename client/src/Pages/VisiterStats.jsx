@@ -30,6 +30,10 @@ const ChartWrap = styled.div`
 				color: var(--gray100);
 			}
 		}
+		.buttons.active{
+			background-color: var(--gray500);
+			color: var(--gray100);
+		}
 	}
 	.chart-box{
 		height: 400px;
@@ -110,13 +114,17 @@ const VisiterStats = () => {
 	const [graphtype, setgraphtype] = useState(0);
 	const [viewMoreOffset, setViewMoreOffset] = useState(1);
 
+	console.log(initialGraphData)
+
 	var [TotalData, setTotalData] = useState([topTotalVisiter, topDayVisiter, topGood])	// top데이터들이 전부 들어있는 배열 [topTotalVisiter, topDayVisiter, topGood] 순서
 
 	// 차트에 표시되는 게시물id useState
-	const [chartPostId, setChartPostId] = useState(topTotalVisiter.post_id);
+	const [chartPostId, setChartPostId] = useState("");
 	// const [chartPostTitle, setChartPostTitle] = useState(topTotalVisiter.posts.post_title);
-	const [chartPostTitle, setChartPostTitle] = useState(topTotalVisiter.posts?.post_title);
+	const [chartPostTitle, setChartPostTitle] = useState("");
 
+	// 버튼 배열
+	const btnValue = ["DATE", "WEEK", "MONTH"];
 	// 검색시에 사용되는 porttype, criterion
 	const [searchPorttype, setSearchPorttype] = useState(0)
 	const [searchCriterion, setSearchCriterion] = useState(0)
@@ -200,40 +208,41 @@ const VisiterStats = () => {
 	}, [searchPorttype, searchCriterion, viewMoreOffset]);
 
 
-		/**
-	 * select box의 value onChange 함수
+
+	/**
+ * select box의 value onChange 함수
+ * @param {*} e 
+ */
+	const onChangeSelect = (e) => {
+		setSelected(e.target.value)
+	};
+	/**
+	 * 검색 버튼을 눌렀을 때 onClick 함수
+	 */
+	const onClickSearch = () => {
+		const word = selected.split(" ");
+		setSearchPorttype(porttype[word[0]])
+		setSearchCriterion(criterion[word[1]])
+		// setMyPosts([]);
+		// 검색 버튼을 다시 누르면 더보기 눌렀던거 초기화
+		setViewMoreOffset(1);
+	}
+
+	/**
+	 * 그래프 타입(일,주,달)선택 onClick
 	 * @param {*} e 
 	 */
-		 const onChangeSelect = (e) => {
-			setSelected(e.target.value)
-		};
-		/**
-		 * 검색 버튼을 눌렀을 때 onClick 함수
-		 */
-		const onClickSearch = () => {
-			const word = selected.split(" ");
-			setSearchPorttype(porttype[word[0]])
-			setSearchCriterion(criterion[word[1]])
-			// setMyPosts([]);
-			// 검색 버튼을 다시 누르면 더보기 눌렀던거 초기화
-			setViewMoreOffset(1);
-		}
-	
-		/**
-		 * 그래프 타입(일,주,달)선택 onClick
-		 * @param {*} e 
-		 */
-		const onClickGraphType = (e) => {
-			setSelected(e.target.value);
-			setgraphtype(e.target.id);
-		}
-	
-		/**
-		 * 게시물 더보기 onClick 함수
-		 */
-		const onClickViewMore = () => {
-			setViewMoreOffset(viewMoreOffset + 9)
-		}
+	const onClickGraphType = (e) => {
+		setSelected(e.target.value);
+		setgraphtype(e.target.id);
+	}
+
+	/**
+	 * 게시물 더보기 onClick 함수
+	 */
+	const onClickViewMore = () => {
+		setViewMoreOffset(viewMoreOffset + 9)
+	}
 
 	return (
 		<MainWrap>
@@ -249,17 +258,18 @@ const VisiterStats = () => {
 							aria-label="Basic example"
 							className="button-box"
 						>
-							<Button variant="secondarye" className="buttons" id={0} onClick={onClickGraphType}>
-								DATE
-							</Button>
-
-							<Button variant="secondarye" className="buttons" id={1} onClick={onClickGraphType}>
-								WEEK
-							</Button>
-
-							<Button variant="secondarye" className="buttons" id={2} onClick={onClickGraphType}>
-								MONTH
-							</Button>
+							{
+								btnValue.map((item, idx) => {
+									return (
+										<Button variant="secondarye" 
+										className={"buttons"} 
+										id={idx}
+										onClick={onClickGraphType}>
+											{item}
+										</Button>
+									)
+								})
+							}
 						</ButtonGroup>
 					</div>
 					<div className="chart-box">
@@ -276,7 +286,7 @@ const VisiterStats = () => {
 				<TopWrap>
 					{
 						// eslint-disable-next-line array-callback-return
-						TotalData.map((topPost, index) => {
+						[topTotalVisiter, topDayVisiter, topGood].map((topPost, index) => {
 							if (index < 2) {
 								return (
 									<Top
