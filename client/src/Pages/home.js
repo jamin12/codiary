@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Carousel from "../components/CarousalCard";
 import { Link } from "react-router-dom";
@@ -49,7 +48,7 @@ const MainSearchBar = styled.input`
 	border-radius: 15px;
 	border: 1px solid #a5a5a5;
   	text-align: left;
-  	color: var(--gray300)
+  	color: var(--gray300);
 `;
 const HomeTitle = styled.div`
 	font-size: 2.5rem;
