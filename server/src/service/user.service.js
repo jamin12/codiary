@@ -7,7 +7,7 @@ const { v4: uuid } = require("uuid");
 // const
 
 class UserService {
-	constructor() {}
+	constructor() { }
 
 	/**
 	 * 아이디로 유저 찾기
@@ -73,15 +73,18 @@ class UserService {
 	 * @param {string} userUniqueId 
 	 */
 	async checkUserUniqueId(userUniqueId) {
+		const reservationWord = ["write", "search", "setting", "presave", "visite", "visiterstat"]
 		const userList = await user_detail.findAll({
 			attributes: ["user_unique_id"],
 		});
 		userList.forEach((user) => {
-			if (user.user_unique_id === userUniqueId)
-				throw new CustomError(
-					httpStatus.BAD_REQUEST,
-					"User_unique_id already exists"
-				);
+			reservationWord.forEach((word) => {
+				if (user.user_unique_id === word || user.user_unique_id === userUniqueId)
+					throw new CustomError(
+						httpStatus.BAD_REQUEST,
+						"User_unique_id already exists"
+					);
+			})
 		});
 	}
 
@@ -169,7 +172,7 @@ class UserService {
 						user_id: userId,
 					},
 				});
-				
+
 				// user 테이블에 데이터 삭제
 				await users.destroy({
 					where: {
