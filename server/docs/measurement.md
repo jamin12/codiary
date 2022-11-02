@@ -132,11 +132,6 @@
                 "created_at": "2022-44",
                 "updated_at": "2022-10-30T19:49:00.000Z",
                 "sum_visit_count": "13",
-                "posts": [
-                    {
-                        "post_title": "test1"
-                    }
-                ]
             },
         ]
     }
