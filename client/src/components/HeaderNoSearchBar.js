@@ -199,7 +199,7 @@ const Menu = styled.div`
     transition: 0.5s;
     display: inline-block;
     width: 200px;
-    height: 280px;
+    height: 320px;
     background-color: var(--gray50);
     box-shadow: 0 25px 35px rgba(0,0,0,0.1);
     box-sizing: border-box;

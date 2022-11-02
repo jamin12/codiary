@@ -4,6 +4,7 @@ import "../css/reset.css";
 import { IoClose } from "react-icons/io5";
 import { auth } from "../api/index";
 import axios from "axios";
+import googleLogo from '../IMG/google-logo.png'
 
 const Login = ({ setLogin }) => {
 
@@ -49,7 +50,7 @@ const Login = ({ setLogin }) => {
 				<LoginBtn>
                     
 					<a href="/auth/login">
-                        <img src="img/google-logo.png" alt="구글 로그인" />
+                        <img src={googleLogo} alt="구글 로그인" />
                     </a>
 					
 				</LoginBtn>
