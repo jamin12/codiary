@@ -186,7 +186,7 @@
     |updated_at|string|업데이트 날짜|
 
 ## __<span style="color:#9999ff">사용자 날짜 별 포스트 목록 조회</span>__
-## __<span style="color:#ff9933">요청</span>__ __[GET] /posts/:uniqueid?startdate=2022:01:01 00:00:00&enddate=2022:01:01 00:00:00__
+## __<span style="color:#ff9933">요청</span>__ __[GET] /posts/:uniqueid?startdate=2022-01-01 00:00:00&enddate=2022-01-01 00:00:00__
 - |속성|타입|설명|
     |---|---|---|
     |uniqueid *|string|사용자 유니크 아이디 (필수)|
@@ -200,31 +200,29 @@
         "message": "getPost",
         "result_data": [
             {
-                "post_id": 4,
-                "post_title": "test4",
-                "post_body_md": null,
-                "post_body_html": null,
-                "post_txt": "qaz",
-                "created_at": "2022-08-15 12:12",
-                "updated_at": "2022-08-15 12:12",
-                "users": {
-                    "user_email": "rudals951004@gmail.com",
-                    "user_detail": {
-                        "user_name": "min ja",
-                        "user_unique_id": "test",
-                        "user_nickname": "",
-                        "user_img": "이미지가 없다링"
+                "post_update_history_id": 1,
+                "post_id": 1,
+                "update_history": "2022-08-15 12:12",
+                "created_at": "2022-10-25 10:20",
+                "updated_at": "2022-10-25 10:20",
+                "posts": {
+                    "post_id": 1,
+                    "post_title": "test1",
+                    "post_body_md": null,
+                    "post_body_html": null,
+                    "post_txt": "qwer",
+                    "created_at": "2022-08-15 12:12",
+                    "updated_at": "2022-08-15 12:12",
+                    "users": {
+                        "user_email": "rudals951004@gmail.com",
+                        "user_detail": {
+                            "user_name": "min ja",
+                            "user_unique_id": "test",
+                            "user_nickname": "",
+                            "user_img": "https://lh3.googleusercontent.com/a/AItbvmkab50Pb4HAnuwMI-UWHJ5YXnMAbAh5zYR2aRy5=s96-c"
+                        }
                     }
-                },
-                "posts_update_history": [
-                    {
-                        "post_update_history_id": 6,
-                        "post_id": 4,
-                        "update_history": "2022-08-29 12:03",
-                        "created_at": "2022-08-29 12:03",
-                        "updated_at": "2022-08-30 23:51"
-                    },
-                ]
+                }
             },
         ]
     }
@@ -248,6 +246,44 @@
     |user_img|string|유저 이미지|
     |post_update_history_id|string|포스트 업데이트 기록 아이디|
     |update_history|datetime|포스트 업데이트 기록 날짜|
+
+## __<span style="color:#9999ff">사용자 날짜 별 포스트 갯수 조회</span>__
+## __<span style="color:#ff9933">요청</span>__ __[GET] /posts/count/:uniqueid?startdate=2022-01-01 00:00:00&enddate=2022-01-01 00:00:00__
+- |속성|타입|설명|
+    |---|---|---|
+    |uniqueid *|string|사용자 유니크 아이디 (필수)|
+    |startdate *|datetime|시작 날짜 (필수)|
+    |enddate *|datetime|마지막 날짜 (필수)|
+
+## __<span style="color:#ff9933">응답</span>__
+- ``` json
+    {
+        "status": 200,
+        "message": "getPersonalPostCountByDate",
+        "result_data": [
+            {
+                "count": 1,
+                "date": "2022-08-10"
+            },
+            {
+                "count": 2,
+                "date": "2022-08-16"
+            },
+            {
+                "count": 1,
+                "date": "2022-08-17"
+            }
+        ]
+    }
+- |속성|타입|설명|
+    |---|---|---|
+    |status|int|상태코드|
+    |message|string|메시지|
+    |**result_data**|json[]|결과 값|
+    |||
+    |count|int|날짜|
+    |date|int|포스트 업데이트 갯수|
+
 
 ## __<span style="color:#9999ff">사용자 포스트 조회</span>__
 ## __<span style="color:#ff9933">요청</span>__ __[GET] /post/:uniqueid/:postid__

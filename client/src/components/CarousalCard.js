@@ -1,120 +1,178 @@
-// import Styles from "./Card.module.css";
-import React, {useState} from "react";
-// import { useSpring } from "react-spring";
-import styled from 'styled-components';
+import React, { Component } from "react";
+import Slider from "react-slick";
+import styled from "styled-components";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
-function Card({ id,img, title, body, date, user, img_u }) {
+// const MainCanvas = styled.SliderItem`
+//   position: relative;
+//   width: 80%;
+//   height: 400px;
+//   perspective: 1500px;
+//   margin: 0 auto;
+//   background-color: black;
 
-  const CardWrap = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content:center;
-    background-color: #eceff1;
-    width: 20rem;
-    height: 400px;
-    border-radius: 20px;
-    position: relative;
+//   @media screen and (max-width:1024px) {
+//     width: 75%;
+//     height: 330px;
+//   }
+// `
 
-    box-shadow: 0 5px 18px -7px rgba(0,0,0,1);
-    transition: 0.2s;
+// const Carousel = (props) => {
 
-    :hover{
-      transform: scale(110%);
+//   const postlist = props.popularList;
+// //   const [currentIndex, setCurrentIndex] = useState(0);
+//   const slideRef = useRef(null);
+
+//     return (
+//       // 보이는 영역
+//       <MainCanvas>
+
+//       </MainCanvas>
+
+//     );
+
+// }
+// export default Carousel;
+
+
+
+export default class Carousel extends Component {
+  render() {
+    const posts = this.props.posts; // props로 post들을 받아옴
+    console.log(posts);
+    // TODO(이묘): text에서 가장 첫 번째 이미지 태그 갖고와야함
+    /**
+     * text에서 가장 첫 번째 이미지 태그 찾는 함수
+     * @param {String} text 
+     */
+    const ImgSearch = (text) => { 
+      return "https://images.unsplash.com/photo-1664575196079-9ac04582854b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
     }
-    .title{ 
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      width: 18rem;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-    .user-wrap{ 
-      position: absolute;
-      display: flex;
-      bottom: 90px;
-      left: 1rem;
-      align-items: center;
-    }
-    .user{
-      margin-left: 1rem;
-      font-size: 1.2rem;
-      color: #263238;
-    }
-    .date{
-      position: absolute;
-      bottom: 1rem; right: 1.3rem;
-      color: #8f8f8f;
-    }
-  `
-  const ThumbnailIMG = styled.div`
-      display: ${(props) => props.img ? 'flex' : 'none'};
-      width: 100%;
-      height: 200px;
-      background: url(${(props) => props.img});
-      background-size: cover;
-      position: absolute;
-      top: 4rem;
-      left: 0;
-  `
-  const PostBody = styled.div`
-    display: ${(props) => props.img ? 'none' : '-webkit-box'};
-    position: absolute;
-    top: 4rem;
-    left: 0;
-    width: 90%;
-    height: 200px;
-    padding: 0 1rem;
-
-    overflow: hidden;
-    word-break: break-word;
-    font-size: 2rem;
-    font-weight: 100;
-
-    background-color: #cfd8dc;
-    color: #eceff1;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-  `
-  const ProfileImg = styled.div`
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-
-    background: url(${(props) => props.img});
-    background-size: cover;
-    background-color: #263238;
-  `
-
-
-  const [center, setCenter] = useState("");
-
-  return (
-    <CardWrap id = {id}
-
-      // 가운데에 있는 게시글을 누르면 이동하라는 alert뜨는 이벤트-ing
-      onClick={
-        (e) => {
-          console.log(e.currentTarget.id);
-          if(e.currentTarget.id === center){
-            alert('가운데에 있는 post가 클릭되었으므로 화면으로 이동합니다.')
-            console.log(center);
-          }
-            setCenter(e.currentTarget.id);
-        }
-      }
-    >
-      <ThumbnailIMG img={img} alt="썸네일" />
-      <h2 className='title'>{title}</h2>
-      <PostBody className='body' img={img}>{body}</PostBody>
-      <div className='user-wrap'>
-        <ProfileImg img={img_u}></ProfileImg>
-        <p className='user'>{user}</p>
-      </div>
-      <p className='date'>{date}</p>
-    </CardWrap>
-  );
+    const settings = {
+      className: "center",
+      centerMode: true,
+      infinite: true,
+      centerPadding: "50px",
+      slidesToShow: 5,
+      speed: 500,
+    };
+    return (
+      <Main>
+        <Slider {...settings}>
+          {posts.map((post) => {
+            return (
+                <PostWrap>
+                  <h3>{post.post_title}</h3>
+                  
+                  <div className="thumbnail">
+                    <img src={ImgSearch(post.post_txt)} alt="" />
+                  </div>
+                  
+                  <div className="user">
+                    <img
+                      className="user-profile"
+                      src={post.users?.user_detail.user_img}
+                      alt="사용자 프로필 이미지"
+                    ></img>
+                    <span>{post.users?.user_detail.user_nickname}</span>
+                  </div>
+                  
+                  <p className="date">{post.updated_at.substring(0,10)}</p>
+                  
+                  <div className="like-box">
+                    <span>❤️</span>
+                    <span>{post.like_count}</span>
+                  </div>
+                </PostWrap>
+            );
+          })}
+        </Slider>
+      </Main>
+    );
+  }
 }
 
-export default Card;
+const PostWrap = styled.div`
+  background-color: var(--gray200);
+  position: relative;
+  width: 100px;
+  height: 100%;
+  border-radius: 15px;
+
+  h3{
+    margin: 5px 10px;
+  }
+  .thumbnail{
+    width: 100%;
+    height: 45%;
+    margin-top: 10px
+  }
+
+  .user-profile{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  .user{
+    display: flex;
+    width: 90%;
+    align-items: center;
+    margin: 10px auto 0 auto;
+
+    span{
+      margin-left: 5px;
+    }
+  }
+  .date{
+    width: 90%;
+    margin: 0 auto;
+    font-size: 0.8rem;
+    color: var(--gray500);
+  }
+  .like-box{
+    display: flex;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 1.3rem;
+    color: var(--gray700);
+  }
+`;
+
+const Main = styled.div`
+  width: 100%;
+  height: 100%;
+
+  .slick-slider{
+    height: 100%;
+  }
+  .slick-list{
+    height: 100%;
+
+    .slick-track{
+    height: 100%;
+
+      .slick-slide>div{
+        height: 100%;
+      }
+    }
+  }
+  
+
+  .center .slick-center ${PostWrap}{  //center 모드일때 center
+    opacity: 1;
+    cursor: pointer;
+    transform: scale(1);
+  }
+
+  .center ${PostWrap}{  // center모드일 때 center 이외의 속성
+    opacity: 0.6;
+    transition: all 300ms ease;
+    transform: scale(0.95);
+    height: 100%;
+  }
+`;
+// const SlidePage = styled.div`
+//   background-color:orange;
+// `

@@ -3,29 +3,32 @@ const passport = require('passport');
 const catchAsync = require('../utils/catchAsync');
 const resultDto = require('../dto/resultDTO');
 const httpStatus = require('http-status');
+const {userService} = require("../service/index")
+
+const uService = new userService();
 
 const output = {
 	index: catchAsync(async (req, res) => {
-		res.send(resultDto(httpStatus.OK, "login success"));
+		const getUser = await uService.getUserByUserId(req.user?.user_id);
+		res.cookie("uniqueid", getUser?.user_detail?.user_unique_id);
+		res.redirect("http://127.0.0.1:4000/");
 	}),
 
 	loginfail: catchAsync(async (req, res) => {
 		res.send(resultDto(httpStatus.INTERNAL_SERVER_ERROR, "login failed"));
 	}),
 
-	logout:catchAsync((req, res) => {
+	logout: catchAsync((req, res) => {
 		req.session.destroy();
-		// TODO: 로그아웃 url 지정
-		res.send('/');
+		res.send('http://jamin2.shop');
 	}),
 };
 
 const input = {
 	login: passport.authenticate('google', { scope: ['email', 'profile'] }),
 
-	// TODO: 성공 실패 url 수정
 	oauth2callback: passport.authenticate('google', {
-		successRedirect: '/',
+		successRedirect: 'http://127.0.0.1:3000/',
 		failureRedirect: '/fail',
 	}),
 };

@@ -15,8 +15,8 @@ class MainService {
 		const pageResult = this.paging.pageResult(params[0], params[1]);
 		const result_contents = await posts.findAll({
 			attributes: postDto.filter((data) => {
-				const excludeColumn = ["user_id", "like_count", "category_id"];
-				if(!excludeColumn.includes(data)) return data;
+				const excludeColumn = ["user_id", "category_id"];
+				if (!excludeColumn.includes(data)) return data;
 			}),
 			include: [
 				{
@@ -33,9 +33,9 @@ class MainService {
 								"user_nickname",
 								"user_img",
 							],
-						}
-					]
-				}
+						},
+					],
+				},
 			],
 			order: [["like_count", "DESC"]],
 			offset: pageResult.offset,
@@ -52,8 +52,8 @@ class MainService {
 		const pageResult = this.paging.pageResult(params[0], params[1]);
 		const searchedContents = await posts.findAll({
 			attributes: postDto.filter((data) => {
-				const excludeColumn = ["user_id", "like_count", "category_id"];
-				if(!excludeColumn.includes(data)) return data;
+				const excludeColumn = ["user_id", "category_id"];
+				if (!excludeColumn.includes(data)) return data;
 			}),
 			include: [
 				{
@@ -70,19 +70,23 @@ class MainService {
 								"user_nickname",
 								"user_img",
 							],
-						}
-					]
-				}
+						},
+					],
+				},
 			],
 			where: {
 				[Op.or]: [
-					{"post_title": {
-						[Op.substring]: searchWord
-					}},
-					{"post_txt": {
-						[Op.substring]: searchWord
-					}}
-				]
+					{
+						post_title: {
+							[Op.substring]: searchWord,
+						},
+					},
+					{
+						post_txt: {
+							[Op.substring]: searchWord,
+						},
+					},
+				],
 			},
 			order: [["like_count", "DESC"]],
 			offset: pageResult.offset,

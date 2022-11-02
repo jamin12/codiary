@@ -1,5 +1,12 @@
 const httpStatus = require("http-status");
-const { posts, users, user_detail, measurement_date, sequelize, measurement } = require("../models/index");
+const {
+	posts,
+	users,
+	user_detail,
+	measurement_date,
+	sequelize,
+	measurement,
+} = require("../models/index");
 const CustomError = require("../utils/Error/customError");
 const Paging = require("../utils/paging");
 const { Op } = require("sequelize");
@@ -27,11 +34,7 @@ class measurementService {
 			attributes: {
 				include: [
 					[
-						sequelize.fn
-							(
-								"sum",
-								sequelize.col("visit_count"),
-							),
+						sequelize.fn("sum", sequelize.col("visit_count")),
 						"sum_visit_count",
 					],
 					[
@@ -44,7 +47,7 @@ class measurementService {
 						"created_at",
 					],
 				],
-				exclude: ['createdAt', "visit_count"],
+				exclude: ["createdAt", "visit_count"],
 			},
 			include: [
 				{
@@ -57,12 +60,20 @@ class measurementService {
 				post_id: postId,
 			},
 			group: [
+<<<<<<< HEAD
 				sequelize.fn
 					(
 						"DATE_FORMAT",
 						sequelize.col("measurement_date.created_at"),
 						dateFormat
 					)
+=======
+				sequelize.fn(
+					"DATE_FORMAT",
+					sequelize.col("created_at"),
+					dateFormat
+				),
+>>>>>>> front_datainsert
 			],
 		});
 	}
@@ -79,10 +90,10 @@ class measurementService {
 				if (!excludeColumn.includes(data)) return data;
 			}),
 			where: {
-				user_id: userId
+				user_id: userId,
 			},
 			order: [["like_count", "DESC"]],
-		})
+		});
 		// 총 방문자 수가 가장 많은 게시물
 		const getBestTotalVisit = await measurement.findOne({
 			include: [
@@ -94,12 +105,12 @@ class measurementService {
 						if (!excludeColumn.includes(data)) return data;
 					}),
 					where: {
-						user_id: userId
-					}
-				}
+						user_id: userId,
+					},
+				},
 			],
 			order: [["total_visit_count", "DESC"]],
-		})
+		});
 		// 오늘 방문자 수가 가장 많은 게시물
 		const getBestTodayVisit = await measurement.findOne({
 			include: [
@@ -111,17 +122,17 @@ class measurementService {
 						if (!excludeColumn.includes(data)) return data;
 					}),
 					where: {
-						user_id: userId
-					}
-				}
+						user_id: userId,
+					},
+				},
 			],
 			order: [["today_visit_count", "DESC"]],
-		})
+		});
 		return {
 			getBestLike,
 			getBestTodayVisit,
-			getBestTotalVisit
-		}
+			getBestTotalVisit,
+		};
 	}
 	/**
 	 * 내 게시물 리스트
@@ -155,21 +166,45 @@ class measurementService {
 						model: measurement,
 						as: "measurement",
 						attributes: {
-							exclude: ["createdAt", "updatedAt"]
-						}
-					}
+							exclude: ["createdAt", "updatedAt"],
+						},
+					},
 				],
 				attributes: postDto.filter((data) => {
 					const excludeColumn = ["user_id"];
 					if (!excludeColumn.includes(data)) return data;
 				}),
 				where: {
-					user_id: userId
+					user_id: userId,
 				},
 				order: [["like_count", criterionStr]],
 				offset: pageResult.offset,
 				limit: pageResult.limit,
-			})
+			});
+		}
+		// 생성 시간 기준
+		else if (postType === 3) {
+			return await posts.findAll({
+				include: [
+					{
+						model: measurement,
+						as: "measurement",
+						attributes: {
+							exclude: ["createdAt", "updatedAt"],
+						},
+					},
+				],
+				attributes: postDto.filter((data) => {
+					const excludeColumn = ["user_id"];
+					if (!excludeColumn.includes(data)) return data;
+				}),
+				where: {
+					user_id: userId,
+				},
+				order: [["updated_at", criterionStr]],
+				offset: pageResult.offset,
+				limit: pageResult.limit,
+			});
 		}
 		return await measurement.findAll({
 			include: [
@@ -181,16 +216,15 @@ class measurementService {
 						if (!excludeColumn.includes(data)) return data;
 					}),
 					where: {
-						user_id: userId
+						user_id: userId,
 					},
-				}
+				},
 			],
 			order: [orderOption],
 			offset: pageResult.offset,
 			limit: pageResult.limit,
-		})
+		});
 	}
-
 }
 
 module.exports = measurementService;

@@ -1,4 +1,4 @@
-const joi = require('Joi');
+const joi = require('joi');
 
 const output = {
   getGraphData: {
@@ -10,7 +10,7 @@ const output = {
 
   getMyPosts: {
     params: joi.object().keys({
-      posttype: joi.number().required().valid(0, 1, 2),
+      posttype: joi.number().required().valid(0, 1, 2, 3),
       criterion: joi.number().required().valid(0, 1),
     }),
     query: joi.object().keys({

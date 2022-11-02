@@ -1,4 +1,4 @@
-const joi =  require('Joi');
+const joi =  require('joi');
 
 const updateUser = {
   body: joi.object().keys({

@@ -19,11 +19,16 @@ const { authLimiter } = require("./src/middleware/rateLimiter");
 const CustomError = require("./src/utils/Error/customError");
 const httpStatus = require("http-status");
 
-
 const app = express();
 dotenv.config();
 
 const routes = require("./src/routes");
+
+// Access-Control-Allow-Credentials에러 해결
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Credentials", true);
+	next();
+});
 
 // set security HTTP headers
 app.use(helmet());
@@ -52,8 +57,11 @@ app.use(xss());
 // enable cors
 app.use(
 	cors({
-		origin: true, // 출처 허용 옵션
+		origin: ["http://127.0.0.1:4000", "http://localhost:4000", "http://39.120.8.109:4000", "http://jamin2.shop"], // 출처 허용 옵션
 		credential: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
+		methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+		preflightContinue: false,
+		optionsSuccessStatus: 204,
 	})
 );
 // app.options('*', cors());
@@ -63,11 +71,6 @@ const passportConfig = require("./src/config/passport/index");
 passportConfig();
 app.use(passport.initialize());
 app.use(passport.session());
-
-// limit repeated failed requests to auth endpoints
-if (process.env.NODE_ENV === "production") {
-	app.use("/v1/auth", authLimiter);
-}
 
 // 라우팅
 app.use("/", routes); // use -> 미들웨어를 등록해주는 메서드.

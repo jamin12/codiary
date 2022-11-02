@@ -16,6 +16,13 @@ router
 	);
 
 router
+	.route("/posts/count/:uniqueid")
+	.get(
+		validate(personalValidation.output.getPersonalPostsByDate),
+		personalController.output.getPersonalPostCountByDate
+	);
+
+router
 	.route("/posts/:uniqueid/:categoryid")
 	.get(
 		validate(personalValidation.output.getPersonalPosts),
