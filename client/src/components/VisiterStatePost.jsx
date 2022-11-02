@@ -1,10 +1,10 @@
-import React, {useState} from "react";
+import React from "react";
 import styled from "styled-components";
 
 import { IoPeopleOutline, IoPersonOutline, IoHeartCircleOutline } from "react-icons/io5";
 
 
-const MainWrap = styled.div`
+const MainWrap = styled.button`
     width: 90%;
     height: 170px;
     background-color: var(--gray50);
@@ -16,6 +16,7 @@ const MainWrap = styled.div`
     box-sizing: border-box;
     padding: 20px 0;
     transition: 0.2s;
+    border: none;
     cursor: pointer;
 
     h3, p, .tag-box{
@@ -65,11 +66,9 @@ const StatePost = (props) => {
     const todayVisiter = props.todayVisiter;
     const good = props.good;
 
-    const setChartPostId = props.setChartPostId;
-
-    //TODO: 빨간 에러나는데 왠지 모르겟슴
     const click = (e) => {
-        setChartPostId(e.tartget)
+        props.setChartPostId(postId)
+        props.setChartPostTitle(title)
     }
 
     return(
