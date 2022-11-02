@@ -21,11 +21,12 @@ const ChartWrap = styled.div`
 
 	.chart-header {
 		width: 100%;
-		height: 10%;
+		height: 60px;
 		display: flex;
 		justify-content: space-between;
 
 		.buttons {
+			height: 40px;
 			background-color: var(--gray100);
 			color: var(--gray400);
 			:focus {
@@ -33,6 +34,9 @@ const ChartWrap = styled.div`
 				color: var(--gray100);
 			}
 		}
+	}
+	.chart-box{
+		height: 400px;
 	}
 `;
 const TopWrap = styled.div`
@@ -142,7 +146,8 @@ const VisiterStats = () => {
 	const [topTotalVisiter, setTopTotalVisiter] = useState({});
 	const [topDayVisiter, setTopDayVisiter] = useState({});
 	const [topGood, setGood] = useState({});
-	const [graphInfo, setgraphInfo] = useState([]);
+	const [initialGraphData, setInitialGraphData] = useState([])	// 초기 그래프 데이터
+	const [graphInfo, setgraphInfo] = useState(initialGraphData);
 	const [myPosts, setMyPosts] = useState([]);
 	const [graphtype, setgraphtype] = useState(0);
 	const [viewMoreOffset, setViewMoreOffset] = useState(1);
@@ -219,7 +224,9 @@ const VisiterStats = () => {
 	const onClickShowGraph = (e) => {
 		setChartPostId(e.target.id)
 		console.log(e.target.id)
+		console.log(graphInfo)
 	}
+	// console.log(graphInfo)
 
 	/**
 	 * 통계 페이지 초기 데이터 가져오기
@@ -241,7 +248,7 @@ const VisiterStats = () => {
 			setGood(
 				getInitMesurementData.data.result_data.bestPosts.getBestLike
 			);
-			setgraphInfo(getInitMesurementData.data.result_data.graphData);
+			setInitialGraphData(getInitMesurementData.data.result_data.graphData);
 			setMyPosts(getInitMesurementData.data.result_data.myPosts);
 		};
 		getInitMesurementDataFun();
@@ -302,13 +309,16 @@ const VisiterStats = () => {
 							</Button>
 						</ButtonGroup>
 					</div>
-					<Chart 
-						// title = {}
-						post = {chartPostId}
-						graphtype={graphtype}
-						graphData={graphInfo}
+					<div className="chart-box">
+						<Chart 
+							// title = {}
+							post = {chartPostId}
+							graphtype={graphtype}
+							graphInfo={graphInfo}
 
-					/>
+						/>
+					</div>
+
 				</ChartWrap>
 
 				{/* top박스들을 뭉쳐놓은 div */}

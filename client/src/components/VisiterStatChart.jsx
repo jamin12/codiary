@@ -1,65 +1,85 @@
-import { Component } from 'react'
-import ApexCharts from 'react-apexcharts'
+import BaseComponent from 'bootstrap/js/dist/base-component';
+import React, {useState, useEffect} from 'react';
+import Chart from 'react-apexcharts';
 
-export default class Chart extends Component {
-    constructor(props) {
-        super(props);
-        const data = props.graphInfo;
-        const postId = props.post;
-        const graphtype = props.graphtype;  //일, 주, 달
 
-        const date = {
-            0: [],
-            1: ["첫째주", " ", " "],
-            3: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+const BasicLineChart = (props) => {
+    const { titleText, 
+            graphInfo,    // 데이터 배열
+            graphtype,    // 일, 주, 달 구분
+        } = props;
+
+    const [basicData, setBasicData] = useState([])
+    const [seriesData, setSeriesData] = useState([]);   // 데이터 배열
+    const [category, setCategory] = useState([]);       // 날짜데이터 배열
+    
+    //TODO(이묘): 초기 데이터 입력 안되어있음.
+
+    /**
+     * 받아온 데이터를 정렬하고 전처리
+     */
+    useEffect(() => {
+        //TODO(이묘): 주차별 그래프 반대로 나오는데 reverse()해도 안고쳐짐
+        if(graphtype===1){
+            setBasicData(graphInfo.reverse().created_at)            
+        }else{
+            setBasicData(graphInfo.sort((a, b) => new Date(a.created_at) - new Date(b.created_at)))            
         }
+        setSeriesData(basicData.map(item => (
+            item.sum_visit_count
+        )));
+        setCategory(basicData.map(date => (
+            date.created_at
+        )));
 
-        this.state = {
-            series: [{
-                // TODO(이묘): props로 받아온 데이터에 따라 이름, 데이터 바꿔줘야함
-                name: {postId},
-                data: [10, 41, 35, 51, 49, 62, 69, 91, 100]
-            },
-        ],
+    }, [graphInfo, graphtype, basicData]);
 
-            options: {
-                chart: {
-                    zoom: {
-                        enabled: false
-                    }
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                stroke: {
-                    curve: 'straight'
-                },
-                title: {
-                    text: 'Product Trends by Month',
-                    align: 'left'
-                },
-                grid: {
-                    row: {
-                        colors: ['#f3f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                        opacity: 0.5
-                    },
-                },
-                xaxis: {
-                    //TODO(이묘): 일, 주, 월에 따라 파라미터 바꿔줘야함
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                }
+
+    const options = {
+        chart: {
+            zoom: {
+                enabled: false
             }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'straight'
+        },
+        title: {
+            text: titleText,
+            align: 'left'
+        },
+        grid: {
+            row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0.5
+            }
+        },
+        xaxis: {
+            //TODO(이묘): 일, 주, 월에 따라 파라미터 바꿔줘야함
+            categories: category
+        },
+    };
+    const series = [
+        {
+            name: titleText,
+            data: seriesData
         }
-    }
-    render() {
-        return (
-            <ApexCharts
-                options={this.state.options}
-                series={this.state.series}
-                typs='line'
+    ];
+
+    return (
+        <div className="linechart">
+            <Chart
+                options={options}
+                series={series} 
+                type='line'
                 width='100%'
-                height='90%'
+                height='400px'
             />
-        );
-    }
-}
+        </div>
+    );
+};
+
+export default BasicLineChart;
