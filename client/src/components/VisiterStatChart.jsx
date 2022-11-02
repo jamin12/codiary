@@ -11,7 +11,6 @@ const BasicLineChart = (props) => {
     const [basicData, setBasicData] = useState([])
     const [seriesData, setSeriesData] = useState([]);   // 데이터 배열
     const [category, setCategory] = useState([]);       // 날짜데이터 배열
-    //TODO(이묘): 초기 데이터 입력 안되어있음.
 
     /**
      * 받아온 데이터를 정렬하고 전처리
@@ -51,7 +50,6 @@ const BasicLineChart = (props) => {
             }
         },
         xaxis: {
-            //TODO(이묘): 일, 주, 월에 따라 파라미터 바꿔줘야함
             categories: category
         },
     };
