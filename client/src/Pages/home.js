@@ -152,7 +152,6 @@ const Home = () => {
 
 	const [loginOpen, setLogin] = useState(false);
 
-
 	/**
 	 * 로그인 모달 여는 onClick
 	 */
@@ -182,24 +181,6 @@ const Home = () => {
 		};
 		getPopularPostFun();
 	}, []);
-
-
-
-	// // 검색창에서 엔터키 쳤을 때 검색
-	// const enterSearchPress = async (e) => {
-	// 	if (e.key === "Enter") {
-	// 		// 백엔드에 검색어 전송
-	//     /**
-	//       * 검색 키워트 게시글 가져오기
-	//     */
-	//     const getSearchPostInMain = await axios.get(
-	// 			main.searchPostInMain(searchWord),
-	// 			// TODO: queryParams 설정 해야함
-	// 			{ params: { offset: 0, limit: 9 } }
-	// 		);
-	// 		setSearchPostInMain(getSearchPostInMain.data.result_data);
-	// 	}
-	// };
 
 	// 프로필 이미지 클릭했을 때 메뉴 on off
 	const toggleMenu = () => {
