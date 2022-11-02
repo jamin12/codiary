@@ -108,15 +108,10 @@ const VisiterStats = () => {
 	const [topTotalVisiter, setTopTotalVisiter] = useState({});
 	const [topDayVisiter, setTopDayVisiter] = useState({});
 	const [topGood, setGood] = useState({});
-	const [initialGraphData, setInitialGraphData] = useState([])	// 초기 그래프 데이터
-	const [graphInfo, setgraphInfo] = useState(initialGraphData);	// 그래프에 들어가는 데이터
+	const [graphInfo, setgraphInfo] = useState([]);	// 그래프에 들어가는 데이터
 	const [myPosts, setMyPosts] = useState([]);
 	const [graphtype, setgraphtype] = useState(0);
 	const [viewMoreOffset, setViewMoreOffset] = useState(1);
-
-	console.log(initialGraphData)
-
-	var [TotalData, setTotalData] = useState([topTotalVisiter, topDayVisiter, topGood])	// top데이터들이 전부 들어있는 배열 [topTotalVisiter, topDayVisiter, topGood] 순서
 
 	// 차트에 표시되는 게시물id useState
 	const [chartPostId, setChartPostId] = useState("");
@@ -171,8 +166,10 @@ const VisiterStats = () => {
 			setGood(
 				getInitMesurementData.data.result_data.bestPosts.getBestLike
 			);
-			setInitialGraphData(getInitMesurementData.data.result_data.graphData);
+			setgraphInfo(getInitMesurementData.data.result_data.graphData);
 			setMyPosts(getInitMesurementData.data.result_data.myPosts);
+			setChartPostTitle(getInitMesurementData.data.result_data.bestPosts
+				.getBestTotalVisit.posts?.post_title)
 		};
 		getInitMesurementDataFun();
 	}, []);
@@ -252,7 +249,7 @@ const VisiterStats = () => {
 				{/* 차트 부분 뭉쳐놓은 div */}
 				<ChartWrap>
 					<div className="chart-header">
-						<h3>{chartPostTitle}</h3>
+						<h3>{topTotalVisiter.posts?.post_title!=="" ? chartPostTitle : topTotalVisiter.posts?.post_title}</h3>
 
 						<ButtonGroup
 							aria-label="Basic example"
