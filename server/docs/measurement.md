@@ -129,9 +129,9 @@
             {
                 "measurement_date_id": 1,
                 "post_id": 1,
-                "created_at": "2022-10-14",
-                "updated_at": "2022-10-14T10:45:58.000Z",
-                "sum_visit_count": "10"
+                "created_at": "2022-44",
+                "updated_at": "2022-10-30T19:49:00.000Z",
+                "sum_visit_count": "13",
             },
         ]
     }

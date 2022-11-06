@@ -49,13 +49,6 @@ class measurementService {
 				],
 				exclude: ["createdAt", "visit_count"],
 			},
-			include: [
-				{
-					model: posts,
-					as: "posts",
-					attributes: ["post_title"],
-				}
-			],
 			where: {
 				post_id: postId,
 			},

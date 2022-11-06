@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Carousel from "../components/CarousalCard";
 import { Link } from "react-router-dom";
@@ -49,7 +48,7 @@ const MainSearchBar = styled.input`
 	border-radius: 15px;
 	border: 1px solid #a5a5a5;
   	text-align: left;
-  	color: var(--gray300)
+  	color: var(--gray300);
 `;
 const HomeTitle = styled.div`
 	font-size: 2.5rem;
@@ -153,7 +152,6 @@ const Home = () => {
 
 	const [loginOpen, setLogin] = useState(false);
 
-
 	/**
 	 * 로그인 모달 여는 onClick
 	 */
@@ -183,24 +181,6 @@ const Home = () => {
 		};
 		getPopularPostFun();
 	}, []);
-
-
-
-	// // 검색창에서 엔터키 쳤을 때 검색
-	// const enterSearchPress = async (e) => {
-	// 	if (e.key === "Enter") {
-	// 		// 백엔드에 검색어 전송
-	//     /**
-	//       * 검색 키워트 게시글 가져오기
-	//     */
-	//     const getSearchPostInMain = await axios.get(
-	// 			main.searchPostInMain(searchWord),
-	// 			// TODO: queryParams 설정 해야함
-	// 			{ params: { offset: 0, limit: 9 } }
-	// 		);
-	// 		setSearchPostInMain(getSearchPostInMain.data.result_data);
-	// 	}
-	// };
 
 	// 프로필 이미지 클릭했을 때 메뉴 on off
 	const toggleMenu = () => {

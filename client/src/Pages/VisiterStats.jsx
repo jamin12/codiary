@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IoChevronDownOutline } from "react-icons/io5";
-import {
-	IoPeopleOutline,
-	IoPersonOutline,
-	IoHeartCircleOutline,
-} from "react-icons/io5";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 import SearchProfile from "../components/SearchProfile";
+import Top from '../components/VisiterStateTop';
 import StatePost from "../components/VisiterStatePost";
 import Chart from "../components/VisiterStatChart";
 import axios from "axios";
@@ -34,6 +30,10 @@ const ChartWrap = styled.div`
 				color: var(--gray100);
 			}
 		}
+		.buttons.active{
+			background-color: var(--gray500);
+			color: var(--gray100);
+		}
 	}
 	.chart-box{
 		height: 400px;
@@ -46,44 +46,6 @@ const TopWrap = styled.div`
 	justify-content: space-between;
 	margin-top: 30px;
 	cursor: pointer;
-
-	> div {
-		width: 30%;
-		height: 100%;
-		background-color: var(--gray50);
-		border-radius: 30px;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-
-		transition: 0.2s;
-		.top-icon {
-			width: 100px;
-			height: 100px;
-			color: var(--gray600);
-		}
-		p {
-			color: var(--gray600);
-		}
-		h4 {
-			color: var(--gray600);
-		}
-
-		:hover {
-			background-color: var(--gray100);
-			.top-icon {
-				color: var(--gray800);
-			}
-			h4 {
-				color: var(--gray800);
-			}
-		}
-
-		:checked {
-			background-color: var(--gray600);
-		}
-	}
 `;
 const PostWrap = styled.div`
 	position: relative;
@@ -146,17 +108,18 @@ const VisiterStats = () => {
 	const [topTotalVisiter, setTopTotalVisiter] = useState({});
 	const [topDayVisiter, setTopDayVisiter] = useState({});
 	const [topGood, setGood] = useState({});
-	const [initialGraphData, setInitialGraphData] = useState([])	// 초기 그래프 데이터
-	const [graphInfo, setgraphInfo] = useState(initialGraphData);
+	const [graphInfo, setgraphInfo] = useState([]);	// 그래프에 들어가는 데이터
 	const [myPosts, setMyPosts] = useState([]);
 	const [graphtype, setgraphtype] = useState(0);
 	const [viewMoreOffset, setViewMoreOffset] = useState(1);
-	
-	// 차트에 표시되는 게시물id useState
-	const [chartPostId, setChartPostId] = useState(graphInfo.post_id);
-	// const [chartPostTitle, setChartPostTitle] = useState(topTotalVisiter.posts.post_title);
-	const [chartPostTitle, setChartPostTitle] = useState();
 
+	// 차트에 표시되는 게시물id useState
+	const [chartPostId, setChartPostId] = useState("");
+	// const [chartPostTitle, setChartPostTitle] = useState(topTotalVisiter.posts.post_title);
+	const [chartPostTitle, setChartPostTitle] = useState("");
+
+	// 버튼 배열
+	const btnValue = ["DATE", "WEEK", "MONTH"];
 	// 검색시에 사용되는 porttype, criterion
 	const [searchPorttype, setSearchPorttype] = useState(0)
 	const [searchCriterion, setSearchCriterion] = useState(0)
@@ -184,51 +147,6 @@ const VisiterStats = () => {
 	];
 
 	/**
-	 * select box의 value onChange 함수
-	 * @param {*} e 
-	 */
-	const onChangeSelect = (e) => {
-		setSelected(e.target.value)
-	};
-	/**
-	 * 검색 버튼을 눌렀을 때 onClick 함수
-	 */
-	const onClickSearch = () => {
-		const word = selected.split(" ");
-		setSearchPorttype(porttype[word[0]])
-		setSearchCriterion(criterion[word[1]])
-		// setMyPosts([]);
-		// 검색 버튼을 다시 누르면 더보기 눌렀던거 초기화
-		setViewMoreOffset(1);
-	}
-
-	/**
-	 * 그래프 타입(일,주,달)선택 onClick
-	 * @param {*} e 
-	 */
-	const onClickGraphType = (e) => {
-		setSelected(e.target.value);
-		setgraphtype(e.target.id);
-	}
-
-	/**
-	 * 게시물 더보기 onClick 함수
-	 */
-	const onClickViewMore = () => {
-		setViewMoreOffset(viewMoreOffset+9)
-	}
-
-	/**
-	 * 차트에 표시되는 게시물 onClick 함수
-	 */
-	const onClickShowGraph = (e) => {
-		setChartPostId(e.target.id)
-		console.log(e.target.id)
-		console.log(graphInfo)
-	}
-	// console.log(graphInfo)
-
-	/**
 	 * 통계 페이지 초기 데이터 가져오기
 	 */
 	useEffect(() => {
@@ -248,11 +166,14 @@ const VisiterStats = () => {
 			setGood(
 				getInitMesurementData.data.result_data.bestPosts.getBestLike
 			);
-			setInitialGraphData(getInitMesurementData.data.result_data.graphData);
+			setgraphInfo(getInitMesurementData.data.result_data.graphData);
 			setMyPosts(getInitMesurementData.data.result_data.myPosts);
+			setChartPostTitle(getInitMesurementData.data.result_data.bestPosts
+				.getBestTotalVisit.posts?.post_title)
 		};
 		getInitMesurementDataFun();
 	}, []);
+
 
 	/**
 	 * 그래프 가져오기
@@ -283,6 +204,43 @@ const VisiterStats = () => {
 		getMyPostsFun();
 	}, [searchPorttype, searchCriterion, viewMoreOffset]);
 
+
+
+	/**
+ * select box의 value onChange 함수
+ * @param {*} e 
+ */
+	const onChangeSelect = (e) => {
+		setSelected(e.target.value)
+	};
+	/**
+	 * 검색 버튼을 눌렀을 때 onClick 함수
+	 */
+	const onClickSearch = () => {
+		const word = selected.split(" ");
+		setSearchPorttype(porttype[word[0]])
+		setSearchCriterion(criterion[word[1]])
+		// setMyPosts([]);
+		// 검색 버튼을 다시 누르면 더보기 눌렀던거 초기화
+		setViewMoreOffset(1);
+	}
+
+	/**
+	 * 그래프 타입(일,주,달)선택 onClick
+	 * @param {*} e 
+	 */
+	const onClickGraphType = (e) => {
+		setSelected(e.target.value);
+		setgraphtype(e.target.id);
+	}
+
+	/**
+	 * 게시물 더보기 onClick 함수
+	 */
+	const onClickViewMore = () => {
+		setViewMoreOffset(viewMoreOffset + 9)
+	}
+
 	return (
 		<MainWrap>
 			<SearchProfile />
@@ -291,32 +249,32 @@ const VisiterStats = () => {
 				{/* 차트 부분 뭉쳐놓은 div */}
 				<ChartWrap>
 					<div className="chart-header">
-						<h3>게시글이름</h3>
+						<h3>{topTotalVisiter.posts?.post_title!=="" ? chartPostTitle : topTotalVisiter.posts?.post_title}</h3>
 
 						<ButtonGroup
 							aria-label="Basic example"
 							className="button-box"
 						>
-							<Button variant="secondarye" className="buttons" id={0} onClick={onClickGraphType}>
-								DATE
-							</Button>
-
-							<Button variant="secondarye" className="buttons" id={1} onClick={onClickGraphType}>
-								WEEK
-							</Button>
-
-							<Button variant="secondarye" className="buttons" id={2} onClick={onClickGraphType}>
-								MONTH
-							</Button>
+							{/* TODO(이묘): 버튼 클릭하면 색 유지되는거 시간나면 넣으셈 */}
+							{
+								btnValue.map((item, idx) => {
+									return (
+										<Button variant="secondarye" 
+										className={"buttons"} 
+										id={idx}
+										onClick={onClickGraphType}>
+											{item}
+										</Button>
+									)
+								})
+							}
 						</ButtonGroup>
 					</div>
 					<div className="chart-box">
-						<Chart 
-							// title = {}
-							post = {chartPostId}
+						<Chart
+							post={chartPostId}
 							graphtype={graphtype}
 							graphInfo={graphInfo}
-
 						/>
 					</div>
 
@@ -324,27 +282,33 @@ const VisiterStats = () => {
 
 				{/* top박스들을 뭉쳐놓은 div */}
 				<TopWrap>
-					<div className="top-total-visiter"
-					id={topTotalVisiter.post_id}
-					onClick={onClickShowGraph}>
-						<IoPeopleOutline className="top-icon" id={topTotalVisiter.post_id} />
-						<p id={topTotalVisiter.post_id}>누적 방문자수 TOP </p>
-						<h4>{topTotalVisiter.post_title}</h4>
-					</div>
-					<div className="top-total-visiter"
-					id={topDayVisiter.post_id}
-					onClick={onClickShowGraph}>
-						<IoPersonOutline className="top-icon" id={topDayVisiter.post_id}/>
-						<p id={topDayVisiter.post_id}>일일 방문자수 TOP</p>
-						<h4>{topDayVisiter.post_title}</h4>
-					</div>
-					<div className="top-total-visiter"
-					id={topGood.post_id}
-					onClick={onClickShowGraph}>
-						<IoHeartCircleOutline className="top-icon" id={topGood.post_id}/>
-						<p id={topGood.post_id}>좋아요수 TOP</p>
-						<h4>{topGood.post_title}</h4>
-					</div>
+					{
+						// eslint-disable-next-line array-callback-return
+						[topTotalVisiter, topDayVisiter, topGood].map((topPost, index) => {
+							if (index < 2) {
+								return (
+									<Top
+										id={topPost.post_id}
+										type={index}
+										title={topPost.posts?.post_title}
+										setChartPostId={setChartPostId}
+										setChartPostTitle={setChartPostTitle}
+									/>
+								)
+							} else {
+								return (
+									<Top
+										id={topPost.post_id}
+										type={index}
+										title={topPost.post_title}
+										setChartPostId={setChartPostId}
+										setChartPostTitle={setChartPostTitle}
+									/>
+								)
+							}
+
+						})
+					}
 				</TopWrap>
 
 				{/* 포스트 box를 뭉쳐놓은 div */}
@@ -368,25 +332,26 @@ const VisiterStats = () => {
 					<div className="post-box">
 						{
 							myPosts.map((post) => {
-								if(searchPorttype===0 || searchPorttype===1){
-									return(
+								if (searchPorttype === 0 || searchPorttype === 1) {
+									return (
 										<StatePost
-										title={post.posts?.post_title}
-										date= {post.posts?.updated_at}
-										totalVisiter={post.total_visit_count}
-										todayVisiter={post.today_visit_count}
-										good={post.posts?.like_count}
+											title={post.posts?.post_title}
+											date={post.posts?.updated_at}
+											totalVisiter={post.total_visit_count}
+											todayVisiter={post.today_visit_count}
+											good={post.posts?.like_count}
 
-										id={post.posts?.post_id}
-										setChartPostId={setChartPostId}
+											id={post.posts?.post_id}
+											setChartPostId={setChartPostId}
+											setChartPostTitle={setChartPostTitle}
 										/>
 									)
 								}
-								else{
-									return(
+								else {
+									return (
 										<StatePost
 											title={post.post_title}
-											date= {post.updated_at}
+											date={post.updated_at}
 											totalVisiter={post.measurement?.total_visit_count}
 											todayVisiter={post.measurement?.today_visit_count}
 											good={post.like_count}
@@ -402,7 +367,7 @@ const VisiterStats = () => {
 				</PostWrap>
 
 				<div className="btn-postview-more" onClick={onClickViewMore} postLength={myPosts.length}>
-					<IoChevronDownOutline/>
+					<IoChevronDownOutline />
 				</div>
 			</div>
 		</MainWrap>
@@ -423,7 +388,7 @@ const MainWrap = styled.div`
 		margin-bottom: 60px;
 
 		> .btn-postview-more{
-			display: ${props => props.postLength>9 ? "flex" : "none"};
+			display: ${props => props.postLength > 9 ? "flex" : "none"};
 			justify-content: center;
 			align-items: center;
 			height: 40px;
