@@ -461,12 +461,11 @@ class PersonalService {
 		body.tag.tag_name = [...setTagList];
 		await sequelize.transaction(async (t1) => {
 			createdPost = await posts.create(body.post);
-			for (let index = 0; index < body.tag.tag_name.length; index++) {
-				await tag.create({
-					post_id: createdPost.post_id,
-					tag_name: body.tag.tag_name[index],
-				});
-			}
+			const tagNameList = body.tag.tag_name.join("\\t")
+			await tag.create({
+				post_id: createdPost.post_id,
+				tag_name: tagNameList
+			});
 			await measurement.create({
 				post_id: createdPost.post_id,
 			});
@@ -497,17 +496,14 @@ class PersonalService {
 				},
 			});
 			if (body.tag) {
-				await tag.destroy({
+				const tagNameList = body.tag.tag_name.join("\\t")
+				await tag.update({
+					tag_name: tagNameList,
+				}, {
 					where: {
 						post_id: postId,
-					},
+					}
 				});
-				for (let index = 0; index < body.tag.tag_name.length; index++) {
-					await tag.create({
-						post_id: postId,
-						tag_name: body.tag.tag_name[index],
-					});
-				}
 			}
 			await posts_update_history.create({
 				post_id: postId,
@@ -1144,25 +1140,26 @@ class PersonalService {
 	async associatePost(postId) {
 		await this.checkPostExists(postId);
 		// 태그 리스트 구하기
-		const tagList = await tag.findAll({
+		let tagList = await tag.findOne({
 			where: {
 				post_id: postId,
 			},
 		});
-		logger.info(tagList);
+		tagList = tagList.tag_name.split('\\t');
 		// 조합을 이용후 랜덤으로 태그 리스트 가져오기
 		const tagCombis = this.myMath.getCombinations(
 			tagList,
 			Math.ceil(tagList.length / 2)
 		);
 		let tagCombi = tagCombis[this.myMath.getRandomInt(0, tagCombis.length)];
-		tagCombi = tagCombi.map((data) => data.dataValues.tag_name);
+		tagCombi = tagCombi[this.myMath.getRandomInt(0, tagCombi.length)]
 		this.postJoin.include = [this.userJoin];
 		const associatePost = await tag.findAll({
+			// TODO: 연관된 태그가 하나밖에 조회가 안된다.... 넘 슬프다 다른 방법 찾는중
 			attributes: ["tag_id", "tag_name"],
 			where: {
 				tag_name: {
-					[Op.or]: tagCombi,
+					[Op.substring]: tagCombi,
 				},
 				post_id: {
 					[Op.notIn]: [postId],
