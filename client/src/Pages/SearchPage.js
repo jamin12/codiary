@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import CardCell from "../components/CardCell";
 import { main } from "../api";
 import { IoChevronDownOutline } from "react-icons/io5";
 
@@ -14,12 +14,21 @@ const Searchpage = () => {
 
 	const [viewMoreOffset, setViewMoreOffset] = useState(1);
 
+  const location = useLocation();
+
+  const type = location.state.type;
+  if(type === 'home') {
+    console.log(type)
+  }else if(type === ''){
+    
+  }
+
 
   /**
    * text가 바뀔 때마다 검색을 하게 해주는 함수
    */
   const changeSearch = async (e) => {
-    
+
     setSearchWord(e.target.value)
     let getSearch
     getSearch = await axios.get(main.searchPostInMain(searchWord), {
@@ -55,11 +64,11 @@ const Searchpage = () => {
           {searchResult.map((post) => {
             return (
               <PostRowCard
-              // title={post.post_title}
-              // user = {post.users.user_detail.user_nickname}
-              // img = {post.users.user_detail.user_img}
-              // date = {post.updated_at}
-              // text = {post.post_txt}
+              title={post.post_title}
+              user = {post.users.user_detail.user_nickname}
+              img = {post.users.user_detail.user_img}
+              date = {post.updated_at}
+              text = {post.post_txt}
               />
             );
           })}
