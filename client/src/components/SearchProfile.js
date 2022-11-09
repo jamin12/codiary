@@ -295,7 +295,7 @@ const SearchProfile = () => {
               <Link className="tagP" to="/presave">
                 임시글 목록
               </Link>
-              <Link className="tagP" to="/visite">
+              <Link className="tagP" to="/visite-like">
                 방문&좋아요 목록
               </Link>
               <Link className="tagP" to="/setting">
