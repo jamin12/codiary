@@ -30,7 +30,6 @@ class MainService {
 							attributes: [
 								"user_name",
 								"user_unique_id",
-								"user_nickname",
 								"user_img",
 							],
 						},
@@ -67,7 +66,6 @@ class MainService {
 							attributes: [
 								"user_name",
 								"user_unique_id",
-								"user_nickname",
 								"user_img",
 							],
 						},

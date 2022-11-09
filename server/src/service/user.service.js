@@ -24,7 +24,6 @@ class UserService {
 					attributes: [
 						"user_name",
 						"user_unique_id",
-						"user_nickname",
 						"user_introduce",
 						"user_img",
 					],
@@ -49,7 +48,6 @@ class UserService {
 				"user_id",
 				"user_name",
 				"user_unique_id",
-				"user_nickname",
 				"user_introduce",
 				"user_img",
 			],

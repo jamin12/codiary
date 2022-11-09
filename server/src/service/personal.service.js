@@ -48,7 +48,6 @@ class PersonalService {
 					attributes: [
 						"user_name",
 						"user_unique_id",
-						"user_nickname",
 						"user_img",
 					],
 				},
@@ -398,15 +397,6 @@ class PersonalService {
 				post_id: postId,
 			},
 			include: [
-				{
-					model: comments,
-					as: "comments",
-					attributes: commentsDto.filter((data) => {
-						const excludeColumn = ["user_id"];
-						if (!excludeColumn.includes(data)) return data;
-					}),
-					include: [this.userJoin],
-				},
 				{
 					model: tag,
 					as: "tag",
@@ -850,6 +840,24 @@ class PersonalService {
 			},
 		});
 		return;
+	}
+
+	/**
+ * 댓글 조회
+ * @param {number} postId
+ * @returns {Object}
+ */
+	async getCommnets(postId) {
+		return comments.findAll({
+			attributes: commentsDto.filter((data) => {
+				const excludeColumn = ["user_id"];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			include: [this.userJoin],
+			where: {
+				post_id: postId
+			}
+		})
 	}
 
 	/**

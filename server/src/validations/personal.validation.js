@@ -43,6 +43,15 @@ const output = {
 	},
 
 	/**
+ * 댓글 조회
+ */
+	getPersonalComments: {
+		params: joi.object().keys({
+			postid: joi.number().required(),
+		}),
+	},
+
+	/**
 	 * 카테고리
 	 */
 	getPersonalCategory: {

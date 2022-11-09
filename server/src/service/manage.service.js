@@ -32,7 +32,6 @@ class manageService {
 					attributes: [
 						"user_name",
 						"user_unique_id",
-						"user_nickname",
 						"user_img",
 					],
 				},
@@ -83,7 +82,6 @@ class manageService {
 					attributes: [
 						"user_name",
 						"user_unique_id",
-						"user_nickname",
 						"user_introduce",
 						"user_img",
 					],
