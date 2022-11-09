@@ -48,10 +48,10 @@ const HeaderNoSearchBar = () => {
               <Link className='tagP' to='/:userId'>내 글 목록</Link>
               <Link className='tagP' to='/write'>글쓰기</Link>
               <Link className='tagP' to='/:userId/calender'>내 코디어리</Link>
-              <Link className='tagP' to='/:userId/presave'>임시글 목록</Link>
-              <Link className='tagP' to='/:userId/visite'>방문&좋아요 목록</Link>
+              <Link className='tagP' to='/presave'>임시글 목록</Link>
+              <Link className='tagP' to='/visite-like'>방문&좋아요 목록</Link>
               <Link className='tagP' to='/setting'>설정</Link>
-              <Link className='tagP' to='/:userId/visiterstat'>방문자통계</Link>
+              <Link className='tagP' to='/visiterstat'>방문자통계</Link>
               <p className='logout tagP' onClick={loginModal}>로그인</p>
             </div>
 

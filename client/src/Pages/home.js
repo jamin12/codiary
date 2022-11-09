@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Carousel from "../components/CarousalCard";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { main } from "../api/index";
 import axios from "axios";
 import Login from "../components/Login.jsx";
@@ -146,8 +146,6 @@ const Menu = styled.div`
 
 const Home = () => {
 	const [isOpen, setMenu] = useState(false);
-	const [searchWord, setSearch] = useState("");
-	const [searchPostInMain, setSearchPostInMain] = useState({});
 	const [popularPost, setPopularPost] = useState([]);
 
 	const [loginOpen, setLogin] = useState(false);
@@ -159,11 +157,12 @@ const Home = () => {
 		setLogin(true);
 	}
 
+	const navigation = useNavigate();
 	/**
 	 * search page 로 이동하는 onClick
 	 */
 	const goToSearchPage = () => {
-
+		navigation("/search", { state: { type: 'home' } });
 	}
 
 
@@ -215,16 +214,16 @@ const Home = () => {
 							<Link to="/:userId/calender">내 코디어리</Link>
 						</p>
 						<p>
-							<Link to="/:userId/presave">임시글 목록</Link>
+							<Link to="/presave">임시글 목록</Link>
 						</p>
 						<p>
-							<Link to="/:userId/visite">방문&좋아요 목록</Link>
+							<Link to="/visite-like">방문&좋아요 목록</Link>
 						</p>
 						<p>
 							<Link to="/setting">설정</Link>
 						</p>
 						<p>
-							<Link to="/:userId/visiterstat">방문자 통계</Link>
+							<Link to="/visiterstat">방문자 통계</Link>
 						</p>
 						<p className="logout" onClick={loginModal}>로그아웃</p>
 					</div>
@@ -233,13 +232,11 @@ const Home = () => {
 				{/* 홈화면 */}
 				<HomeTitle>CODIARY</HomeTitle>
 				{/* 검색창 */}
-				<Link to="/search">
-					<MainSearchBar
-						type="button"
-						onClick={goToSearchPage}
-						value="SEARCH"
-					></MainSearchBar>
-				</Link>
+				<MainSearchBar
+					type="button"
+					onClick={goToSearchPage}
+					value="SEARCH"
+				></MainSearchBar>
 
 			</div>
 

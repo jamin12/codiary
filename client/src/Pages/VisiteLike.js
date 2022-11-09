@@ -4,10 +4,11 @@ import React, { useEffect, useState } from "react";
 import SearchProfile from "../components/SearchProfile";
 // import Card from "../components/CarousalCard";
 // import Carousel from '../components/3DCarousal'
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import { personal } from "../api/index";
 import axios from "axios";
 import Carousel from '../components/CarouselSlick';
+// import { List } from "react-bootstrap/lib/media";
 
 const VisitLike = () => {
 	// card 컴포넌트에 보낼 파라미터
@@ -70,14 +71,14 @@ const VisitLike = () => {
 	//     )
 	//   }
 	// ];
-	
+
 	/**
 	 * 0 : visit records 조회
 	 * 1 : like records 조회
 	 */
-	const [visitLikeSelected, setVisitLikeSelected] = useState(1);
+	const [visitLikeSelected, setVisitLikeSelected] = useState(0);
 
-	const [visitLikeRecords, setVisitLikeRecords] = useState({});
+	const [visitLikeRecords, setVisitLikeRecords] = useState([]);
 	/**
 	 * 임시 저장 게시물 목록 조회
 	 */
@@ -89,7 +90,7 @@ const VisitLike = () => {
 				getVisitLikeRecord = await axios.get(
 					// TODO: params 바꾸기
 					personal.getPersonalVisitRecord(),
-					{ withCredentials: true, params: { offset: 1, limit: 2 } }
+					{ withCredentials: true, params: { offset: 1, limit: 50 } }
 				);
 				setVisitLikeRecords(getVisitLikeRecord.data.result_data);
 			}
@@ -98,7 +99,7 @@ const VisitLike = () => {
 				getVisitLikeRecord = await axios.get(
 					// TODO: params 바꾸기
 					personal.getPersonalLikeRecord(),
-					{ withCredentials: true, params: { offset: 1, limit: 2 } }
+					{ withCredentials: true, params: { offset: 1, limit: 50 } }
 				);
 				setVisitLikeRecords(getVisitLikeRecord.data.result_data);
 			}
@@ -106,17 +107,46 @@ const VisitLike = () => {
 		getVisitLikeRecordFun();
 	}, [visitLikeSelected]);
 
-  console.log(visitLikeRecords);
+	/**
+	 * 방문 목록인지 좋아요 목록인지 타입을 정하는 함수
+	 */
+	const onClickType = (e) => {
+		console.log(e.target.id)
+		if (e.target.id === "visitList") {
+			setVisitLikeSelected(0)
+		} else if ((e.target.id === "goodList")) {
+			setVisitLikeSelected(1)
+		}
+	}
+	console.log(visitLikeRecords)
+
+
 	return (
 		<div>
 			<Header>
 				<SearchProfile />
 			</Header>
 
-			{/* 버튼을 누르면 각각 요청을 보내야함 */}
+			{/* TODO(이묘): 버튼을 누르면 각각 요청을 보내야함 */}
 			{/* 파라미터를 바꿔주는게 */}
 			<Wrap>
-				<Carousel visitLikeSelected={visitLikeSelected} visitLikeRecords={visitLikeRecords}/>
+				<div className="title-box">
+					<h3 id="visitList" onClick={onClickType} visitLikeSelected={visitLikeSelected}>방문 목록</h3>
+					<h3 id="goodList" onClick={onClickType} visitLikeSelected={visitLikeSelected}>좋아요 목록</h3>
+				</div>
+				<div className="carousel-box">
+					<Carousel className='carousel'
+						posts={visitLikeRecords}
+						centerMode={false}
+						dots={true}
+						slidesToShow={3}
+						vertical={false}
+						verticalSwiping={false}
+						// arrows={true}
+						// nextArrow="<i class='fa-solid fa-chevron-right'></i>"
+						// prevArrow="<i class='fa-solid fa-chevron-left'></i>"
+					/>
+				</div>
 			</Wrap>
 		</div>
 	);
@@ -127,8 +157,38 @@ export default VisitLike;
 const Wrap = styled.div`
 	width: 90%;
 	height: 80vh;
-	background-color: red;
 	margin: 0px auto 0 auto;
+
+	@media screen and (max-width: 1024px) {
+		height: 75vh;
+	}
+
+	.title-box{
+		display: flex;
+		justify-content: center;
+
+		h3{
+			margin: 0 20px;
+			cursor: pointer;
+			
+		}
+	}
+
+	.carousel-box{
+		width: 90%;
+		height: 80%;
+		margin: 30px auto;
+
+		.carousel{
+			position: relative;
+			height: 55vh;
+
+
+			@media screen and (min-width: 1200px) {
+    			height: 60vh;
+  			}
+		}
+	}
 `;
 
 const Header = styled.div`
