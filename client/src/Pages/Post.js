@@ -15,6 +15,9 @@ const WritePage = () => {
 	const [checkCommentChange, setCheckCommentChange] = useState(0);
 	const [associatePost, setAssociatePost] = useState({});
 
+	const [commentValue, setCommentValue] = useState("");
+
+
 	/**
 	 * 포스트 가져오기
 	 */
@@ -64,6 +67,20 @@ const WritePage = () => {
 	// }
 
 	console.log(post)
+
+	/**
+	 * 댓글 입력
+	 */
+	const onChangeComment = (e) => {
+		setCommentValue(e.target.value)
+	}
+
+	/**
+	 * 댓글 저장
+	 */
+	const onClickCommentSave = (e) => {
+		console.log('hi')
+	}
 
 	// HTML
 	return (
@@ -145,6 +162,14 @@ const WritePage = () => {
 							</div>
 						</VisiteBox>
 					</TagVisiteBox>
+
+					{/* 댓글 입력창 */}
+					<InputCommnetBox>
+						<textarea placeholder="댓글을 입력하세요!"
+						value={commentValue}
+						onChange={(e) => onChangeComment(e)}></textarea>
+						<button onClick={onClickCommentSave}>저장</button>
+					</InputCommnetBox>
 
 					{/* 댓글 */}
 					{
@@ -382,6 +407,41 @@ const VisiteBox = styled.div`
 		display: none;
 	}
 `;
+
+// 댓글 입력
+const InputCommnetBox = styled.div`
+	width: 100%;
+	height: 150px;
+	
+	position: relative;
+
+	textarea{
+		width: 100%;
+		height: 70%;
+		border-radius: 5px;
+		border: 2px solid var(--gray100);
+		box-sizing: border-box;
+		padding: 5px;
+		resize: none;
+	}
+
+	button{
+		width: 80px;
+		padding: 5px 0;
+		border: 2px solid var(--gray400);
+		background-color: var(--gray100);
+		border-radius: 15px;
+
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		color: var(--gray600);
+
+		cursor: pointer;
+	}
+`
+
+// 댓글
 const CommentBox = styled.div`
 	margin-top: 30px;
 	/* 댓글 창 */
@@ -399,6 +459,7 @@ const CommentBox = styled.div`
 		width: 90%;
 	}
 `;
+// 덧글
 const ReplyBox = styled.div`
 	/* width: 60%; */
 	margin-top: 15px;
@@ -414,7 +475,6 @@ const ReplyBox = styled.div`
 	@media screen and (max-width: 1024px) {
 		width: 85%;
 		margin-left: 120px;
-		background-color: red;
 	}
 `;
 /* 날짜박스 */
