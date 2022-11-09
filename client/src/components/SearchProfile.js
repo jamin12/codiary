@@ -292,7 +292,7 @@ const SearchProfile = () => {
               <Link className="tagP" to="/:userId/calender">
                 내 코디어리
               </Link>
-              <Link className="tagP" to="/:userId/presave">
+              <Link className="tagP" to="/presave">
                 임시글 목록
               </Link>
               <Link className="tagP" to="/visite">
@@ -301,7 +301,7 @@ const SearchProfile = () => {
               <Link className="tagP" to="/setting">
                 설정
               </Link>
-              <Link className="tagP" to="/:userId/visiterstat">
+              <Link className="tagP" to="/visiterstat">
                 방문자 통계
               </Link>
 
