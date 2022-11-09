@@ -108,7 +108,6 @@ class UserService {
 					user_id: userInfo.id,
 					user_name: userInfo.displayName,
 					user_unique_id: uuid(),
-					user_nickname: "",
 					user_introduce: "",
 					user_img: userInfo.picture,
 				});
