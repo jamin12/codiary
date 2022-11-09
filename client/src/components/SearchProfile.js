@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import "../css/reset.css";
 import { devices } from "../css/DeviceSize";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Login from "./Login";
 
 // 스타일 설정
@@ -36,7 +36,6 @@ const SearchWrap = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
-
 const Profile = styled.div`
   width: 100px;
   height: 40px;
@@ -212,7 +211,6 @@ const BtnSearch = styled.div`
 // 회원 정보를 받아와서 프로필 사진을 불러와야 함
 const SearchProfile = () => {
   const [isOpen, setMenu] = useState(false);
-  const [searchWord, setSearch] = useState("");
   const [loginOpen, setLogin] = useState(false);
   // TODO(이묘): 쿠키에 authentication에 있는지 확인 후에 로그인이 돼었느냐를 체크해야함
 
@@ -223,6 +221,36 @@ const SearchProfile = () => {
   const loginModal = () => {
     setLogin(true);
   };
+
+  /**
+   * 검색 버튼을 누른 경로 체크하는 useEffect
+   */
+  const location = useLocation();
+  
+  console.log(location)
+  const selectType = () => {
+    const locationType = location.split('/')
+    if (locationType[1]===null || locationType[1] === 'calender'){
+      return 0
+    }
+    else if(locationType[0] === 'presave'){
+      return 1
+    }
+    else if(locationType[0] === 'visite-list'){
+      return 2
+    }
+    else if(locationType[0] === 'good-list'){
+      return 3
+    }
+  }
+
+  /**
+   * /search로 이동하는 함수
+   */
+  const navigation = useNavigate();
+  const onClickSearch = () => {
+    navigation("/search", { state: { type: selectType() } });
+  }
 
   return (
     <Main>
@@ -237,12 +265,10 @@ const SearchProfile = () => {
 
         <SearchWrap>
           <BtnSearch>
-            <Link to="/search">
-              <ion-icon
+              <ion-icon onClick={onClickSearch}
                 size="small"
                 name="search-outline"
               ></ion-icon>
-            </Link>
           </BtnSearch>
 
           <Profile>
@@ -269,7 +295,7 @@ const SearchProfile = () => {
               <Link className="tagP" to="/:userId/presave">
                 임시글 목록
               </Link>
-              <Link className="tagP" to="/:userId/visite">
+              <Link className="tagP" to="/visite">
                 방문&좋아요 목록
               </Link>
               <Link className="tagP" to="/setting">
