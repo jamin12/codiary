@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useCookies } from "react-cookie"
 import { personal } from "../api";
 
 import SearchProfile from "../components/SearchProfile";
@@ -105,7 +106,8 @@ const Presave = () => {
 	`;
 
 	const [temporaryPosts, setTemporaryPosts] = useState({});
-
+	const [myCookies] = useCookies();
+	console.log(myCookies);
 	/**
 	 * 임시 저장 게시물 목록 조회
 	 */
@@ -120,7 +122,6 @@ const Presave = () => {
 		gettmpPostsFun();
 	}, []);
 
-	console.log(temporaryPosts);
 	return (
 		<>
 			<SearchProfile />
@@ -131,22 +132,19 @@ const Presave = () => {
 
 				{/* Map함수 써서 배열 돌려서 찾아서 넣어야 할 듯? 인자 props처리 */}
 				<PostWrap>
-					<Post>
-						<h2>Title</h2>
-						<p className="text">
-							군인 또는 군무원이 아닌 국민은 대한민국의
-							영역안에서는 중대한 군사상
-							기밀·초병·초소·유독음식물공급·포로·군용물에 관한
-							죄중 법률이 정한 경우와 비상계엄이 선포된 경우를
-							제외하고는 군사법원의 재판을 받지 아니한다.
-						</p>
-						<p className="date">2022.01.01</p>
-					</Post>
-					<Post />
-					<Post />
-
-					<Post />
-					<Post />
+					{
+						// temporaryPosts.map((e) => {
+						// 	return (
+						// 		// <a href={`/${cookies.get("uniqueid")/{e.tmpost}}`}>
+						// 			<Post>
+						// 				<h2>{e.tmppost_title}</h2>
+						// 				<p className="text">{e.tmppost_txt}</p>
+						// 				<p className="date">{e.updated_at}</p>
+						// 			</Post>
+						// 		// </a>
+						// 	)
+						// })
+					}
 				</PostWrap>
 			</Wrap>
 		</>

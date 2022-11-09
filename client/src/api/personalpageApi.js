@@ -173,6 +173,12 @@ const personal = {
 	 * commnets
 	 ***********************************************/
 	/**
+ * 댓글 조회 URL [GET]
+ * @param  {...String} params Path Variables 값들
+ * @returns {String}
+ */
+	getComments: (...params) => createUrl("/comments/g", params),
+	/**
 	 * 댓글 생성 URL [POST]
 	 * @param  {...String} params Path Variables 값들
 	 * @returns {String}

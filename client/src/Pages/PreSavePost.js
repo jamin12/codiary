@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useCookies } from "react-cookie"
 import styled from "styled-components";
 import axios from "axios";
 
@@ -9,62 +10,22 @@ import { personal } from "../api/index";
 
 const WritePage = () => {
 	// 가변 인수 가져오기
-	const { userId, postId } = useParams();
+	const { tmpposttId } = useParams();
 	const [post, setPost] = useState({});
-	const [comments, setComments] = useState([]);
-	const [checkCommentChange, setCheckCommentChange] = useState(0);
-	const [associatePost, setAssociatePost] = useState({});
-
+	const [cookies] = useCookies([]);
+	console.log(cookies.uniqueid);
 	/**
 	 * 포스트 가져오기
 	 */
 	useEffect(() => {
-		const getPostFun = async () => {
-			const getPost = await axios.get(
-				personal.getPersonalPost(userId, parseInt(postId))
+		const getTmpPostFun = async () => {
+			const getTmpPost = await axios.get(
+				personal.getPersonalPost(cookies.uniqueid, parseInt(tmpposttId))
 			);
-			setPost(getPost.data.result_data);
+			setPost(getTmpPost.data.result_data);
 		};
-		getPostFun();
-	}, [postId, userId]);
-
-	/**
-	 * 연관 포스트 가져오기
-	 */
-	useEffect(() => {
-		const getAssociatePostFun = async () => {
-			const getAssociatePost = await axios.get(
-				personal.associatePersonalposts(postId)
-			);
-			setAssociatePost(getAssociatePost.data.result_data);
-		};
-		getAssociatePostFun();
-	}, [postId]);
-
-	/**
- * 댓글 가져오기
- */
-	useEffect(() => {
-		const getCommentsFun = async () => {
-			const getComments = await axios.get(
-				personal.getComments(postId)
-			);
-			setComments(getComments.data.result_data);
-		};
-		setCheckCommentChange(0);
-		getCommentsFun();
-	}, [postId, checkCommentChange]);
-
-	// const createComment = async () => {
-	// 	await axios.post(
-	// 		personal.createComment(),{
-
-	// 		}
-	// 	);
-	// }
-
-	console.log(post)
-
+		getTmpPostFun();
+	}, [tmpposttId]);
 	// HTML
 	return (
 		<>
@@ -73,23 +34,6 @@ const WritePage = () => {
 			</Header>
 
 			<Wrap className="wrap">
-				{/* 카테고리창 - sticky 이용 */}
-				<CategoryBox className="sticky-box">
-					{/* <h3>사용자's CODIARY</h3> */}
-					<div className="category">
-						{post.getPost?.category?.category_name}
-						<ul>
-							{
-								post.getPost?.category?.posts.map(e => {
-									return (
-										<a href={`/${userId}/${e.post_id}`}><li>{e.post_title}</li></a>
-									)
-								})
-							}
-						</ul>
-					</div>
-				</CategoryBox>
-
 				<ContentWrapBox className="inner-width">
 					{/* 제목 및 헤더 */}
 					<HeaderBox>
@@ -103,105 +47,14 @@ const WritePage = () => {
 						</span>
 						{/* <hr/> */}
 					</HeaderBox>
-
 					{/* 본문내용 */}
 					<ContentBox>
 						<div dangerouslySetInnerHTML={{ __html: post.getPost?.post_body_html }}>
 						</div>
 					</ContentBox>
-
-					{/* 태그 & 방문자수 */}
-					<TagVisiteBox>
-						<TagBox>
-							{
-								post.getPost?.tag.map((e) => {
-									let tag_name = e?.tag_name
-									return (
-										<p>
-											{tag_name}
-										</p>
-									)
-								})
-							}
-						</TagBox>
-
-						<VisiteBox>
-							<div className="total-visite">
-								<ion-icon name="people-outline"></ion-icon>
-								{post.getPost?.measurement?.total_visit_count}
-							</div>
-							<div className="today-visite">
-								<ion-icon name="people-outline"></ion-icon>
-								{post.getPost?.measurement?.today_visit_count}
-
-							</div>
-							<div className="like-good">
-								<label for="good">
-									<ion-icon name="heart-outline"></ion-icon>
-								</label>
-								<input type="checkbox" id="good" />
-								{/* <ion-icon name="heart"></ion-icon> */}
-								<p>{post.getPost?.like_count}</p>
-							</div>
-						</VisiteBox>
-					</TagVisiteBox>
-
-					{/* 댓글 */}
-					{
-						comments.map((e) => {
-							if (e.sub_comments_id === null) {
-								return (
-									<CommentBox>
-										<ProfileBox>
-											<img src={e.users.user_detail?.user_img} alt=""></img>
-											<p>{e.users.user_detail?.user_unique_id}</p>
-										</ProfileBox>
-										<p className="text-box">
-											{e.comments_body}
-										</p>
-										<DateBox>
-											<p className="btn-reply">답글 쓰기</p>
-											{/* TODO(경민 -> 이묘): 생성 수정 삭제 텍스트 박스 만들기*/}
-											{/* <p className="btn-reply" onClick={createComment}>답글 쓰기</p> */}
-											{/* <p className="btn-reply" onClick={ }>답글 쓰기</p> */}
-											<p className="date">{e.updated_at}</p>
-										</DateBox>
-									</CommentBox>
-								)
-							} else {
-								return (
-									// {/* 덧글 */ }
-									<ReplyBox>
-										<ProfileBox>
-											<img src={e.users.user_detail?.user_img} alt=""></img>
-											<p>{e.users.user_detail?.user_unique_id}</p>
-										</ProfileBox>
-										<p className="text-box">
-											{e.comments_body}
-										</p>
-										<DateBox>
-											<p className="date">{e.updated_at}</p>
-										</DateBox>
-									</ReplyBox>
-								)
-							}
-
-						})
-					}
-
 				</ContentWrapBox>
-
-				{/* subtitle창 - sticky 이용 */}
-				<SubTitleBox className="sticky-box">
-					<ul>
-						<li>Subtitle</li>
-						<li>What is Lorem Ipsum?</li>
-						<li>Why do we use it?</li>
-					</ul>
-				</SubTitleBox>
 			</Wrap>
-			{/* 비슷한 게시물 props로 태그같은거 보내야함 */}
-			<SimilarPost />
+
 		</>
 	);
 };

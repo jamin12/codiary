@@ -3,6 +3,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import Main from '../Pages/home';
 import Post from '../Pages/Post';
+import PreSavePost from '../Pages/PreSavePost';
 import Write from '../Pages/WritePost.jsx';
 import Setting from '../Pages/Setting'
 import MyCategory from "../components/SettingMycategory";
@@ -30,9 +31,10 @@ const Routers = () => {
 
                 <Route path="/:userId" element={<MyPage/>}></Route>
                 <Route path="/:userId/calender" element={<MyCalender/>}></Route>
-                <Route path="/:userId/presave" element={<Presave/>}></Route>
-                <Route path="/:userId/visite" element={<VisiteLike/>}></Route>
+                <Route path="/presave" element={<Presave/>}></Route>
+                <Route path="/visite" element={<VisiteLike/>}></Route>
                 <Route path="/:userId/:postId" element={<Post/>}></Route>
+                <Route path="/presave/:tmpposttId" element={<PreSavePost/>}></Route>
                 <Route path="/:userId/visiterstat" element={<VisiterStats/>}></Route>
                 <Route path="*" element={<NotFound/>}></Route>
             </Routes>        
