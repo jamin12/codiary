@@ -105,9 +105,8 @@ const Presave = () => {
 		}
 	`;
 
-	const [temporaryPosts, setTemporaryPosts] = useState({});
-	const [myCookies] = useCookies();
-	console.log(myCookies);
+	const [temporaryPosts, setTemporaryPosts] = useState([]);
+
 	/**
 	 * 임시 저장 게시물 목록 조회
 	 */
@@ -133,17 +132,17 @@ const Presave = () => {
 				{/* Map함수 써서 배열 돌려서 찾아서 넣어야 할 듯? 인자 props처리 */}
 				<PostWrap>
 					{
-						// temporaryPosts.map((e) => {
-						// 	return (
-						// 		// <a href={`/${cookies.get("uniqueid")/{e.tmpost}}`}>
-						// 			<Post>
-						// 				<h2>{e.tmppost_title}</h2>
-						// 				<p className="text">{e.tmppost_txt}</p>
-						// 				<p className="date">{e.updated_at}</p>
-						// 			</Post>
-						// 		// </a>
-						// 	)
-						// })
+						temporaryPosts.map((e) => {
+							return (
+								<a href={`/presave/${e.tmppost_id}`}>
+									<Post>
+										<h2>{e.tmppost_title}</h2>
+										<p className="text">{e.tmppost_txt}</p>
+										<p className="date">{e.updated_at}</p>
+									</Post>
+								</a>
+							)
+						})
 					}
 				</PostWrap>
 			</Wrap>

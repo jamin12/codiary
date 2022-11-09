@@ -11,18 +11,19 @@ import { personal } from "../api/index";
 const WritePage = () => {
 	// 가변 인수 가져오기
 	const { tmpposttId } = useParams();
-	const [post, setPost] = useState({});
+	const [tmpPost, setTmpPost] = useState({});
 	const [cookies] = useCookies([]);
-	console.log(cookies.uniqueid);
 	/**
 	 * 포스트 가져오기
 	 */
 	useEffect(() => {
 		const getTmpPostFun = async () => {
 			const getTmpPost = await axios.get(
-				personal.getPersonalPost(cookies.uniqueid, parseInt(tmpposttId))
+				personal.getPersonalTmppost(parseInt(tmpposttId)),
+				{ withCredentials: true }
+
 			);
-			setPost(getTmpPost.data.result_data);
+			setTmpPost(getTmpPost.data.result_data);
 		};
 		getTmpPostFun();
 	}, [tmpposttId]);
@@ -38,10 +39,10 @@ const WritePage = () => {
 					{/* 제목 및 헤더 */}
 					<HeaderBox>
 						<span className="write-data-box">
-							<p className="userName">{post.user?.user_detail?.user_unique_id}</p>
-							<p className="writeDate">{post.getPost?.updated_at}</p>
+							<p className="userName">{cookies.uniqueid}</p>
+							<p className="writeDate">{tmpPost.updated_at}</p>
 						</span>
-						<h1 className="title">{post.getPost?.post_title}</h1>
+						<h1 className="title">{tmpPost.tmppost_title}</h1>
 						<span className="cor-del-box">
 							<p>수정</p>/<p>삭제</p>
 						</span>
@@ -49,7 +50,7 @@ const WritePage = () => {
 					</HeaderBox>
 					{/* 본문내용 */}
 					<ContentBox>
-						<div dangerouslySetInnerHTML={{ __html: post.getPost?.post_body_html }}>
+						<div dangerouslySetInnerHTML={{ __html: tmpPost.tmppost_body_html }}>
 						</div>
 					</ContentBox>
 				</ContentWrapBox>
