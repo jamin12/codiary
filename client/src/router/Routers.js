@@ -21,19 +21,22 @@ const Routers = () => {
             <Routes>
                 <Route path="/" element={<Main/>}></Route>
 
+
+                <Route path="/write" element={<Write/>}></Route>
+                <Route path="/search" element={<Search/>}></Route>
+
+                {/* user 본인만 볼 수 있는 페이지 */}
                 <Route path="/setting" element={<Setting/>}>
                     <Route path="category" element={<MyCategory/>}/>
                     <Route path="info" element={<MyInfo/>}/>
                 </Route>
-                <Route path="/write" element={<Write/>}></Route>
-                <Route path="/search" element={<Search/>}></Route>
+                <Route path="/presave" element={<Presave/>}></Route>
+                <Route path="/visite-like" element={<VisiteLike/>}></Route>
+                <Route path="/visiterstat" element={<VisiterStats/>}></Route>
 
                 <Route path="/:userId" element={<MyPage/>}></Route>
                 <Route path="/:userId/calender" element={<MyCalender/>}></Route>
-                <Route path="/:userId/presave" element={<Presave/>}></Route>
-                <Route path="/:userId/visite" element={<VisiteLike/>}></Route>
                 <Route path="/:userId/:postId" element={<Post/>}></Route>
-                <Route path="/:userId/visiterstat" element={<VisiterStats/>}></Route>
                 <Route path="*" element={<NotFound/>}></Route>
             </Routes>        
         </BrowserRouter>
