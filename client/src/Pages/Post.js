@@ -78,7 +78,8 @@ const WritePage = () => {
 	/**
 	 * 댓글 저장
 	 */
-	const onClickCommentSave = (e) => {
+	const onClickCommentSave = async(e) => {
+		await axios.post(personal.createComment(),{})
 		console.log('hi')
 	}
 
