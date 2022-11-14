@@ -15,86 +15,86 @@ const Mypage = () => {
   const [Nickname] = useState("Emyo");
   // TODO: 하위 카테고리도 설정 넣어놔야함
   const [category, setCategory] = useState([
-    {
-      "category_id": 1,
-      "sub_category_id": null,
-      "category_name": "알고리즘"
-    },
+    // {
+    //   "category_id": 1,
+    //   "sub_category_id": null,
+    //   "category_name": "알고리즘"
+    // },
   ]);
   const [categoryId, setCategoryId] = useState(0);
   const [posts, setPosts] = useState([
-    {
-      "post_id": 25,
-      "post_title": "테스으 생성~~~~~ 이라고 합니다 네에",
-      "post_body_md": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-      "post_body_html": "<p><h1>Lorem Ipsum</h1> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>",
-      "post_txt": "qwer12v",
-      "created_at": "2022-08-29 03:52",
-      "updated_at": "2022-08-29 19:45",
-      "users": {
-          "user_email": "rudals951004@gmail.com",
-          "user_detail": {
-              "user_name": "min ja",
-              "user_unique_id": "test",
-              "user_nickname": "",
-              "user_img": "이미지가 없다링"
-          }
-      }
-    },
-    {
-      "post_id": 26,
-      "post_title": "이묘이묘",
-      "post_body_md": "123",
-      "post_body_html": "<p>123</p>",
-      "post_txt": "qwer12v",
-      "created_at": "2022-08-29 03:52",
-      "updated_at": "2022-08-29 19:45",
-      "users": {
-          "user_email": "rudals951004@gmail.com",
-          "user_detail": {
-              "user_name": "min ja",
-              "user_unique_id": "test",
-              "user_nickname": "코딩하는사람",
-              "user_img": "https://images.unsplash.com/photo-1666616328135-ad1b7e62a25c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
-          }
-      }
-    },
-    {
-      "post_id": 27,
-      "post_title": "진자 존나",
-      "post_body_md": "null",
-      "post_body_html": "null",
-      "post_txt": "qwer12v",
-      "created_at": "2022-08-29 03:52",
-      "updated_at": "2022-08-29 19:45",
-      "users": {
-          "user_email": "rudals951004@gmail.com",
-          "user_detail": {
-              "user_name": "min ja",
-              "user_unique_id": "test",
-              "user_nickname": "이묘ㅛ",
-              "user_img": "https://images.unsplash.com/photo-1666526320369-a1e3fcd69253?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
-          }
-      }
-    },
-    {
-      "post_id": 28,
-      "post_title": "귀찮아",
-      "post_body_md": "null",
-      "post_body_html": "null",
-      "post_txt": "qwer12v",
-      "created_at": "2022-08-29 03:52",
-      "updated_at": "2022-08-29 19:45",
-      "users": {
-          "user_email": "rudals951004@gmail.com",
-          "user_detail": {
-              "user_name": "min ja",
-              "user_unique_id": "test",
-              "user_nickname": "이묘",
-              "user_img": "https://images.unsplash.com/photo-1666473574975-fd909b53dd4d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
-          }
-      }
-    },
+    // {
+    //   "post_id": 25,
+    //   "post_title": "테스으 생성~~~~~ 이라고 합니다 네에",
+    //   "post_body_md": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    //   "post_body_html": "<p><h1>Lorem Ipsum</h1> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>",
+    //   "post_txt": "qwer12v",
+    //   "created_at": "2022-08-29 03:52",
+    //   "updated_at": "2022-08-29 19:45",
+    //   "users": {
+    //       "user_email": "rudals951004@gmail.com",
+    //       "user_detail": {
+    //           "user_name": "min ja",
+    //           "user_unique_id": "test",
+    //           "user_nickname": "",
+    //           "user_img": "이미지가 없다링"
+    //       }
+    //   }
+    // },
+    // {
+    //   "post_id": 26,
+    //   "post_title": "이묘이묘",
+    //   "post_body_md": "123",
+    //   "post_body_html": "<p>123</p>",
+    //   "post_txt": "qwer12v",
+    //   "created_at": "2022-08-29 03:52",
+    //   "updated_at": "2022-08-29 19:45",
+    //   "users": {
+    //       "user_email": "rudals951004@gmail.com",
+    //       "user_detail": {
+    //           "user_name": "min ja",
+    //           "user_unique_id": "test",
+    //           "user_nickname": "코딩하는사람",
+    //           "user_img": "https://images.unsplash.com/photo-1666616328135-ad1b7e62a25c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
+    //       }
+    //   }
+    // },
+    // {
+    //   "post_id": 27,
+    //   "post_title": "진자 존나",
+    //   "post_body_md": "null",
+    //   "post_body_html": "null",
+    //   "post_txt": "qwer12v",
+    //   "created_at": "2022-08-29 03:52",
+    //   "updated_at": "2022-08-29 19:45",
+    //   "users": {
+    //       "user_email": "rudals951004@gmail.com",
+    //       "user_detail": {
+    //           "user_name": "min ja",
+    //           "user_unique_id": "test",
+    //           "user_nickname": "이묘ㅛ",
+    //           "user_img": "https://images.unsplash.com/photo-1666526320369-a1e3fcd69253?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
+    //       }
+    //   }
+    // },
+    // {
+    //   "post_id": 28,
+    //   "post_title": "귀찮아",
+    //   "post_body_md": "null",
+    //   "post_body_html": "null",
+    //   "post_txt": "qwer12v",
+    //   "created_at": "2022-08-29 03:52",
+    //   "updated_at": "2022-08-29 19:45",
+    //   "users": {
+    //       "user_email": "rudals951004@gmail.com",
+    //       "user_detail": {
+    //           "user_name": "min ja",
+    //           "user_unique_id": "test",
+    //           "user_nickname": "이묘",
+    //           "user_img": "https://images.unsplash.com/photo-1666473574975-fd909b53dd4d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60"
+    //       }
+    //   }
+    // },
   ]);
 
   /**
@@ -133,7 +133,6 @@ const Mypage = () => {
     console.log(e.target.id)
   }
   const openAllPost = () => {
-    console.log("전체보기")
     setCategoryId(0)
   }
 
@@ -326,7 +325,6 @@ const CarouselWrap = styled.div`
     border-radius: 50px;
   }
 
-  background-color: red;
 `
 
 const Post = styled.button`
@@ -349,7 +347,6 @@ const Post = styled.button`
     position: absolute;
     top: 10px;
     left: 20px;
-    background-color: red;
     width: 80%;
     text-align: left;
 
