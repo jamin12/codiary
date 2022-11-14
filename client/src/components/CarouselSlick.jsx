@@ -30,7 +30,10 @@ export default class Carousel extends Component {
       }
     };
 
-    
+        // console.log(posts[0].posts.post_body_html.slice(608, 663))
+    // console.log((posts[0].posts.post_body_html).indexOf('src'))
+
+
     const onClickGoPost = (id, user) => {
       window.location.replace(`/${user}/${id}`)
     }
