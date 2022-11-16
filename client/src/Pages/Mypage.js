@@ -186,9 +186,10 @@ const Mypage = () => {
             posts.map(post => {
 
               const html = post.post_body_html
-              const imgStart = html.indexOf('src="')+5
-              const imgEnd = html.indexOf('"', imgStart)
-              const imgSrc = html.slice(imgStart, imgEnd)
+              console.log(html)
+              // const imgStart = html.indexOf('src="')+5
+              // const imgEnd = html.indexOf('"', imgStart)
+              // const imgSrc = html.slice(imgStart, imgEnd)
 
               return(
                 <Post onClick={() => onClickPost(post.post_id, post.users.user_detail.user_unique_id)}>
@@ -197,7 +198,7 @@ const Mypage = () => {
                   </div>
                   <div className="post-img-wrap">
                   {
-                    imgStart !== -1 ? <img src={imgSrc} alt="게시물 대표 이미지" /> : <p>{post.posts?.post_body_md}</p>
+                    // imgStart !== -1 ? <img src={imgSrc} alt="게시물 대표 이미지" /> : <p>{post.posts?.post_body_md}</p>
                   }
                   </div>
                 </Post>
