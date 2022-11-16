@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "../css/reset.css";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
-
-import Carousel from '../components/CarouselSlick';
+import { useParams, Link, useLocation } from "react-router-dom";
 
 import SearchProfile from "../components/SearchProfile";
 import { personal } from "../api/index";
 import axios from "axios";
+import default_img from '../IMG/codiary_default_img.png'
 
 const Mypage = () => {
   const { userId } = useParams();
 
-  const [Nickname] = useState("Emyo");
+  const [userUniqueId, setUserUniqueId] = useState("Emyo");
   // TODO: 하위 카테고리도 설정 넣어놔야함
   const [category, setCategory] = useState([
     // {
@@ -69,6 +68,23 @@ const Mypage = () => {
     window.location.replace(`/${user}/${id}`)
   }
 
+  /**
+ * onError시 실행될 함수
+ * 대체 이미지
+ */
+  const onErrorImg = (e) => {
+    e.target.src = default_img;
+  }
+
+  /**
+   * 현재 url
+   */
+  const location = useLocation();
+  useEffect(() => {
+    console.log(location.pathname.substring(1))
+    setUserUniqueId(location.pathname.substring(1))
+  })
+
 
   return (
     <MainWrap>
@@ -77,13 +93,17 @@ const Mypage = () => {
       <Contents>
         {/* 가운데 홈 글씨 */}
         <div className="mypage-main-txt">
-          <h3>{Nickname}'s</h3>
+          <h3>{userUniqueId}'s</h3>
           <h1>CODIARY</h1>
         </div>
 
         <Folders>
+          <div className="folder link-wrap">
+            <Link className='link' to={`/${userUniqueId}/calender`}><ion-icon name="calendar-outline"></ion-icon></Link>
+          </div>
+
           <div className="folder full-view"
-          onClick={openAllPost}
+            onClick={openAllPost}
           >
             전체보기
           </div>
@@ -91,10 +111,10 @@ const Mypage = () => {
           <div className="category-folder-box">
             {
               category.map((category) => {
-                return(
+                return (
                   <div className="folder"
-                  id={category.category_id}
-                  onClick={clickFolder}
+                    id={category.category_id}
+                    onClick={clickFolder}
                   >
                     <span>{category.category_name}</span>
                     <ion-icon name="chevron-down-outline"></ion-icon>
@@ -111,19 +131,17 @@ const Mypage = () => {
 
               const html = post.post_body_html
               console.log(html)
-              // const imgStart = html.indexOf('src="')+5
-              // const imgEnd = html.indexOf('"', imgStart)
-              // const imgSrc = html.slice(imgStart, imgEnd)
+              const imgStart = html.indexOf('src="') + 5
+              const imgEnd = html.indexOf('"', imgStart)
+              const imgSrc = html.slice(imgStart, imgEnd)
 
-              return(
+              return (
                 <Post onClick={() => onClickPost(post.post_id, post.users.user_detail.user_unique_id)}>
                   <div className='text-box'>
                     <h1 className="title">{post.post_title}</h1>
                   </div>
                   <div className="post-img-wrap">
-                  {
-                    // imgStart !== -1 ? <img src={imgSrc} alt="게시물 대표 이미지" /> : <p>{post.posts?.post_body_md}</p>
-                  }
+                    <img src={imgSrc} onError={onErrorImg} alt='게시물 대표 이미지' />
                   </div>
                 </Post>
               )
@@ -178,6 +196,23 @@ const Folders = styled.div`
   right: 0px;
   transform: translateY(-50%);
 
+  .link-wrap{
+    float: right;
+    margin-right: 10px;
+    margin-bottom: 5px;
+  }
+
+  .link{
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+
+    ion-icon{
+      width: 100%;
+      height: 100%;
+    }
+  }
+
   .full-view{
     background-color: var(--gray200);
     width: 100%;
@@ -230,7 +265,6 @@ const Folders = styled.div`
       }
     }
   }
-
 `
 const CarouselWrap = styled.div`
   width: 35%;
@@ -267,21 +301,21 @@ const Post = styled.button`
     flex-grow: 1;
     flex-basis: 50%;
     position: relative;
-  }
-  .title{
-    position: absolute;
-    top: 10px;
-    left: 20px;
-    width: 80%;
-    text-align: left;
-
-    text-overflow: ellipsis;
-    overflow: hidden;
-    word-break: break-all;
-
-    display: -webkit-box;
-    -webkit-line-clamp: 2; // 원하는 라인수
-    -webkit-box-orient: vertical
+    .title{
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      width: 80%;
+      text-align: left;
+  
+      text-overflow: ellipsis;
+      overflow: hidden;
+      word-break: break-all;
+  
+      display: -webkit-box;
+      -webkit-line-clamp: 2; // 원하는 라인수
+      -webkit-box-orient: vertical
+    }
   }
   .user{
     position: absolute;
@@ -298,27 +332,16 @@ const Post = styled.button`
     width: 50%;
     height: 100%;
     float: right;
-    background-color: var(--gray100);
-    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     img{
-      width: 100%;
-      height: 100%;
+      width: 95%;
+      height: 95%;
       border-radius: 15px;
       display: block;
       object-fit: cover;
       object-position: center;
-    }
-    p{
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      /* text-align: left; */
-      word-break: break-word;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      color: var(--gray600);
     }
   }
 
