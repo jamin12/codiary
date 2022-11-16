@@ -36,8 +36,6 @@ const MyCalendar = () => {
    * 해당 월에 post가 있으면 mark에 넣어줌
    */
   useEffect(() => {
-    setSendYear(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0,4))
-    setsendMonth(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length -1))
     
     const getPostCountByMonthFun = async () => {
       const getPostCountByMonth = await axios.get(
@@ -79,7 +77,10 @@ const MyCalendar = () => {
     window.location.replace(`/${user}/${id}`)
   }
 
-
+  const viewChange = (activeStartDate) => {
+    setSendYear(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0,4))
+    setsendMonth(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length -1))
+  }
 
   return (
     <Main>
@@ -98,7 +99,7 @@ const MyCalendar = () => {
             maxDetail="month"
             formatShortWeekday={(locale, date) => moment(date).format('ddd')}
             showNeighboringMonth={false}  // 이전 이후 달의 날짜는 안보이도록 설정하는 명령어
-
+            onActiveStartDateChange={({activeStartDate}) => viewChange(activeStartDate)}
             tileContent={<div style={{backgroundColor: "red"}}></div>}
             // TODO(이묘): 날짜 받으면 배경색 진하게 넣는 부분 진행해야함
             // tileContent={({ date, view }) => {  // 날짜 타일에 갯수만큼 tile추가
