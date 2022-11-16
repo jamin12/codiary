@@ -27,11 +27,10 @@ import HeaderNoSearchBar from "../components/HeaderNoSearchBar";
  * post 쓰는 부분
  */
 const WritePost = () => {
-	const [modalShow, setModalShow] = React.useState(false);
+	const [modalShow, setModalShow] = useState(false);
 	const [dataHtml, setHtml] = useState("");
 	const [dataMd, setMd] = useState("");
 	const [title, setTitle] = useState("");
-	const [myCategory, setMyCategory] = useState([]);
 
 
 	const editorRef = useRef();
@@ -57,15 +56,7 @@ const WritePost = () => {
 			setModalShow(true);
 		}
 	}
-	useEffect(() => {
-		const getMyCategoryFun = async () => {
-			const getMyCategory = await axios.get(
-				personal.getPersonalMyCategory(),
-				{ withCredentials: true }
-			);
-		};
-		getMyCategoryFun();
-	}, []);
+
 
 	/**
 	 * 포스트 임시 저장

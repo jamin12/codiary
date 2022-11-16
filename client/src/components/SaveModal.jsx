@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { personal } from "../api/index";
 import '../css/reset.css';
-
+import { useCookies } from 'react-cookie';
 // bootstrap
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -11,10 +11,9 @@ import Modal from 'react-bootstrap/Modal';
 function OptionModal(props) {
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
-  const [selected, setSelected] = useState("");
-  const [category, setCategory] = useState({});
-
-
+  const [selected, setSelected] = useState(0);
+  const [category, setCategory] = useState([]);
+  const [cookie] = useCookies();
 
   // tag입력 input onChange 이벤트
   const onChangeTags = (e) => {
@@ -32,6 +31,18 @@ function OptionModal(props) {
     }
   }
 
+  useEffect(() => {
+    const getMyCategoryFun = async () => {
+      const getMyCategory = await axios.get(
+        personal.getPersonalMyCategory(),
+        { withCredentials: true }
+      );
+      setCategory(getMyCategory.data.result_data);
+      setSelected(getMyCategory.data.result_data[0].category_id)
+    };
+    getMyCategoryFun();
+  }, []);
+
   // 태그를 클릭하면 없어지는 클릭 이벤트
   const deleteList = (e) => {
     // tags 배열에서 클릭한 요소 삭제
@@ -42,31 +53,14 @@ function OptionModal(props) {
     setSelected(e.target.value);
   }
 
-  const testList = [];
-
-  /**
-   * 서버에서 유저의 카테고리들을 받아와야 함
-   */
-  useEffect(() => {
-    const getCategorys = async() => {
-      const getCategory = await axios.get(
-        personal.getPersonalMyCategory(),
-        { withCredentials: true }
-      );
-      setCategory(getCategory.data.result_data);
-    }
-    getCategorys();
-  }, []);
-
 
   /**
    * 포스트 저장
    */
   const onClickSave = async () => {
-    alert("save")
     // TODO: body부분 값 변경
     // 일단 수정 했는데 확인 바람
-    await axios.post(
+    const createdPost = await axios.post(
       personal.createPersonalPost(),
       {
         post: {
@@ -74,7 +68,7 @@ function OptionModal(props) {
           post_body_md: props.dataMd,
           post_body_html: props.dataHtml,
           post_txt: props.dataTxt,
-          category_id: 2,
+          category_id: selected,
         },
         tag: {
           tag_name: ["테스트 태그", "리스트 테스트2"],
@@ -85,6 +79,7 @@ function OptionModal(props) {
         headers: { "Content-Type": `application/json` },
       }
     );
+    document.location.href = `/${cookie.uniqueid}/${createdPost.data.result_data.post_id}`
     // 서버에 toHTML과 toMARKDOWN 전송
   };
   return (
@@ -130,14 +125,13 @@ function OptionModal(props) {
           <select className='selectBox' onChange={onChangeSelect} value={selected}>
             {
               // TODO: testList 서버에서 받아온 카테고리 리스트로 변경
-              testList.map(list => (
-                <option value={list} key={list}>
-                  {list}
+              category.map(list => (
+                <option class="op" value={list.category_id} key={list.category_id}>
+                  {list.category_name}
                 </option>
               ))
             }
           </select>
-
         </CategoryWrap>
       </Modal.Body>
       <Modal.Footer>

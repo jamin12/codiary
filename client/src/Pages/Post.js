@@ -157,7 +157,7 @@ const WritePage = () => {
 
 					{/* 본문내용 */}
 					<ContentBox>
-						<div dangerouslySetInnerHTML={{ __html: post.getPost?.post_body_html }}>
+						<div dangerouslySetInnerHTML={{ __html:  post.getPost?.post_body_html.replaceAll("&lt;", "<")}}>
 						</div>
 					</ContentBox>
 
