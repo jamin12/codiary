@@ -6,6 +6,7 @@ import axios from "axios";
 import SearchProfile from "../components/SearchProfile";
 import SimilarPost from "../components/SimilarPost";
 import { personal } from "../api/index";
+import { useCookies } from 'react-cookie';
 
 const WritePage = () => {
 	// 가변 인수 가져오기
@@ -15,8 +16,8 @@ const WritePage = () => {
 	const [checkCommentChange, setCheckCommentChange] = useState(0);
 	const [associatePost, setAssociatePost] = useState({});
 	const [isCheckingBox, setIsCheckingBox] = useState(false)
-
 	const [commentValue, setCommentValue] = useState("");
+	const [cookie] = useCookies();
 
 
 	/**
@@ -115,6 +116,12 @@ const WritePage = () => {
 			);
 		}
 	}
+	const deletePost = async () => {
+		await axios.delete(personal.deletePersonalPost(postId),
+			{ withCredentials: true }
+		);
+		document.location.href = `/${userId}`;
+	}
 
 	// HTML
 	return (
@@ -149,15 +156,17 @@ const WritePage = () => {
 							<p className="writeDate">{post.getPost?.updated_at}</p>
 						</span>
 						<h1 className="title">{post.getPost?.post_title}</h1>
-						<span className="cor-del-box">
-							<p>수정</p>/<p>삭제</p>
-						</span>
+						{cookie?.uniqueid === userId &&
+							<span className="cor-del-box">
+								<p>수정</p>/<p onClick={deletePost}>삭제</p>
+							</span>
+						}
 						{/* <hr/> */}
 					</HeaderBox>
 
 					{/* 본문내용 */}
 					<ContentBox>
-						<div dangerouslySetInnerHTML={{ __html:  post.getPost?.post_body_html.replaceAll("&lt;", "<")}}>
+						<div dangerouslySetInnerHTML={{ __html: post.getPost?.post_body_html.replaceAll("&lt;", "<") }}>
 						</div>
 					</ContentBox>
 
@@ -165,11 +174,10 @@ const WritePage = () => {
 					<TagVisiteBox>
 						<TagBox>
 							{
-								post.getPost?.tag.map((e) => {
-									let tag_name = e?.tag_name
+								post.getPost?.tag[0].tag_name.split("/n").map((e) => {
 									return (
 										<p>
-											{tag_name}
+											{e}
 										</p>
 									)
 								})
@@ -191,7 +199,7 @@ const WritePage = () => {
 									<ion-icon name="heart-outline"></ion-icon>
 								</label>
 								{/* TODO(경민 -> 이묘): 좋아요 숫자 밑으로 내리고 색 표시 나도록 하세용*/}
-								<input type="checkbox" id="good" onChange={checkingCheckedBox} onClick={checkLike} checked={isCheckingBox}  />
+								<input type="checkbox" id="good" onChange={checkingCheckedBox} onClick={checkLike} checked={isCheckingBox} />
 								{/* <ion-icon name="heart"></ion-icon> */}
 								<p>{post.getPost?.like_count}</p>
 							</div>

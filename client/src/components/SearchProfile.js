@@ -4,6 +4,9 @@ import "../css/reset.css";
 import { devices } from "../css/DeviceSize";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Login from "./Login";
+import { useCookies } from 'react-cookie';
+import { useEffect } from "react";
+
 
 // 스타일 설정
 // 1680*900 기준 작성
@@ -55,7 +58,7 @@ const Profile = styled.div`
       min-width: 40px;
       height: 40px;
       /* background-image: url(${(props) =>
-        props.img || "../IMG/KAKAO.png.png"}); */
+    props.img || "../IMG/KAKAO.png.png"}); */
       background-color: orange;
       background-size: cover;
       background-repeat: no-repeat;
@@ -212,6 +215,18 @@ const BtnSearch = styled.div`
 const SearchProfile = () => {
   const [isOpen, setMenu] = useState(false);
   const [loginOpen, setLogin] = useState(false);
+	const [cookie] = useCookies();
+  const [checkLogin, setCheckLogin] = useState(false);
+
+  useEffect(() => {
+    console.log(cookie)
+    if(cookie.uniqueid !== undefined){
+      setCheckLogin(true);
+    }else{
+      setCheckLogin(!true);
+    }
+  },[checkLogin])
+
   // TODO(이묘): 쿠키에 authentication에 있는지 확인 후에 로그인이 돼었느냐를 체크해야함
 
   const toggleMenu = () => {
@@ -226,19 +241,19 @@ const SearchProfile = () => {
    * 검색 버튼을 누른 경로 체크하는 useEffect
    */
   const location = useLocation();
-  
+
   const selectType = () => {
     const locationType = location.split('/')
-    if (locationType[1]===null || locationType[1] === 'calender'){
+    if (locationType[1] === null || locationType[1] === 'calender') {
       return 0
     }
-    else if(locationType[0] === 'presave'){
+    else if (locationType[0] === 'presave') {
       return 1
     }
-    else if(locationType[0] === 'visite-list'){
+    else if (locationType[0] === 'visite-list') {
       return 2
     }
-    else if(locationType[0] === 'good-list'){
+    else if (locationType[0] === 'good-list') {
       return 3
     }
   }
@@ -264,10 +279,10 @@ const SearchProfile = () => {
 
         <SearchWrap>
           <BtnSearch>
-              <ion-icon onClick={onClickSearch}
-                size="small"
-                name="search-outline"
-              ></ion-icon>
+            <ion-icon onClick={onClickSearch}
+              size="small"
+              name="search-outline"
+            ></ion-icon>
           </BtnSearch>
 
           <Profile>
@@ -281,33 +296,43 @@ const SearchProfile = () => {
           </Profile>
 
           <Menu>
-            <div className={isOpen ? "menuON" : "menuOFF"}>
-              <Link className="tagP" to="/write">
-                새 글쓰기
-              </Link>
-              <Link className="tagP" to="/:userId">
-                내 글 목록
-              </Link>
-              <Link className="tagP" to="/:userId/calender">
-                내 코디어리
-              </Link>
-              <Link className="tagP" to="/presave">
-                임시글 목록
-              </Link>
-              <Link className="tagP" to="/visite-like">
-                방문&좋아요 목록
-              </Link>
-              <Link className="tagP" to="/setting">
-                설정
-              </Link>
-              <Link className="tagP" to="/visiterstat">
-                방문자 통계
-              </Link>
+            { checkLogin === true &&
+              <div className={isOpen ? "menuON" : "menuOFF"}>
+                <Link className="tagP" to="/write">
+                  새 글쓰기
+                </Link>
+                <Link className="tagP" to="/:userId">
+                  내 글 목록
+                </Link>
+                <Link className="tagP" to="/:userId/calender">
+                  내 코디어리
+                </Link>
+                <Link className="tagP" to="/presave">
+                  임시글 목록
+                </Link>
+                <Link className="tagP" to="/visite-like">
+                  방문&좋아요 목록
+                </Link>
+                <Link className="tagP" to="/setting">
+                  설정
+                </Link>
+                <Link className="tagP" to="/visiterstat">
+                  방문자 통계
+                </Link>
 
-              <p className="logout tagP" onClick={loginModal}>
-                로그인
-              </p>
-            </div>
+                <p className="logout tagP" onClick={loginModal}>
+                  로그아웃
+                </p>
+              </div>
+            }
+            { checkLogin === false &&
+              <div className={isOpen ? "menuON" : "menuOFF"}>
+
+                <p className="logout tagP" onClick={loginModal}>
+                  로그인
+                </p>
+              </div>
+            }
           </Menu>
         </SearchWrap>
       </Wrap>
