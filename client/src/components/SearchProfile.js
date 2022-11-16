@@ -4,9 +4,10 @@ import "../css/reset.css";
 import { devices } from "../css/DeviceSize";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Login from "./Login";
-import { useCookies } from 'react-cookie';
-import { useEffect } from "react";
-
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { baseUrl } from "../api";
+import { logout } from "../reducers/Action";
 
 // 스타일 설정
 // 1680*900 기준 작성
@@ -215,17 +216,10 @@ const BtnSearch = styled.div`
 const SearchProfile = () => {
   const [isOpen, setMenu] = useState(false);
   const [loginOpen, setLogin] = useState(false);
-	const [cookie] = useCookies();
-  const [checkLogin, setCheckLogin] = useState(false);
-
-  useEffect(() => {
-    console.log(cookie)
-    if(cookie.uniqueid !== undefined){
-      setCheckLogin(true);
-    }else{
-      setCheckLogin(!true);
-    }
-  },[checkLogin])
+  const { uniqueid } = useSelector((state) => state.auth.User);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  console.log(uniqueid)
 
   // TODO(이묘): 쿠키에 authentication에 있는지 확인 후에 로그인이 돼었느냐를 체크해야함
 
@@ -266,6 +260,13 @@ const SearchProfile = () => {
     navigation("/search", { state: { type: selectType() } });
   }
 
+  const logoutClick = async() => {
+    await axios.get(`${baseUrl}/logout`, { withCredentials: true });
+    dispatch(logout(""))
+    navigate("/")
+
+  }
+
   return (
     <Main>
       {loginOpen && <Login setLogin={setLogin} />}
@@ -296,15 +297,15 @@ const SearchProfile = () => {
           </Profile>
 
           <Menu>
-            { checkLogin === true &&
+            {uniqueid !== '' &&
               <div className={isOpen ? "menuON" : "menuOFF"}>
                 <Link className="tagP" to="/write">
                   새 글쓰기
                 </Link>
-                <Link className="tagP" to="/:userId">
+                <Link className="tagP" to={`/${uniqueid}`}>
                   내 글 목록
                 </Link>
-                <Link className="tagP" to="/:userId/calender">
+                <Link className="tagP" to={`/${uniqueid}/calender`}>
                   내 코디어리
                 </Link>
                 <Link className="tagP" to="/presave">
@@ -320,12 +321,12 @@ const SearchProfile = () => {
                   방문자 통계
                 </Link>
 
-                <p className="logout tagP" onClick={loginModal}>
+                <p className="logout tagP" onClick={logoutClick}>
                   로그아웃
                 </p>
               </div>
             }
-            { checkLogin === false &&
+            {uniqueid === '' &&
               <div className={isOpen ? "menuON" : "menuOFF"}>
 
                 <p className="logout tagP" onClick={loginModal}>
