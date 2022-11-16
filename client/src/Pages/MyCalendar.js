@@ -14,10 +14,8 @@ const MyCalendar = () => {
   const [postData, changeDate] = useState(date);
   const sendDate = new Date(+postData + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '').substring(0, 10) + " 00:00:00"
 
-  const [sendYear, setSendYear] = useState('');
-  const [sendMonth, setsendMonth] = useState('');
-
-  console.log(postData)
+  const [sendYear, setSendYear] = useState(sendDate.substring(0, 4));
+  const [sendMonth, setsendMonth] = useState(sendDate.substring(5, 7));
 
   const [postsByDate, setPostByDate] = useState([]);
   // 받은 날짜에 대한 포스팅 기록 저장해서 표시
@@ -31,22 +29,20 @@ const MyCalendar = () => {
 
   }
   const postImg = setPostImg(mark.post_body_html)
-
+  
+  const nextMonth = (sendMonth) => {
+    if (parseInt(sendMonth) < 9) {
+      return "0" + (parseInt(sendMonth) + 1)
+    } else {
+      return (parseInt(sendMonth) + 1)
+    }
+  }
   /**
    * 해당 월에 post가 있으면 mark에 넣어줌
    */
   useEffect(() => {
 
     const getPostCountByMonthFun = async () => {
-
-      const nextMonth = (sendMonth) => {
-        if (parseInt(sendMonth) < 9) {
-          return "0" + (parseInt(sendMonth) + 1)
-        } else {
-          return (parseInt(sendMonth) + 1)
-        }
-      }
-
       const getPostCountByMonth = await axios.get(
         personal.getPersonalPostCountByDate("test"),
         {
@@ -59,10 +55,7 @@ const MyCalendar = () => {
       setMark(getPostCountByMonth.data.result_data);
     };
     getPostCountByMonthFun()
-
   }, [sendYear, sendMonth])
-
-  console.log(mark)
 
 
 
@@ -79,7 +72,6 @@ const MyCalendar = () => {
     };
     getPostsByDateFun();
   }, [postData, sendDate]);
-
   /**
    * post onClick 함수
    */
@@ -110,9 +102,7 @@ const MyCalendar = () => {
             formatShortWeekday={(locale, date) => moment(date).format('ddd')}
             showNeighboringMonth={false}  // 이전 이후 달의 날짜는 안보이도록 설정하는 명령어
             onActiveStartDateChange={() => viewChange()}
-            // TODO(이묘): 날짜 받으면 배경색 진하게 넣는 부분 진행해야함
             tileContent={({ date, view }) => {  // 날짜 타일에 갯수만큼 tile추가
-              //   // 현재 날짜가 mark에 있다면 tile div 추가
               let html = [];
               mark.map(marked => {
                 if (marked.date === moment(date).format('YYYY-MM-DD')) {
@@ -142,8 +132,9 @@ const MyCalendar = () => {
           {
             postsByDate.map(post => {
 
-              const html = post.post_body_html
-              console.log(html)
+              console.log(post)
+
+              // const html = post.post_body_html
               // const imgStart = html.indexOf('src="')+5
               // const imgEnd = html.indexOf('"', imgStart)
               // const imgSrc = html.slice(imgStart, imgEnd)
