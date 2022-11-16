@@ -11,8 +11,8 @@ import axios from 'axios';
 const MyCalendar = () => {
 
   const date = new Date();
-  const [postData, changeDate] = useState(date);
-  const sendDate = new Date(+postData + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '').substring(0, 10) + " 00:00:00"
+  const [postDate, changeDate] = useState(date);
+  const sendDate = new Date(+postDate + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '').substring(0, 10) + " 00:00:00"
 
   const [sendYear, setSendYear] = useState(sendDate.substring(0, 4));
   const [sendMonth, setsendMonth] = useState(sendDate.substring(5, 7));
@@ -25,11 +25,14 @@ const MyCalendar = () => {
   /**
    * 가장 첫번째 이미지 태그 안에 주소를 postImg에 저장하는 함수
    */
-  const setPostImg = (htmlCode) => {
+  // const setPostImg = (htmlCode) => {
 
-  }
-  const postImg = setPostImg(mark.post_body_html)
+  // }
+  // const postImg = setPostImg(mark.post_body_html)
+
+
   
+
   const nextMonth = (sendMonth) => {
     if (parseInt(sendMonth) < 9) {
       return "0" + (parseInt(sendMonth) + 1)
@@ -41,7 +44,6 @@ const MyCalendar = () => {
    * 해당 월에 post가 있으면 mark에 넣어줌
    */
   useEffect(() => {
-
     const getPostCountByMonthFun = async () => {
       const getPostCountByMonth = await axios.get(
         personal.getPersonalPostCountByDate("test"),
@@ -66,12 +68,15 @@ const MyCalendar = () => {
     const getPostsByDateFun = async () => {
       const getPostsByDate = await axios.get(
         personal.getPersonalPostsByDate("test"),
-        { params: { startdate: sendDate/** postData */, enddate: sendDate.substring(0, 8) + (postData.getDate() + 1) + " " + sendDate.substring(11,)/** postData에서 하루 뒤 */ } }
+        { params: { startdate: sendDate/** postDate */, enddate: sendDate.substring(0, 8) + (postDate.getDate() + 1) + " " + sendDate.substring(11,)/** postDate에서 하루 뒤 */ } }
       );
       setPostByDate(getPostsByDate.data.result_data);
     };
     getPostsByDateFun();
-  }, [postData, sendDate]);
+  }, [postDate, sendDate]);
+
+
+
   /**
    * post onClick 함수
    */
@@ -79,10 +84,15 @@ const MyCalendar = () => {
     window.location.replace(`/${user}/${id}`)
   }
 
+  /**
+   * 현재 보고있는 월과 일을 찾아주는 함수
+   */
   const viewChange = () => {
     setSendYear(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0, 4))
     setsendMonth(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length - 1))
   }
+
+  console.log(postsByDate)
 
   return (
     <Main>
@@ -92,8 +102,8 @@ const MyCalendar = () => {
         <CalendarWrap>
           <Calendar
             onChange={changeDate}   // useState로 포커스 변경시 현재 날짜 받아오기
-            value={postData}
-            postData={postData}
+            value={postDate}
+            postDate={postDate}
             formatDay={(locale, date) => moment(date).format('DD')}   // 1'일'에서 일 제외하고 숫자만 보이게
             formatMonthYear={(locale, date) => moment(date).format('YYYY년 MM월')}
             // formatYear={(locale, date) => moment(date).format('YYYY')}
@@ -119,13 +129,12 @@ const MyCalendar = () => {
 
             }}
 
-            onClickMonth={(value, event) => alert('Clicked month: ', value)}
           />
         </CalendarWrap>
 
         <PostWrap>
           <div className='menu'>
-            <h2>{postData.getDate()}일</h2>
+            <h2>{postDate.getDate()}일</h2>
             <ion-icon name="library-outline"></ion-icon>
           </div>
 
@@ -212,18 +221,6 @@ const CalendarWrap = styled.div`
         background-color: rgba(72, 226, 17, 0.1);
     }
   }
-  /* .react-calendar__tile.react-calendar__month-view__days__day{
-    position: absolute;
-    padding-top: 0;
-
-    abbr{
-      margin-top: 8px;
-    }
-    >div{
-      width: 100%;
-      height: 100%;
-    }
-  } */
 
 
 `
