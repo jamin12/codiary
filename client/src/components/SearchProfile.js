@@ -227,7 +227,6 @@ const SearchProfile = () => {
    */
   const location = useLocation();
   
-  console.log(location)
   const selectType = () => {
     const locationType = location.split('/')
     if (locationType[1]===null || locationType[1] === 'calender'){

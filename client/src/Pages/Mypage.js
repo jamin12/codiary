@@ -130,7 +130,6 @@ const Mypage = () => {
 
   const clickFolder = (e) => {
     setCategoryId(e.target.id)
-    console.log(e.target.id)
   }
   const openAllPost = () => {
     setCategoryId(0)
@@ -143,8 +142,6 @@ const Mypage = () => {
     window.location.replace(`/${user}/${id}`)
   }
 
-  console.log(category);
-  console.log(posts);
 
   return (
     <MainWrap>

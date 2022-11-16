@@ -18,7 +18,6 @@ const Searchpage = () => {
 
   const type = location.state.type;
   if(type === 'home') {
-    console.log(type)
   }else if(type === ''){
     
   }

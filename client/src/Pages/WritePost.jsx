@@ -31,13 +31,14 @@ const WritePost = () => {
 	const [dataHtml, setHtml] = useState("");
 	const [dataMd, setMd] = useState("");
 	const [title, setTitle] = useState("");
+	const [myCategory, setMyCategory] = useState([]);
+
 
 	const editorRef = useRef();
 	// editorRef.current().getInstance()의 형식으로 에디터의 설정값들을 갖고 올 수 있음
 
 	const titleChange = (e) => {
 		setTitle(e.target.value);
-		console.log(title);
 	}
 
 	const onChangeEditor = () => {
@@ -56,7 +57,15 @@ const WritePost = () => {
 			setModalShow(true);
 		}
 	}
-
+	useEffect(() => {
+		const getMyCategoryFun = async () => {
+			const getMyCategory = await axios.get(
+				personal.getPersonalMyCategory(),
+				{ withCredentials: true }
+			);
+		};
+		getMyCategoryFun();
+	}, []);
 
 	/**
 	 * 포스트 임시 저장
@@ -169,10 +178,10 @@ const WritePost = () => {
 			<Modal
 				show={modalShow}
 				onHide={() => setModalShow(false)}
-				title = {title}
-				dataMd = {dataMd}
-				dataHtml = {dataHtml}
-				dataTxt = {dataHtml.innerText}
+				title={title}
+				dataMd={dataMd}
+				dataHtml={dataHtml}
+				dataTxt={dataHtml.innerText}
 			/>
 		</div>
 	);

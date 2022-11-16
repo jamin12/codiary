@@ -76,7 +76,6 @@ const MyCategory = ({ categoryList }) => {
   // 백엔드 데이터 받으면 거기서 중복안되는 데이터? 이름? 을 id에 넣고 id기준으로 실행시켜야할 듯
   useEffect(() => {
     $('.drop-down').off('click').on('click', function (e) {
-      console.log(e.target.id)  // 각각에 맞는 id로 나옴
       // var item = e.target.id;
       // item .category-subfolder 이런식으로 쓰면 될 듯
       $('.category-subfolder').slideToggle();
