@@ -16,7 +16,7 @@ const MyCalendar = () => {
 
   const [sendYear, setSendYear] = useState('');
   const [sendMonth, setsendMonth] = useState('');
-  
+
   console.log(postData)
 
   const [postsByDate, setPostByDate] = useState([]);
@@ -28,30 +28,32 @@ const MyCalendar = () => {
    * 가장 첫번째 이미지 태그 안에 주소를 postImg에 저장하는 함수
    */
   const setPostImg = (htmlCode) => {
-    
+
   }
   const postImg = setPostImg(mark.post_body_html)
-  
+
   /**
    * 해당 월에 post가 있으면 mark에 넣어줌
    */
   useEffect(() => {
-    
+
     const getPostCountByMonthFun = async () => {
 
       const nextMonth = (sendMonth) => {
-        if(parseInt(sendMonth) < 9){
-          return "0"+(parseInt(sendMonth)+1)
-        }else{
-          return (parseInt(sendMonth)+1)
+        if (parseInt(sendMonth) < 9) {
+          return "0" + (parseInt(sendMonth) + 1)
+        } else {
+          return (parseInt(sendMonth) + 1)
         }
       }
 
       const getPostCountByMonth = await axios.get(
         personal.getPersonalPostCountByDate("test"),
         {
-          params: {startdate:`${sendYear}-${sendMonth}-01 00:00:00`, 
-          enddate:`${sendYear}-${nextMonth(sendMonth)}-01 00:00:00`}
+          params: {
+            startdate: `${sendYear}-${sendMonth}-01 00:00:00`,
+            enddate: `${sendYear}-${nextMonth(sendMonth)}-01 00:00:00`
+          }
         }
       );
       setMark(getPostCountByMonth.data.result_data);
@@ -86,8 +88,8 @@ const MyCalendar = () => {
   }
 
   const viewChange = () => {
-    setSendYear(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0,4))
-    setsendMonth(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length -1))
+    setSendYear(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0, 4))
+    setsendMonth(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length - 1))
   }
 
   return (
@@ -110,17 +112,19 @@ const MyCalendar = () => {
             onActiveStartDateChange={() => viewChange()}
             // TODO(이묘): 날짜 받으면 배경색 진하게 넣는 부분 진행해야함
             tileContent={({ date, view }) => {  // 날짜 타일에 갯수만큼 tile추가
-            //   // 현재 날짜가 mark에 있다면 tile div 추가
-              
-              if (mark.find((marked) => marked.date === moment(date).format('YYYY-MM-DD'))) {
-
-              }
+              //   // 현재 날짜가 mark에 있다면 tile div 추가
+              let html = [];
+              mark.map(marked => {
+                if (marked.date === moment(date).format('YYYY-MM-DD')) {
+                  for (var i = 0; i < marked.count; i++) {
+                    html.push(<div className='highlight'></div>)
+                  }
+                }
+              })
               return (
-                <>
-                  <p>
-                    !
-                  </p>
-                </>
+                <div>
+                  {html}
+                </div>
               )
 
             }}
@@ -199,9 +203,38 @@ const CalendarWrap = styled.div`
     width: 400px;
   }
 
-  .highlight{
-    background-color: rgba(0, 0, 40, 0.1);
+  .react-calendar__tile{
+    padding-top: 0;
+    position: relative;
+
+    >abbr{
+      margin-top: 10px;
+      z-index: 99;
+    }
+
+      .highlight{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(72, 226, 17, 0.1);
+    }
   }
+  /* .react-calendar__tile.react-calendar__month-view__days__day{
+    position: absolute;
+    padding-top: 0;
+
+    abbr{
+      margin-top: 8px;
+    }
+    >div{
+      width: 100%;
+      height: 100%;
+    }
+  } */
+
+
 `
 
 const PostWrap = styled.div`
