@@ -320,7 +320,6 @@ class PersonalService {
 		this.postJoin.where = {
 			user_id: user.user_id
 		};
-		this.postJoin.attributes = [];
 		return await posts_update_history.findAll({
 			attributes: {
 				include: [
@@ -347,7 +346,11 @@ class PersonalService {
 				]
 			},
 			include: [
-				this.postJoin
+				{
+					model: posts,
+					as: "posts",
+					attributes: []
+				}
 			],
 			where: {
 				update_history: {
