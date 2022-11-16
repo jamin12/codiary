@@ -38,10 +38,20 @@ const MyCalendar = () => {
   useEffect(() => {
     
     const getPostCountByMonthFun = async () => {
+
+      const nextMonth = (sendMonth) => {
+        if(parseInt(sendMonth) < 9){
+          return "0"+(parseInt(sendMonth)+1)
+        }else{
+          return (parseInt(sendMonth)+1)
+        }
+      }
+
       const getPostCountByMonth = await axios.get(
         personal.getPersonalPostCountByDate("test"),
         {
-          params: {startdate:`${sendYear}-${sendMonth}-01 00:00:00`, enddate:`${sendYear}-${parseInt(sendMonth)}-01 00:00:00`}
+          params: {startdate:`${sendYear}-${sendMonth}-01 00:00:00`, 
+          enddate:`${sendYear}-${nextMonth(sendMonth)}-01 00:00:00`}
         }
       );
       setMark(getPostCountByMonth.data.result_data);
@@ -50,8 +60,6 @@ const MyCalendar = () => {
 
   }, [sendYear, sendMonth])
 
-  console.log(sendYear)
-  console.log(sendMonth)
   console.log(mark)
 
 
@@ -77,7 +85,7 @@ const MyCalendar = () => {
     window.location.replace(`/${user}/${id}`)
   }
 
-  const viewChange = (activeStartDate) => {
+  const viewChange = () => {
     setSendYear(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0,4))
     setsendMonth(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length -1))
   }
@@ -99,15 +107,23 @@ const MyCalendar = () => {
             maxDetail="month"
             formatShortWeekday={(locale, date) => moment(date).format('ddd')}
             showNeighboringMonth={false}  // 이전 이후 달의 날짜는 안보이도록 설정하는 명령어
-            onActiveStartDateChange={({activeStartDate}) => viewChange(activeStartDate)}
-            tileContent={<div style={{backgroundColor: "red"}}></div>}
+            onActiveStartDateChange={() => viewChange()}
             // TODO(이묘): 날짜 받으면 배경색 진하게 넣는 부분 진행해야함
-            // tileContent={({ date, view }) => {  // 날짜 타일에 갯수만큼 tile추가
+            tileContent={({ date, view }) => {  // 날짜 타일에 갯수만큼 tile추가
             //   // 현재 날짜가 mark에 있다면 tile div 추가
-            //   if (mark.find((x) => x === moment(date).format('YYYY-MM-DD'))) {
-            //     return "highlight"
-            //   }
-            // }}
+              
+              if (mark.find((marked) => marked.date === moment(date).format('YYYY-MM-DD'))) {
+
+              }
+              return (
+                <>
+                  <p>
+                    !
+                  </p>
+                </>
+              )
+
+            }}
 
             onClickMonth={(value, event) => alert('Clicked month: ', value)}
           />
@@ -184,7 +200,7 @@ const CalendarWrap = styled.div`
   }
 
   .highlight{
-    background-color: rgba(0, 0, 20, 0.2);
+    background-color: rgba(0, 0, 40, 0.1);
   }
 `
 
