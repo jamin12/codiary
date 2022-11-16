@@ -5,7 +5,6 @@ import styled from "styled-components";
 export default class Carousel extends Component {
   render() {
     const posts = this.props.posts  // props로 post들을 받아옴
-    console.log(posts)
 
     const settings = {
       className: this.props.className,
@@ -23,10 +22,8 @@ export default class Carousel extends Component {
 
 
       beforeChange: function (currentSlide, nextSlide) {
-        console.log("before change", currentSlide, nextSlide);
       },
       afterChange: function (currentSlide) {
-        console.log("after change", currentSlide);
       }
     };
 

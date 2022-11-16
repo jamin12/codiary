@@ -135,8 +135,6 @@ const Setting = () => {
 		getMySettingFun();
 	}, [content]);
 
-	console.log(content);
-  console.log(mySettings);
 
 	return (
 		<>

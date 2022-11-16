@@ -346,7 +346,7 @@
                 "sns_name": "min ja"
             }
         },
-            "checkLike": false
+        "checkLike": false
         }
     }
 - |속성|타입|설명|

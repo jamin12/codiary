@@ -111,14 +111,12 @@ const VisitLike = () => {
 	 * 방문 목록인지 좋아요 목록인지 타입을 정하는 함수
 	 */
 	const onClickType = (e) => {
-		console.log(e.target.id)
 		if (e.target.id === "visitList") {
 			setVisitLikeSelected(0)
 		} else if ((e.target.id === "goodList")) {
 			setVisitLikeSelected(1)
 		}
 	}
-	console.log(visitLikeRecords)
 
 
 	return (

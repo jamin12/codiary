@@ -14,6 +14,7 @@ const WritePage = () => {
 	const [comments, setComments] = useState([]);
 	const [checkCommentChange, setCheckCommentChange] = useState(0);
 	const [associatePost, setAssociatePost] = useState({});
+	const [isCheckingBox, setIsCheckingBox] = useState(false)
 
 	const [commentValue, setCommentValue] = useState("");
 
@@ -24,23 +25,25 @@ const WritePage = () => {
 	useEffect(() => {
 		const getPostFun = async () => {
 			const getPost = await axios.get(
-				personal.getPersonalPost(userId, parseInt(postId))
+				personal.getPersonalPost(userId, parseInt(postId)),
+				{ withCredentials: true }
 			);
 			setPost(getPost.data.result_data);
+			setIsCheckingBox(getPost.data.result_data.checkLike)
 		};
 		getPostFun();
-	}, [postId, userId]);
-
+	}, [postId, userId, isCheckingBox]);
 	/**
 	 * 연관 포스트 가져오기
 	 */
 	useEffect(() => {
 		const getAssociatePostFun = async () => {
 			const getAssociatePost = await axios.get(
-				personal.associatePersonalposts(postId)
+				personal.associatePersonalposts(postId),
 			);
 			setAssociatePost(getAssociatePost.data.result_data);
 		};
+
 		getAssociatePostFun();
 	}, [postId]);
 
@@ -66,8 +69,6 @@ const WritePage = () => {
 	// 	);
 	// }
 
-	console.log(post)
-
 	/**
 	 * 댓글 입력
 	 */
@@ -78,9 +79,41 @@ const WritePage = () => {
 	/**
 	 * 댓글 저장
 	 */
-	const onClickCommentSave = async(e) => {
-		await axios.post(personal.createComment(),{})
-		console.log('hi')
+	const onClickCommentSave = async () => {
+		if (commentValue === "") {
+			alert("댓글을 입력해주세요");
+		}
+		await axios.post(personal.createComment(),
+			{
+				post_id: postId,
+				comments_body: commentValue
+			},
+			{ withCredentials: true }
+		);
+		setCheckCommentChange(1);
+		setCommentValue("")
+	}
+
+	/**
+	 * 좋아요 체크
+	 */
+	const checkingCheckedBox = () => {
+		setIsCheckingBox(!isCheckingBox)
+	}
+
+	const checkLike = async () => {
+		if (!isCheckingBox) {
+			await axios.post(personal.createPersonalLikeRecord(),
+				{
+					post_id: postId,
+				},
+				{ withCredentials: true }
+			);
+		} else {
+			await axios.delete(personal.deletePersonalLikeRecordByPostId(postId),
+				{ withCredentials: true }
+			);
+		}
 	}
 
 	// HTML
@@ -157,7 +190,8 @@ const WritePage = () => {
 								<label for="good">
 									<ion-icon name="heart-outline"></ion-icon>
 								</label>
-								<input type="checkbox" id="good" />
+								{/* TODO(경민 -> 이묘): 좋아요 숫자 밑으로 내리고 색 표시 나도록 하세용*/}
+								<input type="checkbox" id="good" onChange={checkingCheckedBox} onClick={checkLike} checked={isCheckingBox}  />
 								{/* <ion-icon name="heart"></ion-icon> */}
 								<p>{post.getPost?.like_count}</p>
 							</div>
@@ -167,8 +201,8 @@ const WritePage = () => {
 					{/* 댓글 입력창 */}
 					<InputCommnetBox>
 						<textarea placeholder="댓글을 입력하세요!"
-						value={commentValue}
-						onChange={(e) => onChangeComment(e)}></textarea>
+							value={commentValue}
+							onChange={(e) => onChangeComment(e)}></textarea>
 						<button onClick={onClickCommentSave}>저장</button>
 					</InputCommnetBox>
 
@@ -188,8 +222,6 @@ const WritePage = () => {
 										<DateBox>
 											<p className="btn-reply">답글 쓰기</p>
 											{/* TODO(경민 -> 이묘): 생성 수정 삭제 텍스트 박스 만들기*/}
-											{/* <p className="btn-reply" onClick={createComment}>답글 쓰기</p> */}
-											{/* <p className="btn-reply" onClick={ }>답글 쓰기</p> */}
 											<p className="date">{e.updated_at}</p>
 										</DateBox>
 									</CommentBox>
@@ -218,6 +250,7 @@ const WritePage = () => {
 				</ContentWrapBox>
 
 				{/* subtitle창 - sticky 이용 */}
+				{/* TODO(경민 -> 이묘): h1 h2 태그 기준으로 이동 태그 만들기*/}
 				<SubTitleBox className="sticky-box">
 					<ul>
 						<li>Subtitle</li>

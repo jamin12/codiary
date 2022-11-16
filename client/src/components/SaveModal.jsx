@@ -54,7 +54,6 @@ function OptionModal(props) {
         { withCredentials: true }
       );
       setCategory(getCategory.data.result_data);
-      console.log(category);
     }
     getCategorys();
   }, []);

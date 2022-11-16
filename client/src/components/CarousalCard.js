@@ -48,7 +48,6 @@ const movePost = (userUniqueId,postId) => {
 export default class Carousel extends Component {
   render() {
     const posts = this.props.posts; // props로 post들을 받아옴
-    console.log(posts);
     // TODO(이묘): text에서 가장 첫 번째 이미지 태그 갖고와야함
     /**
      * text에서 가장 첫 번째 이미지 태그 찾는 함수
