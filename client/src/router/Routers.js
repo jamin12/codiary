@@ -15,34 +15,36 @@ import VisiteLike from '../Pages/VisiteLike';
 import VisiterStats from "../Pages/VisiterStats";
 import Search from "../Pages/SearchPage";
 import NotFound from '../Pages/NotFound';
+import Login from "../Pages/Login"
 
 const Routers = () => {
-    return(
+    return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Main/>}></Route>
+                <Route path="/" element={<Main />}></Route>
 
+                <Route path="/authenti/login" element={<Login />}></Route>
 
-                <Route path="/write" element={<Write/>}></Route>
-                <Route path="/search" element={<Search/>}></Route>
+                <Route path="/write" element={<Write />}></Route>
+                <Route path="/search" element={<Search />}></Route>
 
                 {/* user 본인만 볼 수 있는 페이지 */}
-                <Route path="/setting" element={<Setting/>}>
-                    <Route path="category" element={<MyCategory/>}/>
-                    <Route path="info" element={<MyInfo/>}/>
+                <Route path="/setting" element={<Setting />}>
+                    <Route path="category" element={<MyCategory />} />
+                    <Route path="info" element={<MyInfo />} />
                 </Route>
-                <Route path="/presave" element={<Presave/>}></Route>
-                <Route path="/visite-like" element={<VisiteLike/>}></Route>
-                <Route path="/visiterstat" element={<VisiterStats/>}></Route>
+                <Route path="/presave" element={<Presave />}></Route>
+                <Route path="/visite-like" element={<VisiteLike />}></Route>
+                <Route path="/visiterstat" element={<VisiterStats />}></Route>
 
-                <Route path="/:userId" element={<MyPage/>}></Route>
-                <Route path="/:userId/calender" element={<MyCalender/>}></Route>
-                <Route path="/visite" element={<VisiteLike/>}></Route>
-                <Route path="/:userId/:postId" element={<Post/>}></Route>
-                <Route path="/presave/:tmpposttId" element={<PreSavePost/>}></Route>
-                <Route path="/:userId/visiterstat" element={<VisiterStats/>}></Route>
-                <Route path="*" element={<NotFound/>}></Route>
-            </Routes>        
+                <Route path="/:userId" element={<MyPage />}></Route>
+                <Route path="/:userId/calender" element={<MyCalender />}></Route>
+                <Route path="/visite" element={<VisiteLike />}></Route>
+                <Route path="/:userId/:postId" element={<Post />}></Route>
+                <Route path="/presave/:tmpposttId" element={<PreSavePost />}></Route>
+                <Route path="/:userId/visiterstat" element={<VisiterStats />}></Route>
+                <Route path="*" element={<NotFound />}></Route>
+            </Routes>
         </BrowserRouter>
 
     )

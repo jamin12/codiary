@@ -7,6 +7,7 @@ const catchAsync = require('../utils/catchAsync');
 
 const mService = new mainService()
 
+
 const output = {
   getPopularPosts: catchAsync(async (req, res) => {
     const result_contents = await mService.getPopularPosts(req.query.offset, req.query.limit);

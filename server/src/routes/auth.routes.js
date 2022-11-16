@@ -10,6 +10,11 @@ router
   .get(authController.output.index);
 
 router
+  // 로그인 성공 시 
+  .route('/loginsuccess')
+  .get(auth("user"),authController.output.loginSuccess);
+
+router
   // OAuth2 로그인 
   .route('/login')
   .get(authController.input.login);

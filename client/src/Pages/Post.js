@@ -7,6 +7,8 @@ import SearchProfile from "../components/SearchProfile";
 import SimilarPost from "../components/SimilarPost";
 import { personal } from "../api/index";
 import { useCookies } from 'react-cookie';
+import { useSelector } from "react-redux";
+
 
 const WritePage = () => {
 	// 가변 인수 가져오기
@@ -17,7 +19,7 @@ const WritePage = () => {
 	const [associatePost, setAssociatePost] = useState({});
 	const [isCheckingBox, setIsCheckingBox] = useState(false)
 	const [commentValue, setCommentValue] = useState("");
-	const [cookie] = useCookies();
+	const { uniqueid } = useSelector((state) => state.auth.User);
 
 
 	/**
@@ -156,7 +158,7 @@ const WritePage = () => {
 							<p className="writeDate">{post.getPost?.updated_at}</p>
 						</span>
 						<h1 className="title">{post.getPost?.post_title}</h1>
-						{cookie?.uniqueid === userId &&
+						{uniqueid === userId &&
 							<span className="cor-del-box">
 								<p>수정</p>/<p onClick={deletePost}>삭제</p>
 							</span>

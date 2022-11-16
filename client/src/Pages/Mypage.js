@@ -131,7 +131,7 @@ const Mypage = () => {
 
               const html = post.post_body_html
               console.log(html)
-              const imgStart = html.indexOf('src="') + 5
+              const imgStart = html.indexOf('src="')+5
               const imgEnd = html.indexOf('"', imgStart)
               const imgSrc = html.slice(imgStart, imgEnd)
 

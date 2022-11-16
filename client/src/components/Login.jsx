@@ -15,13 +15,6 @@ const Login = ({ setLogin }) => {
 		setLogin(false);
 	}
 
-	/**
-	 * 구글 로그인 버튼 onClick
-	 */
-	const loginGoogle = () => {
-		alert('로그인 기능 추가해야함')
-	}
-
 	useEffect(() => {
 		document.body.style.cssText = `
 		position: fixed; 
