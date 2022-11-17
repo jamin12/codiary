@@ -14,7 +14,7 @@ import "@toast-ui/editor/dist/i18n/ko-kr";
 import Prism from "prismjs";
 import "prismjs/themes/prism.css";
 import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
-import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
+import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all.js';
 
 import axios from "axios";
 import { personal } from "../api/index";
@@ -135,11 +135,7 @@ const WritePost = () => {
 						initialEditType="markdown" // 처음 언어 설정을 마크다운으로 설정
 						useCommandShortcut={true} // 키보드 입력 컨트롤 방지
 						hideModeSwitch={true} // 한 가지 타입(마크다운)만 사용하고싶으면 설정
-						viewer={true}
-						plugins={[
-							colorSyntax,
-							[codeSyntaxHighlight, { highlighter: Prism }],
-						]}
+						plugins={[[codeSyntaxHighlight, { highlighter: Prism }],]}
 						language="ko-KR" // 초기 언어 세팅: 한글
 						toolbarItems={[
 							["heading", "bold", "italic", "strike"],

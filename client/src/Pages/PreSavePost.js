@@ -26,7 +26,6 @@ const WritePage = () => {
 		};
 		getTmpPostFun();
 	}, []);
-	console.log(tmpPost)
 
 	const deletePost = async () => {
 		await axios.delete(personal.deletePersonalTmpPost(parseInt(tmpposttId)),
