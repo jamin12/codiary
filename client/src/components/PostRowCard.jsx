@@ -7,7 +7,7 @@ const PostRowCard = (props) => {
   const text = props.text;
   const user = props.user;
   const date = props.date;
-  const img = props.img;
+  const img = props.img;    // TODO: props로 받은 주소가 없으면 아예 나타나지 않게 처리 해야함
 
   // TODO(이묘): 가장 처음 이미지 찾는 함수 구현바람.
   /**
