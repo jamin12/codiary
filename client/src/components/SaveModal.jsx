@@ -3,17 +3,16 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { personal } from "../api/index";
 import '../css/reset.css';
-import { useCookies } from 'react-cookie';
-// bootstrap
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
+import { useSelector } from "react-redux";
 function OptionModal(props) {
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
   const [selected, setSelected] = useState(0);
   const [category, setCategory] = useState([]);
-  const [cookie] = useCookies();
+  const { uniqueid } = useSelector((state) => state.auth.User);
+
 
   // tag입력 input onChange 이벤트
   const onChangeTags = (e) => {
@@ -58,28 +57,55 @@ function OptionModal(props) {
    * 포스트 저장
    */
   const onClickSave = async () => {
-    // TODO: body부분 값 변경
-    // 일단 수정 했는데 확인 바람
-    const createdPost = await axios.post(
-      personal.createPersonalPost(),
-      {
-        post: {
-          post_title: props.title,
-          post_body_md: props.dataMd,
-          post_body_html: props.dataHtml,
-          post_txt: props.dataTxt,
-          category_id: selected,
+    if (props.postId) {
+      await axios.patch(
+        personal.updatePersonalPost(parseInt(props.postId)),
+        {
+          post: {
+            post_title: props.title,
+            post_body_md: props.dataMd,
+            post_body_html: props.dataHtml,
+            post_txt: props.dataTxt,
+            category_id: selected,
+          },
+          tag: {
+            // TODO(경민 -> 이묘): 태그 바꾸세요
+            tag_name: ["테스트 태그", "리스트 테스트2"],
+          },
         },
-        tag: {
-          tag_name: ["테스트 태그", "리스트 테스트2"],
-        },
-      },
-      {
-        withCredentials: true,
-        headers: { "Content-Type": `application/json` },
+        {
+          withCredentials: true,
+          headers: { "Content-Type": `application/json` },
+        }
+      );
+      document.location.href = `/${uniqueid}/${props.postId}`
+    } else {
+      if (props.tmpPostId) {
+        await axios.delete(personal.deletePersonalTmpPost(parseInt(props.tmpPostId)), { withCredentials: true });
       }
-    );
-    document.location.href = `/${cookie.uniqueid}/${createdPost.data.result_data.post_id}`
+      const createdPost = await axios.post(
+        personal.createPersonalPost(),
+        {
+          post: {
+            post_title: props.title,
+            post_body_md: props.dataMd,
+            post_body_html: props.dataHtml,
+            post_txt: props.dataTxt,
+            category_id: selected,
+          },
+          tag: {
+            // TODO(경민 -> 이묘): 태그 바꾸세요
+            tag_name: ["테스트 태그", "리스트 테스트2"],
+          },
+        },
+        {
+          withCredentials: true,
+          headers: { "Content-Type": `application/json` },
+        }
+      );
+      document.location.href = `/${uniqueid}/${createdPost.data.result_data.post_id}`
+
+    }
     // 서버에 toHTML과 toMARKDOWN 전송
   };
   return (
@@ -126,7 +152,7 @@ function OptionModal(props) {
             {
               // TODO: testList 서버에서 받아온 카테고리 리스트로 변경
               category.map(list => (
-                <option class="op" value={list.category_id} key={list.category_id}>
+                <option value={list.category_id} key={list.category_id}>
                   {list.category_name}
                 </option>
               ))

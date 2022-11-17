@@ -26,6 +26,8 @@ const Routers = () => {
                 <Route path="/authenti/login" element={<Login />}></Route>
 
                 <Route path="/write" element={<Write />}></Route>
+                <Route path="/write/presave/:tmppostid" element={<Write />}></Route>
+                <Route path="/write/:postId" element={<Write />}></Route>
                 <Route path="/search" element={<Search />}></Route>
 
                 {/* user 본인만 볼 수 있는 페이지 */}
@@ -41,7 +43,7 @@ const Routers = () => {
                 <Route path="/:userId" element={<MyPage />}></Route>
                 <Route path="/:userId/calender" element={<MyCalender />}></Route>
                 <Route path="/:userId/:postId" element={<Post />}></Route>
-                
+
                 <Route path="*" element={<NotFound />}></Route>
             </Routes>
         </BrowserRouter>

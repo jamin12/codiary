@@ -260,11 +260,10 @@ const SearchProfile = () => {
     navigation("/search", { state: { type: selectType() } });
   }
 
-  const logoutClick = async() => {
+  const logoutClick = async () => {
     await axios.get(`${baseUrl}/logout`, { withCredentials: true });
     dispatch(logout(""))
     navigate("/")
-
   }
 
   return (
