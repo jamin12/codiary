@@ -11,16 +11,18 @@ import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 // 한국어 플러그인
 import "@toast-ui/editor/dist/i18n/ko-kr";
 // code lightlite 플러그인
+import Prism from "prismjs";
 import "prismjs/themes/prism.css";
 import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
-import Prism from "prismjs";
-import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
+import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all.js';
 
 import axios from "axios";
 import { personal } from "../api/index";
 
 import Modal from '../components/SaveModal'
 import HeaderNoSearchBar from "../components/HeaderNoSearchBar";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 
 /**
@@ -31,7 +33,9 @@ const WritePost = () => {
 	const [dataHtml, setHtml] = useState("");
 	const [dataMd, setMd] = useState("");
 	const [title, setTitle] = useState("");
-
+	const { postId, tmppostid } = useParams();
+	const { uniqueid } = useSelector((state) => state.auth.User);
+	const navigate = useNavigate();
 
 	const editorRef = useRef();
 	// editorRef.current().getInstance()의 형식으로 에디터의 설정값들을 갖고 올 수 있음
@@ -45,6 +49,32 @@ const WritePost = () => {
 		setMd(editorRef.current.getInstance().getMarkdown());
 	};
 
+	/**
+	 * 포스트 가져오기
+	 */
+	useEffect(() => {
+		if (postId) {
+			const getPostFun = async () => {
+				const getPost = await axios.get(
+					personal.getPersonalPost(uniqueid, parseInt(postId)),
+					{ withCredentials: true }
+				);
+				editorRef.current.getInstance().setMarkdown(getPost.data?.result_data?.getPost?.post_body_md.replaceAll("&lt;", "<"));
+				setTitle(getPost.data?.result_data?.getPost?.post_title);
+			};
+			getPostFun();
+		} else if (tmppostid) {
+			const getTmpPostFun = async () => {
+				const getPost = await axios.get(
+					personal.getPersonalTmppost(parseInt(tmppostid)),
+					{ withCredentials: true }
+				);
+				editorRef.current.getInstance().setMarkdown(getPost.data?.result_data?.tmppost_body_md.replaceAll("&lt;", "<"));
+				setTitle(getPost.data?.result_data?.tmppost_title);
+			};
+			getTmpPostFun();
+		}
+	}, []);
 
 	/**
 	 * 모달창 open
@@ -56,7 +86,7 @@ const WritePost = () => {
 			setModalShow(true);
 		}
 	}
-
+	console.log(dataHtml);
 
 	/**
 	 * 포스트 임시 저장
@@ -65,6 +95,9 @@ const WritePost = () => {
 		if (!title) {
 			alert("제목을 먼저 입력해주세요")
 		}
+		// if (postId) {
+		// 	await axios.delete(personal.deletePersonalPost(postId), { withCredentials: true });
+		// }
 		// TODO: body부분 값 변경
 		await axios.post(
 			personal.createPersonalTmpPost(),
@@ -79,6 +112,7 @@ const WritePost = () => {
 				headers: { "Content-Type": `application/json` },
 			}
 		);
+		navigate("/presave")
 	};
 
 	return (
@@ -101,10 +135,7 @@ const WritePost = () => {
 						initialEditType="markdown" // 처음 언어 설정을 마크다운으로 설정
 						useCommandShortcut={true} // 키보드 입력 컨트롤 방지
 						hideModeSwitch={true} // 한 가지 타입(마크다운)만 사용하고싶으면 설정
-						plugins={[
-							colorSyntax,
-							[codeSyntaxHighlight, { highlighter: Prism }],
-						]}
+						plugins={[[codeSyntaxHighlight, { highlighter: Prism }],]}
 						language="ko-KR" // 초기 언어 세팅: 한글
 						toolbarItems={[
 							["heading", "bold", "italic", "strike"],
@@ -112,20 +143,20 @@ const WritePost = () => {
 							["ul", "ol", "task", "indent", "outdent"],
 							["table", "image", "link"],
 							["code", "codeblock"],
-							[
-								{
-									name: "compiler",
-									tooltip: "코드 컴파일러",
-									command: "htmlBlock",
-									text: "CC",
-									className: "btn-code-compiler",
-									styled: {
-										fontSize: "20px",
-									},
-									state: "compiler",
-								},
-								"scrollSync",
-							],
+							// [
+							// 	{
+							// 		name: "compiler",
+							// 		tooltip: "코드 컴파일러",
+							// 		command: "htmlBlock",
+							// 		text: "CC",
+							// 		className: "btn-code-compiler",
+							// 		styled: {
+							// 			fontSize: "20px",
+							// 		},
+							// 		state: "compiler",
+							// 	},
+							// 	"scrollSync",
+							// ],
 						]}
 						// customHTMLRenderer={{
 						//   htmlBlock:{
@@ -173,6 +204,8 @@ const WritePost = () => {
 				dataMd={dataMd}
 				dataHtml={dataHtml}
 				dataTxt={dataHtml.innerText}
+				postId={postId}
+				tmpPostId={tmppostid}
 			/>
 		</div>
 	);

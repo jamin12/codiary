@@ -64,14 +64,6 @@ const WritePage = () => {
 		getCommentsFun();
 	}, [postId, checkCommentChange]);
 
-	// const createComment = async () => {
-	// 	await axios.post(
-	// 		personal.createComment(),{
-
-	// 		}
-	// 	);
-	// }
-
 	/**
 	 * 댓글 입력
 	 */
@@ -160,7 +152,7 @@ const WritePage = () => {
 						<h1 className="title">{post.getPost?.post_title}</h1>
 						{uniqueid === userId &&
 							<span className="cor-del-box">
-								<p>수정</p>/<p onClick={deletePost}>삭제</p>
+								<a href={`/write/${postId}`}>수정</a>/<p onClick={deletePost}>삭제</p>
 							</span>
 						}
 						{/* <hr/> */}

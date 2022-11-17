@@ -304,6 +304,7 @@ class PersonalService {
 			include: [
 				this.postJoin
 			],
+			group: "post_id",
 			where: whereOptions
 		})
 	}
@@ -454,7 +455,7 @@ class PersonalService {
 		body.tag.tag_name = [...setTagList];
 		await sequelize.transaction(async (t1) => {
 			createdPost = await posts.create(body.post);
-			const tagNameList = body.tag.tag_name.join("\\t")
+			const tagNameList = body.tag.tag_name.join("/n")
 			await tag.create({
 				post_id: createdPost.post_id,
 				tag_name: tagNameList
@@ -489,7 +490,7 @@ class PersonalService {
 				},
 			});
 			if (body.tag) {
-				const tagNameList = body.tag.tag_name.join("\\t")
+				const tagNameList = body.tag.tag_name.join("/n")
 				await tag.update({
 					tag_name: tagNameList,
 				}, {
@@ -1156,7 +1157,7 @@ class PersonalService {
 				post_id: postId,
 			},
 		});
-		tagList = tagList.tag_name.split('\\t');
+		tagList = tagList.tag_name.split('/n');
 		// 조합을 이용후 랜덤으로 태그 리스트 가져오기
 		const tagCombis = this.myMath.getCombinations(
 			tagList,

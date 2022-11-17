@@ -219,7 +219,9 @@ const SearchProfile = () => {
   const { uniqueid } = useSelector((state) => state.auth.User);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // console.log(uniqueid)
+  console.log(uniqueid)
+
+  // TODO(이묘): 쿠키에 authentication에 있는지 확인 후에 로그인이 돼었느냐를 체크해야함
 
   const toggleMenu = () => {
     setMenu((isOpen) => !isOpen);
@@ -243,11 +245,10 @@ const SearchProfile = () => {
     navigation("/search", { state: { type: location } });
   }
 
-  const logoutClick = async() => {
+  const logoutClick = async () => {
     await axios.get(`${baseUrl}/logout`, { withCredentials: true });
     dispatch(logout(""))
     navigate("/")
-
   }
 
   return (
