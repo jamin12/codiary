@@ -39,7 +39,6 @@ const Routers = () => {
 
                 <Route path="/:userId" element={<MyPage />}></Route>
                 <Route path="/:userId/calender" element={<MyCalender />}></Route>
-                <Route path="/visite" element={<VisiteLike />}></Route>
                 <Route path="/:userId/:postId" element={<Post />}></Route>
                 <Route path="/presave/:tmpposttId" element={<PreSavePost />}></Route>
                 <Route path="/:userId/visiterstat" element={<VisiterStats />}></Route>
