@@ -212,16 +212,14 @@ const BtnSearch = styled.div`
   }
 `
 
-// 회원 정보를 받아와서 프로필 사진을 불러와야 함
+// TODO: 회원 정보를 받아와서 프로필 사진을 불러와야 함
 const SearchProfile = () => {
   const [isOpen, setMenu] = useState(false);
   const [loginOpen, setLogin] = useState(false);
   const { uniqueid } = useSelector((state) => state.auth.User);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(uniqueid)
-
-  // TODO(이묘): 쿠키에 authentication에 있는지 확인 후에 로그인이 돼었느냐를 체크해야함
+  // console.log(uniqueid)
 
   const toggleMenu = () => {
     setMenu((isOpen) => !isOpen);
@@ -236,28 +234,13 @@ const SearchProfile = () => {
    */
   const location = useLocation();
 
-  const selectType = () => {
-    const locationType = location.split('/')
-    if (locationType[1] === null || locationType[1] === 'calender') {
-      return 0
-    }
-    else if (locationType[0] === 'presave') {
-      return 1
-    }
-    else if (locationType[0] === 'visite-list') {
-      return 2
-    }
-    else if (locationType[0] === 'good-list') {
-      return 3
-    }
-  }
-
   /**
    * /search로 이동하는 함수
    */
   const navigation = useNavigate();
   const onClickSearch = () => {
-    navigation("/search", { state: { type: selectType() } });
+    // navigation("/search", { state: { type: selectType() } });
+    navigation("/search", { state: { type: location } });
   }
 
   const logoutClick = async() => {
