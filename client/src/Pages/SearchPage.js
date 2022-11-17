@@ -1,8 +1,8 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { main } from "../api";
+import { main, personal } from "../api";
 import { IoChevronDownOutline } from "react-icons/io5";
 
 import HeaderNoSearchBar from "../components/HeaderNoSearchBar";
@@ -11,34 +11,116 @@ import PostRowCard from "../components/PostRowCard";
 const Searchpage = () => {
   const [searchWord, setSearchWord] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [viewType, setViewType] = useState(0); // 전체인지 개인인지 공용인지 구분
+  const [searchType, setSearchType] = useState(0);
 
-	const [viewMoreOffset, setViewMoreOffset] = useState(1);
+  const [viewMoreOffset, setViewMoreOffset] = useState(1);
 
   const location = useLocation();
 
-  const type = location.state.type;
-  if(type === 'home') {
-  }else if(type === ''){
-    
+  const path = location.state.type.pathname;
+
+  const checkViewType = (path) => {
+    if (path === undefined) {
+      console.log('home')
+      setViewType(0)
+      return 0
+    } else if (path.split("/")[1] === 'visiterstat' ||
+      path.split("/")[1] === 'setting') {
+      setViewType(0)
+      return 0
+    }
+    // 개인 페이지 검색
+    else if (path.split("/")[1] === 'presave' ||
+      path.split("/")[1] === 'visite-like') {
+      setViewType(1)
+      if (path.split("/")[1] === 'presave') { setSearchType(1) }
+      else { setSearchType(4) }
+      return 1
+    }
+    // 특정 user 게시물 검색(공용 검색)
+    else {
+      setViewType(2)
+      return 2
+    }
   }
+
+  // if(path === undefined) {
+  //   console.log('home')
+  //   setViewType(0)
+  // }else if (path.split("/")[1] === 'visiterstat' ||
+  //           path.split("/")[1] === 'setting'){
+  //   setViewType(0)
+  // }
+  // // 개인 페이지 검색
+  // else if(path.split("/")[1] === 'presave' || 
+  // path.split("/")[1] === 'visite-like'){
+  //   setViewType(1)
+  //   if(path.split("/")[1] === 'presave'){ setSearchType(1) }
+  //   else{ setSearchType(4) }
+  // }
+  // // 특정 user 게시물 검색(공용 검색)
+  // else{
+  //   setViewType(2)
+  // }
+
+
+  // const changeSearch = (e) => {
+  //   setSearchWord(e.target.value)
+  //     const getSearchResultFun = async() => {
+  //       if(checkViewType(path) === 0){
+  //         const getSearchResult = await axios.get(main.searchPostInMain(searchWord), {
+  //           params: {
+  //             offset: viewMoreOffset,
+  //             limit: 11
+  //           }
+  //         })
+  //         setSearchResult(getSearchResult.data.result_data)
+  //       }
+  //     }
+  //     getSearchResultFun();
+  // }
 
 
   /**
    * text가 바뀔 때마다 검색을 하게 해주는 함수
    */
-  const changeSearch = async (e) => {
+  // useEffect(() => {
 
+  // }, [searchWord]);
+  const changeSearch = async (e) => {
     setSearchWord(e.target.value)
-    let getSearch
-    getSearch = await axios.get(main.searchPostInMain(searchWord), {
-      params: {
-        offset: viewMoreOffset,
-        limit: 11
+    let getSearch;
+
+    if (checkViewType(path) === 0) {
+      console.log("hi")
+      getSearch = await axios.get(main.searchPostInMain(e.target.value), {
+        params: {
+          offset: viewMoreOffset,
+          limit: 11
+        }
+      })
+    }
+    else if (checkViewType(path) === 1) {
+      console.log("0")
+      if (searchType === 1) {
+        getSearch = await axios.get(personal.searchPersonalposts(e.target.value, 1), {
+          withCredentials: true,
+          params: {
+            offset: viewMoreOffset,
+            limit: 11
+          }
+        })
+        // setSearchResult(getSearch.data.result_data);
       }
-    })
+
+    }
+    else if (checkViewType(path) === 2) {
+    }
     // TODO: (경민 -> 이묘) 검색 위치에 따라서 검색하는 url달라지는거 구현(axios 써야해요 doc파일 보고 하면 됩니다.)
     setSearchResult(getSearch.data.result_data);
   };
+  // console.log(searchResult)
 
   /**
   * 게시물 더보기 onClick 함수
@@ -55,22 +137,37 @@ const Searchpage = () => {
       <MainSearchBar
         type="text"
         placeholder="SEARCH"
-        onChange={changeSearch}
-      // value={searchWord}
+        onChange={(e) => changeSearch(e)}
+        value={searchWord}
       ></MainSearchBar>
       <Wrap>
         <PostWrap>
-          {searchResult.map((post) => {
-            return (
-              <PostRowCard
-              title={post.post_title}
-              user = {post.users.user_detail.user_nickname}
-              img = {post.users.user_detail.user_img}
-              date = {post.updated_at}
-              text = {post.post_txt}
-              />
-            );
-          })}
+          {
+            searchResult.forEach((post) => {
+              console.log(post)
+              if (checkViewType(path) === 0) {
+                return (
+                  <PostRowCard
+                    title={post.post_title}
+                    user={post.users?.user_detail.user_nickname}
+                    img={post.users?.user_detail.user_img}
+                    date={post.updated_at}
+                    text={post.post_txt}
+                  />
+                );
+              }
+              else if (checkViewType(path) === 1) {
+                if (searchType === 1) {
+                  <PostRowCard
+                    title={post.tmppost_title}
+                    // user = {post.users?.user_detail.user_nickname}
+                    // img = {post.users?.user_detail.user_img}
+                    date={post.updated_at}
+                    text={post.tmppost_txt}
+                  />
+                }
+              }
+            })}
         </PostWrap>
 
 
@@ -95,7 +192,7 @@ const Wrap = styled.div`
   > .btn-postview-more{
     bottom: 20px;
     width: 100%;
-		display: ${props => props.postLength>9 ? "flex" : "none"};
+		display: ${props => props.postLength > 9 ? "flex" : "none"};
 		justify-content: center;
 		align-items: center;
 		height: 40px;

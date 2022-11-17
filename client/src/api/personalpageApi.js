@@ -205,13 +205,13 @@ const personal = {
 	 * search
 	 ***********************************************/
 	/**
-	 * 개인 검색 URL [DELETE]
+	 * 개인 검색 URL [GET]
 	 * @param  {...String} params Path Variables 값들
 	 * @returns {String}
 	 */
 	searchPersonalposts: (...params) => createUrl("/search/personal", params),
 	/**
-	 * 공통 검색 URL [DELETE]
+	 * 공통 검색 URL [GET]
 	 * @param  {...String} params Path Variables 값들
 	 * @returns {String}
 	 */
@@ -220,7 +220,7 @@ const personal = {
 	 * associate
 	 ***********************************************/
 	/**
-	 * 관련 게시물 URL [DELETE]
+	 * 관련 게시물 URL [GET]
 	 * @param  {...String} params Path Variables 값들
 	 * @returns {String}
 	 */
