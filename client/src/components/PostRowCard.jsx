@@ -7,8 +7,7 @@ const PostRowCard = (props) => {
   const text = props.text;
   const user = props.user;
   const date = props.date;
-  // const img = props.img;
-  const img= "https://images.unsplash.com/photo-1666859940385-d73f54180d48?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
+  const img = props.img;
 
   // TODO(이묘): 가장 처음 이미지 찾는 함수 구현바람.
   /**
@@ -22,14 +21,14 @@ const PostRowCard = (props) => {
   return (
     <Post>
       <div className='text-box'>
-        <h1 className="title">titlddddd ddddddddd ddde</h1>
+        <h1 className="title">{title}</h1>
         <div className="user">
           <img src={img} alt="사용자 프로필"/>
-          <span className='user'>user</span>
+          <span className='user'>{user}</span>
         </div>
-        <p className='date'>2022-02-07 10:30</p>
+        <p className='date'>{date}</p>
       </div>
-
+      {/* TODO: 이미지 썸네일 고쳐야함 캘린더 페이지 참고 */}
       <ThumbnailIMG img={ImgSearch(text)} alt='썸네일' />
     </Post>
   )
