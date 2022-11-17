@@ -13,22 +13,24 @@ const Searchpage = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [viewType, setViewType] = useState(0); // 전체인지 개인인지 공용인지 구분
   const [searchType, setSearchType] = useState(0);
+  const [checkType, setCheckType] = useState(0);
 
   const [viewMoreOffset, setViewMoreOffset] = useState(1);
 
   const location = useLocation();
 
   const path = location.state.type.pathname;
-
-  const checkViewType = (path) => {
+  console.log(path)
+  useEffect(() => {
     if (path === undefined) {
       console.log('home')
       setViewType(0)
-      return 0
+      setCheckType(0);
     } else if (path.split("/")[1] === 'visiterstat' ||
       path.split("/")[1] === 'setting') {
       setViewType(0)
-      return 0
+      setCheckType(0);
+
     }
     // 개인 페이지 검색
     else if (path.split("/")[1] === 'presave' ||
@@ -36,15 +38,18 @@ const Searchpage = () => {
       setViewType(1)
       if (path.split("/")[1] === 'presave') { setSearchType(1) }
       else { setSearchType(4) }
-      return 1
+      setCheckType(1);
+
     }
     // 특정 user 게시물 검색(공용 검색)
     else {
       setViewType(2)
-      return 2
+      setCheckType(2);
     }
-  }
-
+  }, [])
+  console.log("view : " + viewType)
+  console.log("check : " + checkType)
+  console.log("serach : " + searchType)
   // if(path === undefined) {
   //   console.log('home')
   //   setViewType(0)
@@ -91,8 +96,7 @@ const Searchpage = () => {
   const changeSearch = async (e) => {
     setSearchWord(e.target.value)
     let getSearch;
-
-    if (checkViewType(path) === 0) {
+    if (checkType === 0) {
       console.log("hi")
       getSearch = await axios.get(main.searchPostInMain(e.target.value), {
         params: {
@@ -101,7 +105,7 @@ const Searchpage = () => {
         }
       })
     }
-    else if (checkViewType(path) === 1) {
+    else if (checkType === 1) {
       console.log("0")
       if (searchType === 1) {
         getSearch = await axios.get(personal.searchPersonalposts(e.target.value, 1), {
@@ -113,9 +117,8 @@ const Searchpage = () => {
         })
         // setSearchResult(getSearch.data.result_data);
       }
-
     }
-    else if (checkViewType(path) === 2) {
+    else if (checkType === 2) {
     }
     // TODO: (경민 -> 이묘) 검색 위치에 따라서 검색하는 url달라지는거 구현(axios 써야해요 doc파일 보고 하면 됩니다.)
     setSearchResult(getSearch.data.result_data);
@@ -145,7 +148,7 @@ const Searchpage = () => {
           {
             searchResult.forEach((post) => {
               console.log(post)
-              if (checkViewType(path) === 0) {
+              if (checkType === 0) {
                 return (
                   <PostRowCard
                     title={post.post_title}
@@ -156,7 +159,7 @@ const Searchpage = () => {
                   />
                 );
               }
-              else if (checkViewType(path) === 1) {
+              else if (checkType === 1) {
                 if (searchType === 1) {
                   <PostRowCard
                     title={post.tmppost_title}
