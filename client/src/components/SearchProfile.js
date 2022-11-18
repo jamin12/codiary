@@ -212,7 +212,7 @@ const BtnSearch = styled.div`
   }
 `
 
-// 회원 정보를 받아와서 프로필 사진을 불러와야 함
+// TODO: 회원 정보를 받아와서 프로필 사진을 불러와야 함
 const SearchProfile = () => {
   const [isOpen, setMenu] = useState(false);
   const [loginOpen, setLogin] = useState(false);
@@ -236,35 +236,19 @@ const SearchProfile = () => {
    */
   const location = useLocation();
 
-  const selectType = () => {
-    const locationType = location.split('/')
-    if (locationType[1] === null || locationType[1] === 'calender') {
-      return 0
-    }
-    else if (locationType[0] === 'presave') {
-      return 1
-    }
-    else if (locationType[0] === 'visite-list') {
-      return 2
-    }
-    else if (locationType[0] === 'good-list') {
-      return 3
-    }
-  }
-
   /**
    * /search로 이동하는 함수
    */
   const navigation = useNavigate();
   const onClickSearch = () => {
-    navigation("/search", { state: { type: selectType() } });
+    // navigation("/search", { state: { type: selectType() } });
+    navigation("/search", { state: { type: location } });
   }
 
-  const logoutClick = async() => {
+  const logoutClick = async () => {
     await axios.get(`${baseUrl}/logout`, { withCredentials: true });
     dispatch(logout(""))
     navigate("/")
-
   }
 
   return (

@@ -26,6 +26,8 @@ const Routers = () => {
                 <Route path="/authenti/login" element={<Login />}></Route>
 
                 <Route path="/write" element={<Write />}></Route>
+                <Route path="/write/presave/:tmppostid" element={<Write />}></Route>
+                <Route path="/write/:postId" element={<Write />}></Route>
                 <Route path="/search" element={<Search />}></Route>
 
                 {/* user 본인만 볼 수 있는 페이지 */}
@@ -34,15 +36,14 @@ const Routers = () => {
                     <Route path="info" element={<MyInfo />} />
                 </Route>
                 <Route path="/presave" element={<Presave />}></Route>
+                <Route path="/presave/:tmpposttId" element={<PreSavePost />}></Route>
                 <Route path="/visite-like" element={<VisiteLike />}></Route>
                 <Route path="/visiterstat" element={<VisiterStats />}></Route>
 
                 <Route path="/:userId" element={<MyPage />}></Route>
                 <Route path="/:userId/calender" element={<MyCalender />}></Route>
-                <Route path="/visite" element={<VisiteLike />}></Route>
                 <Route path="/:userId/:postId" element={<Post />}></Route>
-                <Route path="/presave/:tmpposttId" element={<PreSavePost />}></Route>
-                <Route path="/:userId/visiterstat" element={<VisiterStats />}></Route>
+
                 <Route path="*" element={<NotFound />}></Route>
             </Routes>
         </BrowserRouter>

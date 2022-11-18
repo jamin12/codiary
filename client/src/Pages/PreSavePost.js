@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useCookies } from "react-cookie"
 import styled from "styled-components";
 import axios from "axios";
 
 import SearchProfile from "../components/SearchProfile";
-import SimilarPost from "../components/SimilarPost";
 import { personal } from "../api/index";
+import { useSelector } from "react-redux";
 
 const WritePage = () => {
 	// 가변 인수 가져오기
 	const { tmpposttId } = useParams();
 	const [tmpPost, setTmpPost] = useState({});
-	const [cookies] = useCookies([]);
+	const { uniqueid } = useSelector((state) => state.auth.User);
+
 	/**
 	 * 포스트 가져오기
 	 */
@@ -21,12 +21,18 @@ const WritePage = () => {
 			const getTmpPost = await axios.get(
 				personal.getPersonalTmppost(parseInt(tmpposttId)),
 				{ withCredentials: true }
-
 			);
 			setTmpPost(getTmpPost.data.result_data);
 		};
 		getTmpPostFun();
-	}, [tmpposttId]);
+	}, []);
+
+	const deletePost = async () => {
+		await axios.delete(personal.deletePersonalTmpPost(parseInt(tmpposttId)),
+			{ withCredentials: true }
+		);
+		document.location.href = `/presave`;
+	}
 	// HTML
 	return (
 		<>
@@ -39,18 +45,18 @@ const WritePage = () => {
 					{/* 제목 및 헤더 */}
 					<HeaderBox>
 						<span className="write-data-box">
-							<p className="userName">{cookies.uniqueid}</p>
+							<p className="userName">{uniqueid}</p>
 							<p className="writeDate">{tmpPost.updated_at}</p>
 						</span>
 						<h1 className="title">{tmpPost.tmppost_title}</h1>
 						<span className="cor-del-box">
-							<p>수정</p>/<p>삭제</p>
+							<a href={`/write/presave/${tmpposttId}`}>수정</a>/<p onClick={deletePost}>삭제</p>
 						</span>
 						{/* <hr/> */}
 					</HeaderBox>
 					{/* 본문내용 */}
 					<ContentBox>
-						<div dangerouslySetInnerHTML={{ __html: tmpPost.tmppost_body_html }}>
+						<div dangerouslySetInnerHTML={{ __html: tmpPost?.tmppost_body_html?.replaceAll("&lt;", "<") }}>
 						</div>
 					</ContentBox>
 				</ContentWrapBox>
