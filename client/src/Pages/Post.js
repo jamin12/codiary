@@ -93,21 +93,27 @@ const WritePage = () => {
 	 * 좋아요 체크
 	 */
 	const checkingCheckedBox = () => {
-		setIsCheckingBox(!isCheckingBox)
+		if(uniqueid !== ''){
+			setIsCheckingBox(!isCheckingBox)
+		}
 	}
 
 	const checkLike = async () => {
-		if (!isCheckingBox) {
-			await axios.post(personal.createPersonalLikeRecord(),
-				{
-					post_id: postId,
-				},
-				{ withCredentials: true }
-			);
-		} else {
-			await axios.delete(personal.deletePersonalLikeRecordByPostId(postId),
-				{ withCredentials: true }
-			);
+		if(uniqueid !== ''){
+			if (!isCheckingBox) {
+				await axios.post(personal.createPersonalLikeRecord(),
+					{
+						post_id: postId,
+					},
+					{ withCredentials: true }
+				);
+			} else {
+				await axios.delete(personal.deletePersonalLikeRecordByPostId(postId),
+					{ withCredentials: true }
+				);
+			}
+		}else{
+			alert("로그인을 해주십시오")
 		}
 	}
 	const deletePost = async () => {
