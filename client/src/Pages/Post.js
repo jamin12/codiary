@@ -51,6 +51,19 @@ const WritePage = () => {
 	}, [postId]);
 
 	/**
+	 * 방문 기록 저장
+	 */
+	useEffect(() => {
+		if (uniqueid !== '') {
+			const createVisitRecordFun = async () => {
+				await axios.post(personal.createPersonalVisitRecord(),
+					{ post_id: postId },
+					{ withCredentials: true });
+			};
+			createVisitRecordFun();
+		}
+	}, [postId, uniqueid])
+	/**
  * 댓글 가져오기
  */
 	useEffect(() => {
@@ -93,13 +106,13 @@ const WritePage = () => {
 	 * 좋아요 체크
 	 */
 	const checkingCheckedBox = () => {
-		if(uniqueid !== ''){
+		if (uniqueid !== '') {
 			setIsCheckingBox(!isCheckingBox)
 		}
 	}
 
 	const checkLike = async () => {
-		if(uniqueid !== ''){
+		if (uniqueid !== '') {
 			if (!isCheckingBox) {
 				await axios.post(personal.createPersonalLikeRecord(),
 					{
@@ -112,7 +125,7 @@ const WritePage = () => {
 					{ withCredentials: true }
 				);
 			}
-		}else{
+		} else {
 			alert("로그인을 해주십시오")
 		}
 	}
