@@ -28,7 +28,8 @@ const httpStatus = require("http-status"),
 	measurementDto = require("../dto/measurmentDto"),
 	logger = require("../config/logger"),
 	myDate = require("../utils/myDate"),
-	myMath = require("../utils/myMath");
+	myMath = require("../utils/myMath"),
+	_ = require("lodash");
 
 class PersonalService {
 	constructor() {
@@ -290,19 +291,20 @@ class PersonalService {
 	 */
 	async getPersonalPostsByDate(uniqueId, startDate, endDate) {
 		const user = await this.uService.getUserByUniqueId(uniqueId);
+		const myPostJoin = _.cloneDeep(this.postJoin);
 		const whereOptions = {
 			update_history: {
 				[Op.between]: [startDate, endDate],
 			},
 		};
-		this.postJoin.where = {
+		myPostJoin.where = {
 			user_id: user.user_id,
 		}
-		this.postJoin.include = [this.userJoin];
+		myPostJoin.include = [this.userJoin];
 		return await posts_update_history.findAll({
 			attributes: postupdatehistoryDto,
 			include: [
-				this.postJoin
+				myPostJoin
 			],
 			where: whereOptions
 		})
@@ -317,9 +319,6 @@ class PersonalService {
 	 */
 	async getPersonalPostCountByDate(uniqueId, startDate, endDate) {
 		const user = await this.uService.getUserByUniqueId(uniqueId);
-		this.postJoin.where = {
-			user_id: user.user_id
-		};
 		return await posts_update_history.findAll({
 			attributes: {
 				include: [
@@ -349,7 +348,10 @@ class PersonalService {
 				{
 					model: posts,
 					as: "posts",
-					attributes: []
+					attributes: [],
+					where: {
+						user_id: user.user_id
+					}
 				}
 			],
 			where: {
@@ -638,16 +640,18 @@ class PersonalService {
 	 */
 	async getPersonalVisitRecord(userId, ...paging) {
 		const pageResult = this.paging.pageResult(paging[0], paging[1]);
+		const myPostJoin = _.cloneDeep(this.postJoin);
+
 		const whereOptions = {
 			user_id: userId,
 		};
-		this.postJoin.include = [this.userJoin];
+		myPostJoin.include = [this.userJoin];
 		return await visit_record.findAll({
 			attributes: visitRecordDto.filter((data) => {
 				const excludeColumn = ["user_id"];
 				if (!excludeColumn.includes(data)) return data;
 			}),
-			include: [this.postJoin],
+			include: [myPostJoin],
 			where: whereOptions,
 			order: [["updated_at", "DESC"]],
 			offset: pageResult.offset,
@@ -725,16 +729,18 @@ class PersonalService {
 	 */
 	async getPersonalLikeRecord(userId, ...paging) {
 		const pageResult = this.paging.pageResult(paging[0], paging[1]);
+		const myPostJoin = _.cloneDeep(this.postJoin);
+
 		const whereOptions = {
 			user_id: userId,
 		};
-		this.postJoin.include = [this.userJoin];
+		myPostJoin.include = [this.userJoin];
 		return await like_record.findAll({
 			attributes: likeRecordDto.filter((data) => {
 				const excludeColumn = ["user_id"];
 				if (!excludeColumn.includes(data)) return data;
 			}),
-			include: [this.postJoin],
+			include: [myPostJoin],
 			where: whereOptions,
 			order: [["updated_at", "DESC"]],
 			offset: pageResult.offset,
@@ -1029,15 +1035,14 @@ class PersonalService {
 				],
 			};
 		}
-		// 개인 방문 목록에서 검색
+		// 개인 방문 좋아요 목록에서 검색
 		else if (searchType === 2) {
-			searchType = visit_record;
-			myAttributes = visitRecordDto.filter((data) => {
-				const excludeColumn = ["user_id"];
+			searchType = posts;
+			myAttributes = postsDto.filter((data) => {
+				const excludeColumn = ["category_id", "user_id", "like_count"];
 				if (!excludeColumn.includes(data)) return data;
 			});
-			this.postJoin.include = [this.userJoin];
-			this.postJoin.where = {
+			whereOptions = {
 				[Op.or]: [
 					{
 						post_title: {
@@ -1051,37 +1056,26 @@ class PersonalService {
 					},
 				],
 			};
-			whereOptions = {
-				user_id: userId,
-			};
-			includeOptions.push(this.postJoin);
-		}
-		// 개인 좋아요 목록에서 검색
-		else if (searchType === 3) {
-			searchType = like_record;
-			myAttributes = likeRecordDto.filter((data) => {
-				const excludeColumn = ["user_id"];
-				if (!excludeColumn.includes(data)) return data;
+			includeOptions.push(this.userJoin);
+			includeOptions.push({
+				model: visit_record,
+				as: "visit_record",
+				attributes: {
+					include: ["visit_record_id"],
+					exclude: ["user_id", "created_at", "updated_at"]
+				},
+				where: {
+					user_id: userId,
+				}
 			});
-			this.postJoin.include = [this.userJoin];
-			this.postJoin.where = {
-				[Op.or]: [
-					{
-						post_title: {
-							[Op.substring]: searchWord,
-						},
-					},
-					{
-						post_txt: {
-							[Op.substring]: searchWord,
-						},
-					},
-				],
-			};
-			whereOptions = {
-				user_id: userId,
-			};
-			includeOptions.push(this.postJoin);
+			includeOptions.push({
+				model: like_record,
+				as: "like_record",
+				attributes: {
+					include: ["like_record_id"],
+					exclude: ["user_id", "created_at", "updated_at"]
+				},
+			});
 		}
 
 		return await searchType.findAll({
@@ -1150,6 +1144,9 @@ class PersonalService {
 	 */
 	async associatePost(postId) {
 		await this.checkPostExists(postId);
+		const myPostJoin = _.cloneDeep(this.postJoin);
+
+
 		// 태그 리스트 구하기
 		let tagList = await tag.findOne({
 			where: {
@@ -1164,7 +1161,7 @@ class PersonalService {
 		);
 		let tagCombi = tagCombis[this.myMath.getRandomInt(0, tagCombis.length)];
 		tagCombi = tagCombi[this.myMath.getRandomInt(0, tagCombi.length)]
-		this.postJoin.include = [this.userJoin];
+		myPostJoin.include = [this.userJoin];
 		const associatePost = await tag.findAll({
 			// TODO: 연관된 태그가 하나밖에 조회가 안된다.... 넘 슬프다 다른 방법 찾는중
 			attributes: ["tag_id", "tag_name"],
@@ -1176,7 +1173,7 @@ class PersonalService {
 					[Op.notIn]: [postId],
 				},
 			},
-			include: [this.postJoin],
+			include: [myPostJoin],
 			offset: 1,
 			limit: 6,
 		});

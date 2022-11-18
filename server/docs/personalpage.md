@@ -978,7 +978,7 @@
 - |속성|타입|설명|
     |---|---|---|
     |searchword *|int|검색 단어(필수)</br>없으면 날짜순으로 전송됨|
-    |searchtype *|int|검색 타입(필수)</br>0 : 개인 포스트 페이지에서 검색</br>1 : 개인 임시저장 페이지에서 검색</br>2 : 개인 방문 목록에서 검색</br>3 : 개인 좋아요 목록에서 검색|
+    |searchtype *|int|검색 타입(필수)</br>0 : 개인 포스트 페이지에서 검색</br>1 : 개인 임시저장 페이지에서 검색</br>2 : 개인 방문 좋아요 목록에서 검색|
     |offset *|int|현재 페이지 번호 (필수)|
     |limit|int|보여줄 개수|
 - authentication 쿠키 필요
@@ -1025,66 +1025,39 @@
             }
         ]
     }
-
-    // 2 : 개인 방문 목록에서 검색
     {
         "status": 200,
         "message": "searchContents",
         "result_data": [
             {
-                "visit_record_id": 1,
-                "post_id": 5,
-                "created_at": "2022-09-01 21:00",
-                "updated_at": "2022-09-03 11:12",
-                "posts": {
-                    "post_id": 5,
-                    "post_title": "테스으 생성",
-                    "post_body_md": "",
-                    "post_body_html": "",
-                    "post_txt": "qwer12v",
-                    "created_at": "2022-08-29 03:25",
-                    "updated_at": "2022-09-01 21:01",
-                    "users": {
-                        "user_email": "rudals951004@gmail.com",
-                        "user_detail": {
-                            "user_name": "min ja",
-                            "user_unique_id": "test",
-                            "user_img": "이미지가 없다링"
-                        }
+                "post_id": 1,
+                "post_title": "기본개념",
+                "post_body_md": "",
+                "post_body_html": "",
+                "post_txt": "qwer",
+                "created_at": "2022-08-15 12:12",
+                "updated_at": "2022-11-16 23:26",
+                "users": {
+                    "user_email": "rudals951004@gmail.com",
+                    "user_detail": {
+                        "user_name": "min ja",
+                        "user_unique_id": "test",
+                        "user_img": "https://lh3.googleusercontent.com/aAItbvmkab50Pb4HAnuwMI-UWHJ5YXnMAbAh5zYR2aRy5=s96-c"
                     }
-                }
-            },
-        ]
-    }
-
-    // 3 : 개인 좋아요 목록에서 검색
-    {
-        "status": 200,
-        "message": "searchContents",
-        "result_data": [
-            {
-                "like_record_id": 2,
-                "post_id": 26,
-                "created_at": "2022-09-03 11:31",
-                "updated_at": "2022-09-03 11:31",
-                "posts": {
-                    "post_id": 26,
-                    "post_title": "테스으 생성",
-                    "post_body_md": "null",
-                    "post_body_html": "null",
-                    "post_txt": "qwer12v",
-                    "created_at": "2022-08-29 12:09",
-                    "updated_at": "2022-09-03 10:55",
-                    "users": {
-                        "user_email": "rudals951004@gmail.com",
-                        "user_detail": {
-                            "user_name": "min ja",
-                            "user_unique_id": "test",
-                            "user_img": "이미지가 없다링"
-                        }
+                },
+                "visit_record": [
+                    {
+                        "visit_record_id": 1,
+                        "post_id": 1
                     }
-                }
-            },
+                ],
+                "like_record": [
+                    {
+                        "like_record_id": 7,
+                        "post_id": 1
+                    }
+                ]
+            }
         ]
     }
 - |속성|타입|설명|
