@@ -205,6 +205,12 @@ const WritePost = () => {
 							addImageBlobHook: async (blob, callback) => {
 								// blob -> file로 만든 후
 								const fileReader = new File([blob], blob.name, {type: blob.type});
+								const filetype = blob.type.split('/')[1]
+								if(!["jpg","jpeg","png"].includes(filetype)){
+									alert("이미지 파일을 넣어주십시오");
+									return
+								}
+								console.log(blob)
 								// formdata에 삽입
 								const formdata = new FormData()
 								formdata.append("file", fileReader)
@@ -215,7 +221,7 @@ const WritePost = () => {
 									{
 										"Content-Type": "multipart/form-data",
 									}
-								);
+								)
 								callback(img.getImg(imgFile.data.result_data.fid), blob.name);
 							},
 						}}
