@@ -7,23 +7,21 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 // Toast ColorSyntax 플러그인
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
-import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 // 한국어 플러그인
 import "@toast-ui/editor/dist/i18n/ko-kr";
 // code lightlite 플러그인
 import Prism from "prismjs";
 import "prismjs/themes/prism.css";
 import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
-import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all.js';
+import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all.js";
 
 import axios from "axios";
-import { personal } from "../api/index";
+import { personal, img } from "../api/index";
 
-import Modal from '../components/SaveModal'
+import Modal from "../components/SaveModal";
 import HeaderNoSearchBar from "../components/HeaderNoSearchBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-
 
 /**
  * post 쓰는 부분
@@ -42,7 +40,7 @@ const WritePost = () => {
 
 	const titleChange = (e) => {
 		setTitle(e.target.value);
-	}
+	};
 
 	const onChangeEditor = () => {
 		setHtml(editorRef.current.getInstance().getHTML());
@@ -59,7 +57,14 @@ const WritePost = () => {
 					personal.getPersonalPost(uniqueid, parseInt(postId)),
 					{ withCredentials: true }
 				);
-				editorRef.current.getInstance().setMarkdown(getPost.data?.result_data?.getPost?.post_body_md.replaceAll("&lt;", "<"));
+				editorRef.current
+					.getInstance()
+					.setMarkdown(
+						getPost.data?.result_data?.getPost?.post_body_md.replaceAll(
+							"&lt;",
+							"<"
+						)
+					);
 				setTitle(getPost.data?.result_data?.getPost?.post_title);
 			};
 			getPostFun();
@@ -69,7 +74,14 @@ const WritePost = () => {
 					personal.getPersonalTmppost(parseInt(tmppostid)),
 					{ withCredentials: true }
 				);
-				editorRef.current.getInstance().setMarkdown(getPost.data?.result_data?.tmppost_body_md.replaceAll("&lt;", "<"));
+				editorRef.current
+					.getInstance()
+					.setMarkdown(
+						getPost.data?.result_data?.tmppost_body_md.replaceAll(
+							"&lt;",
+							"<"
+						)
+					);
 				setTitle(getPost.data?.result_data?.tmppost_title);
 			};
 			getTmpPostFun();
@@ -81,19 +93,18 @@ const WritePost = () => {
 	 */
 	const onClickModalOpen = () => {
 		if (!title) {
-			alert("제목을 먼저 입력해주세요")
+			alert("제목을 먼저 입력해주세요");
 		} else {
 			setModalShow(true);
 		}
-	}
-	console.log(dataHtml);
+	};
 
 	/**
 	 * 포스트 임시 저장
 	 */
 	const onClickPresave = async () => {
 		if (!title) {
-			alert("제목을 먼저 입력해주세요")
+			alert("제목을 먼저 입력해주세요");
 		}
 		// if (postId) {
 		// 	await axios.delete(personal.deletePersonalPost(postId), { withCredentials: true });
@@ -112,7 +123,7 @@ const WritePost = () => {
 				headers: { "Content-Type": `application/json` },
 			}
 		);
-		navigate("/presave")
+		navigate("/presave");
 	};
 
 	return (
@@ -122,7 +133,12 @@ const WritePost = () => {
 
 			<WriteWrap>
 				<Title>
-					<input type="text" onChange={titleChange} value={title} placeholder="제목을 입력하세요"></input>
+					<input
+						type="text"
+						onChange={titleChange}
+						value={title}
+						placeholder="제목을 입력하세요"
+					></input>
 				</Title>
 				<WriteBox>
 					<Editor
@@ -135,7 +151,9 @@ const WritePost = () => {
 						initialEditType="markdown" // 처음 언어 설정을 마크다운으로 설정
 						useCommandShortcut={true} // 키보드 입력 컨트롤 방지
 						hideModeSwitch={true} // 한 가지 타입(마크다운)만 사용하고싶으면 설정
-						plugins={[[codeSyntaxHighlight, { highlighter: Prism }],]}
+						plugins={[
+							[codeSyntaxHighlight, { highlighter: Prism }],
+						]}
 						language="ko-KR" // 초기 언어 세팅: 한글
 						toolbarItems={[
 							["heading", "bold", "italic", "strike"],
@@ -183,6 +201,24 @@ const WritePost = () => {
 							"mark",
 							"table",
 						]}
+						hooks={{
+							addImageBlobHook: async (blob, callback) => {
+								// blob -> file로 만든 후
+								const fileReader = new File([blob], blob.name, {type: blob.type});
+								// formdata에 삽입
+								const formdata = new FormData()
+								formdata.append("file", fileReader)
+								// axios로 formdata 넣어서 전송
+								const imgFile = await axios.post(
+									img.createImg(),
+									formdata,
+									{
+										"Content-Type": "multipart/form-data",
+									}
+								);
+								callback(img.getImg(imgFile.data.result_data.fid), blob.name);
+							},
+						}}
 					/>
 				</WriteBox>
 
@@ -211,8 +247,6 @@ const WritePost = () => {
 	);
 };
 export default WritePost;
-
-
 
 //css
 
@@ -257,7 +291,7 @@ const Title = styled.div`
 	display: flex;
 	justify-content: center;
 
-	input{
+	input {
 		background-color: var(--gray50);
 		border: none;
 		width: 90%;
@@ -265,7 +299,7 @@ const Title = styled.div`
 		font-size: 20px;
 		font-weight: bold;
 	}
-	input:focus{
+	input:focus {
 		outline: none;
 	}
-`
+`;
