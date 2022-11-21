@@ -13,7 +13,6 @@
             "user_detail": {
                 "user_name": "string",
                 "user_unique_id": "string",
-                "user_nickname": "string",
                 "user_introduce": "string",
                 "user_img": "string"
             },
@@ -31,7 +30,6 @@
     |user_email|string|유저 이메일|
     |user_name|string|유저 이름|
     |user_unique_id|string|유저 유니크 아이디|
-    |user_nickname|string|유저 닉네임|
     |user_introduce|string|유저 소개|
     |user_img|string|유저 이미지 url|
     |sns_name|string|유저 sns상 이름|
@@ -43,14 +41,12 @@
 - ``` json
     {
         "user_unique_id": String,
-        "user_nickname": String,
         "user_introduce": String,
         "user_img": String
     }
 - |속성|타입|설명|
     |---|---|---|
     |user_unique_id|string|유저 유니크 아이디|
-    |user_nickname|string|유저 닉네임|
     |user_introduce|string|유저 소개|
     |user_img|string|유저 이미지 url|
 - authentication 쿠키 필요
@@ -65,7 +61,6 @@
             "user_detail": {
                 "user_name": "string",
                 "user_unique_id": "string",
-                "user_nickname": "string",
                 "user_introduce": "string",
                 "user_img": "string"
             },
@@ -83,7 +78,6 @@
     |user_email|string|유저 이메일|
     |user_name|string|유저 이름|
     |user_unique_id|string|유저 유니크 아이디|
-    |user_nickname|string|유저 닉네임|
     |user_introduce|string|유저 소개|
     |user_img|string|유저 이미지 url|
     |sns_name|string|유저 sns 이름|
@@ -104,7 +98,6 @@
             "user_detail": {
                 "user_name": "string",
                 "user_unique_id": "string",
-                "user_nickname": "string",
                 "user_introduce": "string",
                 "user_img": "string"
             },
@@ -122,7 +115,6 @@
     |user_email|string|유저 이메일|
     |user_name|string|유저 이름|
     |user_unique_id|string|유저 유니크 아이디|
-    |user_nickname|string|유저 닉네임|
     |user_introduce|string|유저 소개|
     |user_img|string|유저 이미지 url|
     |sns_name|string|유저 sns 이름|

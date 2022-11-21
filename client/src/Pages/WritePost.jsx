@@ -45,6 +45,7 @@ const WritePost = () => {
 	const onChangeEditor = () => {
 		setHtml(editorRef.current.getInstance().getHTML());
 		setMd(editorRef.current.getInstance().getMarkdown());
+		console.log(dataHtml.replaceAll(/<[^>]*>?/g,""))
 	};
 
 	/**

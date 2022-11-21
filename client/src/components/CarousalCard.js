@@ -84,7 +84,7 @@ export default class Carousel extends Component {
                   <img
                     className="user-profile"
                     src={post.users?.user_detail.user_img}
-                    alt="사용자 프로필 이미지"
+                    // alt="사용자 프로필 이미지"
                   ></img>
                   <span>{post.users?.user_detail.user_unique_id}</span>
                 </div>
