@@ -80,6 +80,7 @@ function OptionModal(props) {
       );
       document.location.href = `/${uniqueid}/${props.postId}`
     } else {
+      // 임시 게시글이면 삭제하고 게시글로 올린다.
       if (props.tmpPostId) {
         await axios.delete(personal.deletePersonalTmpPost(parseInt(props.tmpPostId)), { withCredentials: true });
       }
