@@ -3,6 +3,8 @@ import Slider from "react-slick";
 import styled from "styled-components";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { img } from '../api';
+
 
 // const MainCanvas = styled.SliderItem`
 //   position: relative;
@@ -40,7 +42,7 @@ import 'slick-carousel/slick/slick-theme.css';
  * @param {string} userUniqueId 
  * @param {number} postId 
  */
-const movePost = (userUniqueId,postId) => {
+const movePost = (userUniqueId, postId) => {
   document.location.href = `/${userUniqueId}/${postId}`;
 };
 
@@ -83,8 +85,8 @@ export default class Carousel extends Component {
                 <div className="user">
                   <img
                     className="user-profile"
-                    src={post.users?.user_detail.user_img}
-                    // alt="사용자 프로필 이미지"
+                    src={img.getImg(post.users?.user_detail.user_img)}
+                    alt=""
                   ></img>
                   <span>{post.users?.user_detail.user_unique_id}</span>
                 </div>
@@ -154,7 +156,7 @@ const PostWrap = styled.button`
     margin-left: 20px;
     display: block;
     width: 85%;
-    bottom: 60px;
+    bottom: 12%;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.2;
