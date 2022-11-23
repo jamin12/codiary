@@ -30,6 +30,7 @@ const WritePost = () => {
 	const [modalShow, setModalShow] = useState(false);
 	const [dataHtml, setHtml] = useState("");
 	const [dataMd, setMd] = useState("");
+	const [dataTxt, setTxt] = useState("");
 	const [title, setTitle] = useState("");
 	const { postId, tmppostid } = useParams();
 	const { uniqueid } = useSelector((state) => state.auth.User);
@@ -45,7 +46,7 @@ const WritePost = () => {
 	const onChangeEditor = () => {
 		setHtml(editorRef.current.getInstance().getHTML());
 		setMd(editorRef.current.getInstance().getMarkdown());
-		console.log(dataHtml.replaceAll(/<[^>]*>?/g,""))
+		setTxt(dataHtml.replaceAll(/<[^>]*>?/g, ""));
 	};
 
 	/**
@@ -87,7 +88,7 @@ const WritePost = () => {
 			};
 			getTmpPostFun();
 		}
-	}, []);
+	}, [postId, tmppostid, uniqueid]);
 
 	/**
 	 * 모달창 open
@@ -107,9 +108,6 @@ const WritePost = () => {
 		if (!title) {
 			alert("제목을 먼저 입력해주세요");
 		}
-		// if (postId) {
-		// 	await axios.delete(personal.deletePersonalPost(postId), { withCredentials: true });
-		// }
 		// TODO: body부분 값 변경
 		await axios.post(
 			personal.createPersonalTmpPost(),
@@ -117,13 +115,18 @@ const WritePost = () => {
 				tmppost_title: title,
 				tmppost_body_md: dataMd,
 				tmppost_body_html: dataHtml,
-				tmppost_txt: "create test txt1",
+				tmppost_txt: dataTxt,
 			},
 			{
 				withCredentials: true,
 				headers: { "Content-Type": `application/json` },
 			}
 		);
+		if (postId) {
+			await axios.delete(personal.deletePersonalPost(postId), {
+				withCredentials: true,
+			});
+		}
 		navigate("/presave");
 	};
 
@@ -205,16 +208,19 @@ const WritePost = () => {
 						hooks={{
 							addImageBlobHook: async (blob, callback) => {
 								// blob -> file로 만든 후
-								const fileReader = new File([blob], blob.name, {type: blob.type});
-								const filetype = blob.type.split('/')[1]
-								if(!["jpg","jpeg","png"].includes(filetype)){
+								const fileReader = new File([blob], blob.name, {
+									type: blob.type,
+								});
+								const filetype = blob.type.split("/")[1];
+								if (
+									!["jpg", "jpeg", "png"].includes(filetype)
+								) {
 									alert("이미지 파일을 넣어주십시오");
-									return
+									return;
 								}
-								console.log(blob)
 								// formdata에 삽입
-								const formdata = new FormData()
-								formdata.append("file", fileReader)
+								const formdata = new FormData();
+								formdata.append("file", fileReader);
 								// axios로 formdata 넣어서 전송
 								const imgFile = await axios.post(
 									img.createImg(),
@@ -222,8 +228,11 @@ const WritePost = () => {
 									{
 										"Content-Type": "multipart/form-data",
 									}
-								)
-								callback(img.getImg(imgFile.data.result_data.fid), blob.name);
+								);
+								callback(
+									img.getImg(imgFile.data.result_data.fid),
+									blob.name
+								);
 							},
 						}}
 					/>
@@ -246,7 +255,7 @@ const WritePost = () => {
 				title={title}
 				dataMd={dataMd}
 				dataHtml={dataHtml}
-				dataTxt={dataHtml.innerText}
+				dataTxt={dataTxt}
 				postId={postId}
 				tmpPostId={tmppostid}
 			/>
