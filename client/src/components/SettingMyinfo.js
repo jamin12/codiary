@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import { IoClose } from "react-icons/io5";
 import '../App.css'
 import axios from 'axios';
-import { personal, user } from '../api';
+import { personal, user, img } from '../api';
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../reducers/Action";
+import { login, logout } from "../reducers/Action";
 
 
 // 글자를 입력하면 하나씩 밖에 입력되는 현상 해결해야함.
@@ -202,8 +203,11 @@ const Myinfo = () => {
   const [myName, setMyName] = useState({})
   const [myUniqueName, setMyUniqueName] = useState({})
   const [myIntro, setMyIntro] = useState({})
+  const [myProfileImg, setMyProfileImg] = useState("")
+  const [myProfileImgUrl, setMyProfileImgrul] = useState("")
   const dispatch = useDispatch();
-
+  const nevigate = useNavigate();
+  const fileInput = React.createRef();
   // 회원탈퇴(setting에서) 버튼 클릭
   const clickWithdraw = () => {
     setLoad((prev) => !prev)
@@ -218,9 +222,12 @@ const Myinfo = () => {
         user.getMyInfo(),
         { withCredentials: true }
       );
-      setMyName(getMyInfo.data.result_data.user_detail.user_name)
-      setMyUniqueName(getMyInfo.data.result_data.user_detail.user_unique_id)
-      setMyIntro(getMyInfo.data.result_data.user_detail.user_introduce)
+      setMyName(getMyInfo.data.result_data.user_detail.user_name);
+      setMyUniqueName(getMyInfo.data.result_data.user_detail.user_unique_id);
+      setMyIntro(getMyInfo.data.result_data.user_detail.user_introduce);
+      setMyProfileImg(getMyInfo.data.result_data.user_detail.user_img);
+      setMyProfileImgrul(img.getImg(getMyInfo.data.result_data.user_detail.user_img));
+
     };
     getMyInfoFun();
   }, []);
@@ -246,15 +253,18 @@ const Myinfo = () => {
           {
             user_unique_id: myUniqueName,
             user_introduce: myIntro,
-            user_img: "front test img url"
+            user_img: myProfileImg
           },
           {
             withCredentials: true
           })
-          setMyName(changeMyInfo.data.result_data.user_detail.user_name)
-          setMyUniqueName(changeMyInfo.data.result_data.user_detail.user_unique_id)
-          setMyIntro(changeMyInfo.data.result_data.user_detail.user_introduce)
-          dispatch(login(changeMyInfo.data.result_data.user_detail.user_unique_id));
+        setMyName(changeMyInfo.data.result_data.user_detail.user_name)
+        setMyUniqueName(changeMyInfo.data.result_data.user_detail.user_unique_id)
+        setMyIntro(changeMyInfo.data.result_data.user_detail.user_introduce)
+        setMyProfileImg(changeMyInfo.data.result_data.user_detail.user_img)
+        setMyProfileImgrul(img.getImg(changeMyInfo.data.result_data.user_detail.user_img));
+
+        dispatch(login(changeMyInfo.data.result_data.user_detail.user_unique_id));
 
       }
     } else {
@@ -276,10 +286,12 @@ const Myinfo = () => {
       await axios.delete(user.deleteUser(), {
         withCredentials: true
       });
-      // codiary 메인화면으로 이동
+      dispatch(logout(""))
+      nevigate("/")
     } else {
       alert('이름이 올바르지 않습니다. 다시 확인해주세요.')
     }
+
   }
 
   // 회원탈퇴창 취소(닫기)버튼
@@ -287,12 +299,57 @@ const Myinfo = () => {
     setLoad(false);
   }
 
+  /**
+   * 파일 탐색기 띄우기
+   */
+  const callFileInput = () => {
+    fileInput.current.click();
 
+  }
+
+  /**
+   * 이미지 변경
+   * 
+   * @param {*} e 이벤트 파라미터
+   * @returns 
+   */
+  const changeMyImg = async (e) => {
+    const blob = e.target.files[0]
+    // blob -> file로 만든 후
+    const fileReader = new File([blob], blob.name, {
+      type: blob.type,
+    });
+    const filetype = blob.type.split("/")[1];
+    if (
+      !["jpg", "jpeg", "png"].includes(filetype)
+    ) {
+      alert("이미지 파일을 넣어주십시오");
+      return;
+    }
+    // formdata에 삽입
+    const formdata = new FormData();
+    formdata.append("file", fileReader);
+    // axios로 formdata 넣어서 전송
+    const imgFile = await axios.post(
+      img.createImg(),
+      formdata,
+      {
+        "Content-Type": "multipart/form-data",
+      }
+    );
+    setMyProfileImg(imgFile.data.result_data.fid);
+    setMyProfileImgrul(img.getImg(imgFile.data.result_data.fid));
+  }
 
 
   return (
     <MainWrap>
-      <ImgBox> 클릭해서 <br /> 이미지 변경 </ImgBox>
+      <ImgBox onClick={callFileInput}>
+        {/* TODO(경민 -> 이묘): 이미지랑 글자 css 적용 */}
+        클릭 후 이미지 변경
+        <img src={myProfileImgUrl} alt='asdf'></img>
+        <input type="file" ref={fileInput} onChange={changeMyImg} style={{ display: "none" }}></input>
+      </ImgBox>
 
       <InputGroup>
         <div className="user-name">
