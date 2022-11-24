@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Carousel from "../components/CarousalCard";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { main } from "../api/index";
 import axios from "axios";
 import Login from "../components/Login.jsx";
+import { useSelector, useDispatch } from "react-redux";
+import { baseUrl } from "../api";
+import { logout } from "../reducers/Action";
+
 
 const MainWrap = styled.div`
 	.container {
@@ -146,11 +150,13 @@ const Menu = styled.div`
 
 const Home = () => {
 	const [isOpen, setMenu] = useState(false);
-	const [searchWord, setSearch] = useState("");
-	const [searchPostInMain, setSearchPostInMain] = useState({});
 	const [popularPost, setPopularPost] = useState([]);
-
 	const [loginOpen, setLogin] = useState(false);
+	const { uniqueid } = useSelector((state) => state.auth.User);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+
 
 	/**
 	 * 로그인 모달 여는 onClick
@@ -159,11 +165,12 @@ const Home = () => {
 		setLogin(true);
 	}
 
+	const navigation = useNavigate();
 	/**
 	 * search page 로 이동하는 onClick
 	 */
 	const goToSearchPage = () => {
-
+		navigation("/search", { state: { type: 'home' } });
 	}
 
 
@@ -187,6 +194,11 @@ const Home = () => {
 		setMenu((isOpen) => !isOpen);
 	};
 
+	const logoutClick = async () => {
+		axios.get(`${baseUrl}/logout`, { withCredentials: true });
+		dispatch(logout(""))
+		navigate("/")
+	}
 	return (
 		<MainWrap>
 
@@ -204,42 +216,48 @@ const Home = () => {
 				></ProfileIMG>
 				{/* 메뉴창 */}
 				<Menu>
-					<div className={isOpen ? "menuON" : "menuOFF"}>
-						<p>
-							<Link to="/write">새 글쓰기</Link>
-						</p>
-						<p>
-							<Link to="/:userId">내 글 목록</Link>
-						</p>
-						<p>
-							<Link to="/:userId/calender">내 코디어리</Link>
-						</p>
-						<p>
-							<Link to="/:userId/presave">임시글 목록</Link>
-						</p>
-						<p>
-							<Link to="/:userId/visite">방문&좋아요 목록</Link>
-						</p>
-						<p>
-							<Link to="/setting">설정</Link>
-						</p>
-						<p>
-							<Link to="/:userId/visiterstat">방문자 통계</Link>
-						</p>
-						<p className="logout" onClick={loginModal}>로그아웃</p>
-					</div>
+					{uniqueid !== '' &&
+						<div className={isOpen ? "menuON" : "menuOFF"}>
+							<p>
+								<Link to="/write">새 글쓰기</Link>
+							</p>
+							<p>
+								<Link to={`/${uniqueid}`}>내 글 목록</Link>
+							</p>
+							<p>
+								<Link to={`/${uniqueid}/calender`}>내 코디어리</Link>
+							</p>
+							<p>
+								<Link to="/presave">임시글 목록</Link>
+							</p>
+							<p>
+								<Link to="/visite-like">방문&좋아요 목록</Link>
+							</p>
+							<p>
+								<Link to="/setting">설정</Link>
+							</p>
+							<p>
+								<Link to="/visiterstat">방문자 통계</Link>
+							</p>
+							<p className="logout" onClick={logoutClick}>로그아웃</p>
+						</div>
+					}
+					{
+						uniqueid === '' &&
+						<div className={isOpen ? "menuON" : "menuOFF"}>
+							<p className="logout" onClick={loginModal}>로그인</p>
+						</div>
+					}
 				</Menu>
 
 				{/* 홈화면 */}
 				<HomeTitle>CODIARY</HomeTitle>
 				{/* 검색창 */}
-				<Link to="/search">
-					<MainSearchBar
-						type="button"
-						onClick={goToSearchPage}
-						value="SEARCH"
-					></MainSearchBar>
-				</Link>
+				<MainSearchBar
+					type="button"
+					onClick={goToSearchPage}
+					value="SEARCH"
+				></MainSearchBar>
 
 			</div>
 

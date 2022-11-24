@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import "../css/reset.css";
 import { devices } from "../css/DeviceSize";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Login from "./Login";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { baseUrl } from "../api";
+import { logout } from "../reducers/Action";
 
 // 스타일 설정
 // 1680*900 기준 작성
@@ -36,7 +40,6 @@ const SearchWrap = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
-
 const Profile = styled.div`
   width: 100px;
   height: 40px;
@@ -56,7 +59,7 @@ const Profile = styled.div`
       min-width: 40px;
       height: 40px;
       /* background-image: url(${(props) =>
-        props.img || "../IMG/KAKAO.png.png"}); */
+    props.img || "../IMG/KAKAO.png.png"}); */
       background-color: orange;
       background-size: cover;
       background-repeat: no-repeat;
@@ -209,11 +212,14 @@ const BtnSearch = styled.div`
   }
 `
 
-// 회원 정보를 받아와서 프로필 사진을 불러와야 함
+// TODO: 회원 정보를 받아와서 프로필 사진을 불러와야 함
 const SearchProfile = () => {
   const [isOpen, setMenu] = useState(false);
-  const [searchWord, setSearch] = useState("");
   const [loginOpen, setLogin] = useState(false);
+  const { uniqueid } = useSelector((state) => state.auth.User);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   // TODO(이묘): 쿠키에 authentication에 있는지 확인 후에 로그인이 돼었느냐를 체크해야함
 
   const toggleMenu = () => {
@@ -223,6 +229,26 @@ const SearchProfile = () => {
   const loginModal = () => {
     setLogin(true);
   };
+
+  /**
+   * 검색 버튼을 누른 경로 체크하는 useEffect
+   */
+  const location = useLocation();
+
+  /**
+   * /search로 이동하는 함수
+   */
+  const navigation = useNavigate();
+  const onClickSearch = () => {
+    // navigation("/search", { state: { type: selectType() } });
+    navigation("/search", { state: { type: location } });
+  }
+
+  const logoutClick = async () => {
+    await axios.get(`${baseUrl}/logout`, { withCredentials: true });
+    dispatch(logout(""))
+    navigate("/")
+  }
 
   return (
     <Main>
@@ -237,12 +263,10 @@ const SearchProfile = () => {
 
         <SearchWrap>
           <BtnSearch>
-            <Link to="/search">
-              <ion-icon
-                size="small"
-                name="search-outline"
-              ></ion-icon>
-            </Link>
+            <ion-icon onClick={onClickSearch}
+              size="small"
+              name="search-outline"
+            ></ion-icon>
           </BtnSearch>
 
           <Profile>
@@ -256,33 +280,43 @@ const SearchProfile = () => {
           </Profile>
 
           <Menu>
-            <div className={isOpen ? "menuON" : "menuOFF"}>
-              <Link className="tagP" to="/write">
-                새 글쓰기
-              </Link>
-              <Link className="tagP" to="/:userId">
-                내 글 목록
-              </Link>
-              <Link className="tagP" to="/:userId/calender">
-                내 코디어리
-              </Link>
-              <Link className="tagP" to="/:userId/presave">
-                임시글 목록
-              </Link>
-              <Link className="tagP" to="/:userId/visite">
-                방문&좋아요 목록
-              </Link>
-              <Link className="tagP" to="/setting">
-                설정
-              </Link>
-              <Link className="tagP" to="/:userId/visiterstat">
-                방문자 통계
-              </Link>
+            {uniqueid !== '' &&
+              <div className={isOpen ? "menuON" : "menuOFF"}>
+                <Link className="tagP" to="/write">
+                  새 글쓰기
+                </Link>
+                <Link className="tagP" to={`/${uniqueid}`}>
+                  내 글 목록
+                </Link>
+                <Link className="tagP" to={`/${uniqueid}/calender`}>
+                  내 코디어리
+                </Link>
+                <Link className="tagP" to="/presave">
+                  임시글 목록
+                </Link>
+                <Link className="tagP" to="/visite-like">
+                  방문&좋아요 목록
+                </Link>
+                <Link className="tagP" to="/setting">
+                  설정
+                </Link>
+                <Link className="tagP" to="/visiterstat">
+                  방문자 통계
+                </Link>
 
-              <p className="logout tagP" onClick={loginModal}>
-                로그인
-              </p>
-            </div>
+                <p className="logout tagP" onClick={logoutClick}>
+                  로그아웃
+                </p>
+              </div>
+            }
+            {uniqueid === '' &&
+              <div className={isOpen ? "menuON" : "menuOFF"}>
+
+                <p className="logout tagP" onClick={loginModal}>
+                  로그인
+                </p>
+              </div>
+            }
           </Menu>
         </SearchWrap>
       </Wrap>

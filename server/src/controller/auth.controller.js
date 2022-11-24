@@ -3,15 +3,21 @@ const passport = require('passport');
 const catchAsync = require('../utils/catchAsync');
 const resultDto = require('../dto/resultDTO');
 const httpStatus = require('http-status');
-const {userService} = require("../service/index")
+const { userService } = require("../service/index")
 
 const uService = new userService();
 
 const output = {
 	index: catchAsync(async (req, res) => {
+		res.redirect("http://127.0.0.1:4000/authenti/login");
+	}),
+	loginSuccess: catchAsync(async (req, res) => {
 		const getUser = await uService.getUserByUserId(req.user?.user_id);
-		res.cookie("uniqueid", getUser?.user_detail?.user_unique_id);
-		res.redirect("http://127.0.0.1:4000/");
+
+		res.send(resultDto(httpStatus.OK, "login success", {
+			uniqueid: getUser?.user_detail?.user_unique_id,
+			user_role: getUser?.user_role
+		}))
 	}),
 
 	loginfail: catchAsync(async (req, res) => {
@@ -20,7 +26,7 @@ const output = {
 
 	logout: catchAsync((req, res) => {
 		req.session.destroy();
-		res.send('http://jamin2.shop');
+		res.send(resultDto(httpStatus.OK, "logout success"));
 	}),
 };
 

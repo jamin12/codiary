@@ -134,52 +134,43 @@ const Category = styled.div`
   }
 `
 // CSS END
-
 const MainCategory = (category_id, sub_category_id) => {
 
   // TODO: 카테고리 이름 가져오기
   // Add sub category
   const addSubCategory = async () => {
-    await axios.post(personal.createPersonalCategory(),
-      {
-        category_name: "",
-        sub_category_id: sub_category_id
-      },
-      {
-        withCredentials: true,
-        headers: { "Content-Type": "application/json" }
-      }
-    )
+    // await axios.post(personal.createPersonalCategory(),
+    //   {
+    //     category_name: "",
+    //     sub_category_id: sub_category_id
+    //   },
+    //   {
+    //     withCredentials: true,
+    //     headers: { "Content-Type": "application/json" }
+    //   }
+    // )
     alert("서브카테고리 추가")
   }
 
-  // TODO: 삭제 기능을 따로 나눌 필요 없음
   // delete main Category
-  const deleteMainCategory = async (category_id) => {
-    await axios.delete(personal.deletePersonalCategory(category_id),
-      {
-        withCredentials: true,
-      });
+  const deleteCategory = async (category_id) => {
+    // await axios.delete(personal.deletePersonalCategory(category_id),
+    //   {
+    //     withCredentials: true,
+    //   });
     alert('메인카테고리 삭제')
   }
 
-  // delete sub Category
-  const deleteSubCategory = async (sub_category_id) => {
-    await axios.delete(personal.deletePersonalCategory(sub_category_id),
-      {
-        withCredentials: true,
-      });
-    alert('서브 카테고리 삭제')
-  }
 
 
 
 
   return (
     <Category>
-      <IoClose className='category-delete' onClick={deleteMainCategory} />
+      <IoClose className='category-delete' onClick={deleteCategory} />
 
       <div className='category-mainfolder'>
+        
         <input id='mainT1' className='maintitle' type='text' name='maintitle'></input>
         <IoChevronDown className='drop-down off' />
       </div>
@@ -187,7 +178,7 @@ const MainCategory = (category_id, sub_category_id) => {
       <div className="category-subfolder">
         <div className="category-subtitle">
           <input id='subtitle' type='text' name='subtitle'></input>
-          <IoRemove className='folder-remove' onClick={deleteSubCategory} />
+          <IoRemove className='folder-remove' onClick={deleteCategory} />
         </div>
         <IoAdd className='add-subfolder' onClick={addSubCategory} />
       </div>

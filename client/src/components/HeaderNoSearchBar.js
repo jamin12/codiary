@@ -1,17 +1,20 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import Login from './Login';
 import { devices } from '../css/DeviceSize';
+import { useSelector } from "react-redux";
+
 
 
 const HeaderNoSearchBar = () => {
 
   const [isOpen, setMenu] = useState(false);
   const [loginOpen, setLogin] = useState(false);
+  const { uniqueid } = useSelector((state) => state.auth.User);
 
   const toggleMenu = () => {
-      setMenu(isOpen => !isOpen);
+    setMenu(isOpen => !isOpen);
   }
 
   const loginModal = () => {
@@ -20,7 +23,7 @@ const HeaderNoSearchBar = () => {
 
   //TODO: 로그인한 후에 프로필 사진 가져올 것
 
-  return(
+  return (
     <Main>
       {
         loginOpen && <Login setLogin={setLogin} />
@@ -35,27 +38,34 @@ const HeaderNoSearchBar = () => {
           </Link>
         </GotoHome>
 
-          <Profile>
-            <div className='userBox'>
-              <div className='imgBox' img='../IMG/profile_test.png'>
-              </div>
+        <Profile>
+          <div className='userBox'>
+            <div className='imgBox' img='../IMG/profile_test.png'>
             </div>
-            <div className={isOpen ? 'menuToggleON' : 'menuToggleOFF'} onClick={toggleMenu}></div>
-          </Profile>
+          </div>
+          <div className={isOpen ? 'menuToggleON' : 'menuToggleOFF'} onClick={toggleMenu}></div>
+        </Profile>
 
-          <Menu>
+        <Menu>
+          {uniqueid !== '' &&
             <div className={isOpen ? 'menuON' : 'menuOFF'}>
               <Link className='tagP' to='/:userId'>내 글 목록</Link>
               <Link className='tagP' to='/write'>글쓰기</Link>
               <Link className='tagP' to='/:userId/calender'>내 코디어리</Link>
-              <Link className='tagP' to='/:userId/presave'>임시글 목록</Link>
-              <Link className='tagP' to='/:userId/visite'>방문&좋아요 목록</Link>
+              <Link className='tagP' to='/presave'>임시글 목록</Link>
+              <Link className='tagP' to='/visite-like'>방문&좋아요 목록</Link>
               <Link className='tagP' to='/setting'>설정</Link>
-              <Link className='tagP' to='/:userId/visiterstat'>방문자통계</Link>
+              <Link className='tagP' to='/visiterstat'>방문자통계</Link>
+              <p className='logout tagP' onClick={loginModal}>로그아웃</p>
+            </div>
+          }
+          {uniqueid === '' &&
+            <div className={isOpen ? 'menuON' : 'menuOFF'}>
               <p className='logout tagP' onClick={loginModal}>로그인</p>
             </div>
+          }
 
-          </Menu>
+        </Menu>
       </Wrap>
 
     </Main>

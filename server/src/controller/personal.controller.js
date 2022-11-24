@@ -143,6 +143,14 @@ const output = {
 			resultDto(httpStatus.OK, "associateContents", result_contents)
 		);
 	}),
+
+	// 댓글 조회
+	getPersonalComments: catchAsync(async (req, res) => {
+		const result_contents = await pService.getCommnets(
+			req.params.postid,
+		);
+		res.send(resultDto(httpStatus.OK, "getcommnets", result_contents));
+	}),
 };
 
 const input = {

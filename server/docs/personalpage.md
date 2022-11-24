@@ -159,7 +159,6 @@
                     "user_detail": {
                         "user_name": "min ja",
                         "user_unique_id": "test",
-                        "user_nickname": "",
                         "user_img": "이미지가 없다링"
                     }
                 }
@@ -180,7 +179,6 @@
     |user_email|string|유저 이메일|
     |user_name|string|유저 이름|
     |user_unique_id|string|유저 유니크 아이디|
-    |user_nickname|string|유저 닉네임|
     |user_img|string|유저 이미지|
     |created_at|string|생성 날짜|
     |updated_at|string|업데이트 날짜|
@@ -218,7 +216,6 @@
                         "user_detail": {
                             "user_name": "min ja",
                             "user_unique_id": "test",
-                            "user_nickname": "",
                             "user_img": "https://lh3.googleusercontent.com/a/AItbvmkab50Pb4HAnuwMI-UWHJ5YXnMAbAh5zYR2aRy5=s96-c"
                         }
                     }
@@ -242,7 +239,6 @@
     |user_email|string|유저 이메일|
     |user_name|string|유저 이름|
     |user_unique_id|string|유저 유니크 아이디|
-    |user_nickname|string|유저 닉네임|
     |user_img|string|유저 이미지|
     |post_update_history_id|string|포스트 업데이트 기록 아이디|
     |update_history|datetime|포스트 업데이트 기록 날짜|
@@ -307,25 +303,6 @@
                 "like_count": 0,
                 "created_at": "2022-08-29 12:09",
                 "updated_at": "2022-08-29 14:43",
-                "comments": [
-                    {
-                        "comments_id": 3,
-                        "sub_comments_id": null,
-                        "post_id": 26,
-                        "comments_body": "덧글",
-                        "created_at": "2022-08-26 01:23",
-                        "updated_at": "2022-08-31 15:09",
-                        "users": {
-                            "user_email": "rudals951004@gmail.com",
-                            "user_detail": {
-                                "user_name": "min ja",
-                                "user_unique_id": "test",
-                                "user_nickname": "",
-                                "user_img": "이미지가 없다링"
-                            }
-                        }
-                    }
-                ],
                 "tag": [
                     {
                         "tag_id": 36,
@@ -362,7 +339,6 @@
             "user_detail": {
                 "user_name": "min ja",
                 "user_unique_id": "test",
-                "user_nickname": "",
                 "user_introduce": "저에요~",
                 "user_img": "이미지가 없다링"
             },
@@ -370,7 +346,7 @@
                 "sns_name": "min ja"
             }
         },
-            "checkLike": false
+        "checkLike": false
         }
     }
 - |속성|타입|설명|
@@ -385,9 +361,6 @@
     |post_body_html|string|포스트 html 텍스트|
     |post_txt|string|포스트 html 태그를 제외한 텍스트|
     |like_count|int|포스트 좋아요 숫자|
-    |comments_id|int|댓글 아이디|
-    |sub_comments_id|int|상위 댓글 아이디|
-    |comments_body|string|댓글 본문|
     |tag_id|int|태그 아이디|
     |tag_name|string|태그 이름|
     |like_count|int|포스트 좋아요 숫자|
@@ -401,7 +374,6 @@
     |user_name|string|유저 이름|
     |user_unique_id|string|유저 유니크 아이디|
     |user_introduce|string|유저 소개|
-    |user_nickname|string|유저 닉네임|
     |user_img|string|유저 이미지|
     |sns_name|string|sns상 유저 이름|
     |checkLike|bool|좋아요 눌렀는지 안눌렀는지 체크|
@@ -687,7 +659,6 @@
                         "user_detail": {
                             "user_name": "min ja",
                             "user_unique_id": "test",
-                            "user_nickname": "",
                             "user_img": "이미지가 없다링"
                         }
                     }
@@ -711,7 +682,6 @@
     |user_name|string|유저 이름|
     |user_unique_id|string|유저 유니크 아이디|
     |user_introduce|string|유저 소개|
-    |user_nickname|string|유저 닉네임|
     |user_img|string|유저 이미지|
     |created_at|string|생성 날짜|
     |updated_at|string|업데이트 날짜|
@@ -792,7 +762,6 @@
                         "user_detail": {
                             "user_name": "min ja",
                             "user_unique_id": "test",
-                            "user_nickname": "",
                             "user_img": "이미지가 없다링"
                         }
                     }
@@ -816,7 +785,6 @@
     |user_name|string|유저 이름|
     |user_unique_id|string|유저 유니크 아이디|
     |user_introduce|string|유저 소개|
-    |user_nickname|string|유저 닉네임|
     |user_img|string|유저 이미지|
     |created_at|string|생성 날짜|
     |updated_at|string|업데이트 날짜|
@@ -884,6 +852,53 @@
     |status|int|상태코드|
     |message|string|메시지|
 
+## __<span style="color:#9999ff">댓글 조회</span>__
+## __<span style="color:#ff9933">요청</span>__ __[PATCH] /comments/g/:postid__
+- |속성|타입|설명|
+    |---|---|---|
+    |postid *|int|게시글 아이디(필수)|
+## __<span style="color:#ff9933">응답</span>__
+- ``` json
+    {
+        "status": 200,
+        "message": "getcommnets",
+        "result_data": [
+            {
+                "comments_id": 1,
+                "sub_comments_id": null,
+                "post_id": 1,
+                "comments_body": "좋아요",
+                "created_at": "2022-11-09 07:53",
+                "updated_at": "2022-11-09 07:53",
+                "users": {
+                    "user_email": "rudals951004@gmail.com",
+                    "user_detail": {
+                        "user_name": "min ja",
+                        "user_unique_id": "jamin",
+                        "user_img": "https://lh3.googleusercontent.com/a/AItbvmkab50Pb4HAnuwMI-UWHJ5YXnMAbAh5zYR2aRy5=s96-c"
+                    }
+                }
+            },
+        ]
+    }
+- |속성|타입|설명|
+    |---|---|---|
+    |status|int|상태코드|
+    |message|string|메시지|
+    |**result_data**|json|결과 값|
+    |||
+    |post_id|int|포스트 아이디|    
+    |comments_id|int|댓글 아이디|
+    |sub_comments_id|int|상위 댓글 아이디|
+    |comments_body|string|댓글 본문|
+    |tmppost_body_md|string|임시포스트 md 텍스트|
+    |user_email|string|유저 이메일|
+    |user_name|string|유저 이름|
+    |user_unique_id|string|유저 유니크 아이디|
+    |user_introduce|string|유저 소개|
+    |user_img|string|유저 이미지|
+    |created_at|string|생성 날짜|
+    |updated_at|string|업데이트 날짜|
 ## __<span style="color:#9999ff">댓글 생성</span>__
 ## __<span style="color:#ff9933">요청</span>__ __[POST] /comments__
 - ``` json
@@ -914,6 +929,8 @@
     |**result_data**||
     ||||
     |comment_id|int|댓글 아이디|
+
+
 
 ## __<span style="color:#9999ff">댓글 수정</span>__
 ## __<span style="color:#ff9933">요청</span>__ __[PATCH] /comments/:commentid__
@@ -961,7 +978,7 @@
 - |속성|타입|설명|
     |---|---|---|
     |searchword *|int|검색 단어(필수)</br>없으면 날짜순으로 전송됨|
-    |searchtype *|int|검색 타입(필수)</br>0 : 개인 포스트 페이지에서 검색</br>1 : 개인 임시저장 페이지에서 검색</br>2 : 개인 방문 목록에서 검색</br>3 : 개인 좋아요 목록에서 검색|
+    |searchtype *|int|검색 타입(필수)</br>0 : 개인 포스트 페이지에서 검색</br>1 : 개인 임시저장 페이지에서 검색</br>2 : 개인 방문 좋아요 목록에서 검색|
     |offset *|int|현재 페이지 번호 (필수)|
     |limit|int|보여줄 개수|
 - authentication 쿠키 필요
@@ -985,7 +1002,6 @@
                     "user_detail": {
                         "user_name": "min ja",
                         "user_unique_id": "test",
-                        "user_nickname": "",
                         "user_img": "이미지가 없다링"
                     }
                 }
@@ -1009,68 +1025,39 @@
             }
         ]
     }
-
-    // 2 : 개인 방문 목록에서 검색
     {
         "status": 200,
         "message": "searchContents",
         "result_data": [
             {
-                "visit_record_id": 1,
-                "post_id": 5,
-                "created_at": "2022-09-01 21:00",
-                "updated_at": "2022-09-03 11:12",
-                "posts": {
-                    "post_id": 5,
-                    "post_title": "테스으 생성",
-                    "post_body_md": "",
-                    "post_body_html": "",
-                    "post_txt": "qwer12v",
-                    "created_at": "2022-08-29 03:25",
-                    "updated_at": "2022-09-01 21:01",
-                    "users": {
-                        "user_email": "rudals951004@gmail.com",
-                        "user_detail": {
-                            "user_name": "min ja",
-                            "user_unique_id": "test",
-                            "user_nickname": "",
-                            "user_img": "이미지가 없다링"
-                        }
+                "post_id": 1,
+                "post_title": "기본개념",
+                "post_body_md": "",
+                "post_body_html": "",
+                "post_txt": "qwer",
+                "created_at": "2022-08-15 12:12",
+                "updated_at": "2022-11-16 23:26",
+                "users": {
+                    "user_email": "rudals951004@gmail.com",
+                    "user_detail": {
+                        "user_name": "min ja",
+                        "user_unique_id": "test",
+                        "user_img": "https://lh3.googleusercontent.com/aAItbvmkab50Pb4HAnuwMI-UWHJ5YXnMAbAh5zYR2aRy5=s96-c"
                     }
-                }
-            },
-        ]
-    }
-
-    // 3 : 개인 좋아요 목록에서 검색
-    {
-        "status": 200,
-        "message": "searchContents",
-        "result_data": [
-            {
-                "like_record_id": 2,
-                "post_id": 26,
-                "created_at": "2022-09-03 11:31",
-                "updated_at": "2022-09-03 11:31",
-                "posts": {
-                    "post_id": 26,
-                    "post_title": "테스으 생성",
-                    "post_body_md": "null",
-                    "post_body_html": "null",
-                    "post_txt": "qwer12v",
-                    "created_at": "2022-08-29 12:09",
-                    "updated_at": "2022-09-03 10:55",
-                    "users": {
-                        "user_email": "rudals951004@gmail.com",
-                        "user_detail": {
-                            "user_name": "min ja",
-                            "user_unique_id": "test",
-                            "user_nickname": "",
-                            "user_img": "이미지가 없다링"
-                        }
+                },
+                "visit_record": [
+                    {
+                        "visit_record_id": 1,
+                        "post_id": 1
                     }
-                }
-            },
+                ],
+                "like_record": [
+                    {
+                        "like_record_id": 7,
+                        "post_id": 1
+                    }
+                ]
+            }
         ]
     }
 - |속성|타입|설명|
@@ -1095,7 +1082,6 @@
     |user_name|string|유저 이름|
     |user_unique_id|string|유저 유니크 아이디|
     |user_introduce|string|유저 소개|
-    |user_nickname|string|유저 닉네임|
     |user_img|string|유저 이미지|
     |sns_name|string|sns상 유저 이름|
     |created_at|string|생성 날짜|
@@ -1128,7 +1114,6 @@
                     "user_detail": {
                         "user_name": "min ja",
                         "user_unique_id": "test",
-                        "user_nickname": "",
                         "user_img": "이미지가 없다링"
                     }
                 }
@@ -1150,7 +1135,6 @@
     |user_name|string|유저 이름|
     |user_unique_id|string|유저 유니크 아이디|
     |user_introduce|string|유저 소개|
-    |user_nickname|string|유저 닉네임|
     |user_img|string|유저 이미지|
     |created_at|string|생성 날짜|
     |updated_at|string|업데이트 날짜|
@@ -1183,7 +1167,6 @@
                         "user_detail": {
                             "user_name": "min ja",
                             "user_unique_id": "test",
-                            "user_nickname": "",
                             "user_img": "이미지가 없다링"
                         }
                     }
@@ -1210,7 +1193,6 @@
                     "user_detail": {
                         "user_name": "min ja",
                         "user_unique_id": "test",
-                        "user_nickname": "",
                         "user_img": "이미지가 없다링"
                     }
                 }
@@ -1234,7 +1216,6 @@
     |user_name|string|유저 이름|
     |user_unique_id|string|유저 유니크 아이디|
     |user_introduce|string|유저 소개|
-    |user_nickname|string|유저 닉네임|
     |user_img|string|유저 이미지|
     |created_at|string|생성 날짜|
     |updated_at|string|업데이트 날짜|

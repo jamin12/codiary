@@ -3,6 +3,8 @@ import Slider from "react-slick";
 import styled from "styled-components";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { img } from '../api';
+
 
 // const MainCanvas = styled.SliderItem`
 //   position: relative;
@@ -34,19 +36,26 @@ import 'slick-carousel/slick/slick-theme.css';
 
 // }
 // export default Carousel;
-
+/**
+ * 해당 포스트로 이동하는 함수
+ * 
+ * @param {string} userUniqueId 
+ * @param {number} postId 
+ */
+const movePost = (userUniqueId, postId) => {
+  document.location.href = `/${userUniqueId}/${postId}`;
+};
 
 
 export default class Carousel extends Component {
   render() {
     const posts = this.props.posts; // props로 post들을 받아옴
-    console.log(posts);
     // TODO(이묘): text에서 가장 첫 번째 이미지 태그 갖고와야함
     /**
      * text에서 가장 첫 번째 이미지 태그 찾는 함수
      * @param {String} text 
      */
-    const ImgSearch = (text) => { 
+    const ImgSearch = (text) => {
       return "https://images.unsplash.com/photo-1664575196079-9ac04582854b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
     }
     const settings = {
@@ -54,7 +63,7 @@ export default class Carousel extends Component {
       centerMode: true,
       infinite: true,
       centerPadding: "50px",
-      slidesToShow: 5,
+      slidesToShow: 3,
       speed: 500,
     };
     return (
@@ -62,29 +71,35 @@ export default class Carousel extends Component {
         <Slider {...settings}>
           {posts.map((post) => {
             return (
-                <PostWrap>
+              <PostWrap onClick={() => {
+                movePost(post.users.user_detail.user_unique_id, post.post_id);
+              }}>
+                <div className="popul-title">
                   <h3>{post.post_title}</h3>
-                  
-                  <div className="thumbnail">
-                    <img src={ImgSearch(post.post_txt)} alt="" />
-                  </div>
-                  
-                  <div className="user">
-                    <img
-                      className="user-profile"
-                      src={post.users?.user_detail.user_img}
-                      alt="사용자 프로필 이미지"
-                    ></img>
-                    <span>{post.users?.user_detail.user_nickname}</span>
-                  </div>
-                  
-                  <p className="date">{post.updated_at.substring(0,10)}</p>
-                  
-                  <div className="like-box">
-                    <span>❤️</span>
-                    <span>{post.like_count}</span>
-                  </div>
-                </PostWrap>
+                </div>
+
+                <div className="thumbnail">
+                  <img src={ImgSearch(post.post_txt)} alt="" />
+                </div>
+
+                <div className="user">
+                  <img
+                    className="user-profile"
+                    src={img.getImg(post.users?.user_detail.user_img)}
+                    alt=""
+                  ></img>
+                  <span>{post.users?.user_detail.user_unique_id}</span>
+                </div>
+                <div>
+                  <p className="post-txt">{post.post_txt}</p>
+                </div>
+                <p className="date">{post.updated_at.substring(0, 10)}</p>
+
+                <div className="like-box">
+                  <span>❤️</span>
+                  <span>{post.like_count}</span>
+                </div>
+              </PostWrap>
             );
           })}
         </Slider>
@@ -93,20 +108,31 @@ export default class Carousel extends Component {
   }
 }
 
-const PostWrap = styled.div`
+const PostWrap = styled.button`
   background-color: var(--gray200);
   position: relative;
   width: 100px;
   height: 100%;
   border-radius: 15px;
+  cursor: pointer;
+  border: none;
 
   h3{
-    margin: 5px 10px;
+    width: 100%;
+    height: 100%;
+    white-space : nowrap;
+    overflow : hidden;
+  }
+  .popul-title{
+    position: relative;
+    bottom: 60px;
   }
   .thumbnail{
+    position: relative;
+    bottom: 50px;
     width: 100%;
     height: 45%;
-    margin-top: 10px
+    margin-top: 5px
   }
 
   .user-profile{
@@ -116,16 +142,36 @@ const PostWrap = styled.div`
   }
   .user{
     display: flex;
+    position: relative;
     width: 90%;
     align-items: center;
-    margin: 10px auto 0 auto;
-
+    margin: 0 auto;
+    bottom: 30px;
     span{
       margin-left: 5px;
     }
   }
+  .post-txt{
+    position: absolute;
+    margin-left: 20px;
+    display: block;
+    width: 85%;
+    bottom: 12%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    height: 3.6em;
+    word-wrap : break-word;
+    text-align : left;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+
+  }
   .date{
     width: 90%;
+    position: relative;
+    top: 60px;
     margin: 0 auto;
     font-size: 0.8rem;
     color: var(--gray500);

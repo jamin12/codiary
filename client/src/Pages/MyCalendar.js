@@ -7,88 +7,111 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { personal } from '../api';
 import axios from 'axios';
+import default_img from '../IMG/codiary_default_img.png';
+import { Link, useLocation } from 'react-router-dom';
 
 const MyCalendar = () => {
+  const [userUniqueId, setUserUniqueId] = useState("Emyo");
 
   const date = new Date();
-  const [postData, changeDate] = useState(date);
-  const sendDate = new Date(+postData + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '').substring(0, 10)+" 00:00:00"
+  const [postDate, changeDate] = useState(date);
+  const sendDate = new Date(+postDate + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '').substring(0, 10) + " 00:00:00"
 
-  const [postsByDate, setPostByDate] = useState({});	
+  const [sendYear, setSendYear] = useState(sendDate.substring(0, 4));
+  const [sendMonth, setsendMonth] = useState(sendDate.substring(5, 7));
+
+  const [postsByDate, setPostByDate] = useState([]);
   // 받은 날짜에 대한 포스팅 기록 저장해서 표시
-  const [mark, setMark] = useState(
-    [
-      {
-        "post_id": 4,
-        "post_title": "test4",
-        "post_body_md": null,
-        "post_body_html": null,
-        "post_txt": "qaz",
-        "created_at": "2022-08-15 12:12",
-        "updated_at": "2022-08-15 12:12",
-        "users": {
-          "user_email": "rudals951004@gmail.com",
-          "user_detail": {
-            "user_name": "min ja",
-            "user_unique_id": "test",
-            "user_nickname": "testemyo",
-            "user_img": "이미지가 없다링"
-          }
-        },
-        "posts_update_history": [
-          {
-            "post_update_history_id": 6,
-            "post_id": 4,
-            "update_history": "2022-08-29 12:03",
-            "created_at": "2022-08-29 12:03",
-            "updated_at": "2022-08-30 23:51"
-          },
-        ]
-      },
-    ]
-  );
-
-  /**
-   * 요청 데이터에서 endDate의 일 포멧을 01로 바꾸는 함수
-   * @param {String} date 
-   * @returns 두자리 숫자
-   */
-  function sendDateGetDate(date){
-    if (date.toString.length === 1){
-      return "0"+date;
-    }else{
-      return date
-    }
-  }
-
-  // const [markDate, setMarkDate] = useState([]);
+  const [mark, setMark] = useState([]);
 
   // TODO(이묘): mark에서 text에서 이미지 태그만 뽑아서 가장 첫번째 있는 이미지 태그만 뽑아서 넣기 - 함수구현
   /**
    * 가장 첫번째 이미지 태그 안에 주소를 postImg에 저장하는 함수
    */
-  const setPostImg = (htmlCode) => {
+  // const setPostImg = (htmlCode) => {
 
+  // }
+  // const postImg = setPostImg(mark.post_body_html)
+
+
+
+
+  const nextMonth = (sendMonth) => {
+    if (parseInt(sendMonth) < 9) {
+      return "0" + (parseInt(sendMonth) + 1)
+    } else {
+      return (parseInt(sendMonth) + 1)
+    }
   }
-  const postImg = setPostImg(mark.post_body_html)
+  /**
+   * 해당 월에 post가 있으면 mark에 넣어줌
+   */
+  useEffect(() => {
+    const getPostCountByMonthFun = async () => {
+      const getPostCountByMonth = await axios.get(
+        personal.getPersonalPostCountByDate("test"),
+        {
+          params: {
+            startdate: `${sendYear}-${sendMonth}-01 00:00:00`,
+            enddate: `${sendYear}-${nextMonth(sendMonth)}-01 00:00:00`
+          }
+        }
+      );
+      setMark(getPostCountByMonth.data.result_data);
+    };
+    getPostCountByMonthFun()
+  }, [sendYear, sendMonth])
+
+
 
   /**
-	 *  사용자 날짜 별 포스트 목록 조회
-	 */
+   *  사용자 날짜 별 포스트 목록 조회
+   */
   useEffect(() => {
     const getPostsByDateFun = async () => {
       const getPostsByDate = await axios.get(
-        personal.getPersonalPostsByDate("test"),
-        { params: { startdate: sendDate/** postData */, enddate: sendDate.substring(0,8) + sendDateGetDate(Number(sendDate.substring(9,10))+1) + " " + sendDate.substring(11,)/** postData에서 하루 뒤 */ } }
+        personal.getPersonalPostsByDate(userUniqueId),
+        { params: { startdate: sendDate/** postDate */, enddate: sendDate.substring(0, 8) + (postDate.getDate() + 1) + " " + sendDate.substring(11,)/** postDate에서 하루 뒤 */ } }
       );
       setPostByDate(getPostsByDate.data.result_data);
     };
     getPostsByDateFun();
-  }, [postData]);
-  // // 배열 안에 있는 날짜 뽑아오는 함수 구현해야함.
-  // const test = mark.map(date => date.created_at);
-  // console.log(test);
-  // console.log(postData);
+  }, [postDate, sendDate, userUniqueId]);
+
+
+
+  /**
+   * post onClick 함수
+   */
+  const onClickPost = (id, user) => {
+    window.location.replace(`/${user}/${id}`)
+  }
+
+  /**
+   * 현재 보고있는 월과 일을 찾아주는 함수
+   */
+  const viewChange = () => {
+    setSendYear(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0, 4))
+    setsendMonth(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length - 1))
+  }
+
+  /**
+   * onError시 실행될 함수
+   * 대체 이미지
+   */
+  const onErrorImg = (e) => {
+    e.target.src = default_img;
+  }
+  console.log(mark)
+
+  /**
+ * 현재 url
+ */
+  const location = useLocation();
+  useEffect(() => {
+    setUserUniqueId(location.pathname.split("/")[1])
+  }, [location.pathname])
+
   return (
     <Main>
       <SearchProfile />
@@ -97,46 +120,65 @@ const MyCalendar = () => {
         <CalendarWrap>
           <Calendar
             onChange={changeDate}   // useState로 포커스 변경시 현재 날짜 받아오기
-            value={postData}
-            postData={postData}
+            value={postDate}
+            postDate={postDate}
             formatDay={(locale, date) => moment(date).format('DD')}   // 1'일'에서 일 제외하고 숫자만 보이게
-            formatMonth={(locale, date) => moment(date).format('MMM')}
-            formatMonthYear={(locale, date) => moment(date).format('MMMM')}
-            formatYear={(locale, date) => moment(date).format('YYYY')}
+            formatMonthYear={(locale, date) => moment(date).format('YYYY년 MM월')}
+            // formatYear={(locale, date) => moment(date).format('YYYY')}
+            minDetail="month"
+            maxDetail="month"
             formatShortWeekday={(locale, date) => moment(date).format('ddd')}
             showNeighboringMonth={false}  // 이전 이후 달의 날짜는 안보이도록 설정하는 명령어
-
-            // TODO(이묘): 날짜 받으면 배경색 진하게 넣는 부분 진행해야함
+            onActiveStartDateChange={() => viewChange()}
             tileContent={({ date, view }) => {  // 날짜 타일에 갯수만큼 tile추가
-              // 현재 날짜가 mark에 있다면 tile div 추가
-              if (mark.find((x) => x === moment(date).format('YYYY-MM-DD HH:mm'))) {
-                return (
-                  <>
-                    <HightLight>
-                    </HightLight>
-                  </>
-                );
-              }
+              let html = [];
+              // eslint-disable-next-line array-callback-return
+              mark.map((marked) => {
+                if (marked.date === moment(date).format('YYYY-MM-DD')) {
+                  for (var i = 0; i < marked.count; i++) {
+                    html.push(<div className='highlight'></div>);
+                  }
+                }
+              })
+              return (
+                <div>
+                  {html}
+                </div>
+              )
+
             }}
+
           />
         </CalendarWrap>
 
         <PostWrap>
           <div className='menu'>
-            <h2>{postData.getDate()}일</h2>
-            <ion-icon name="library-outline"></ion-icon>
+            <h2>{postDate.getDate()}일</h2>
+            <Link className='link' to={`/${userUniqueId}`}><ion-icon name="library-outline"></ion-icon></Link>
           </div>
 
           {
-            mark.map(post => {
+            postsByDate.map(post => {
+
+              const html = post.posts?.post_body_html
+              const imgStart = html.indexOf('src="') + 5
+              const imgEnd = html.indexOf('"', imgStart)
+              const imgSrc = html.slice(imgStart, imgEnd)
+
+              console.log(post)
+
               return (
-                <Post>
+                <Post onClick={() => onClickPost(post.post_id, post.posts?.users?.user_detail.user_unique_id)}>
                   <div className='text-box'>
-                    <h1 className="title">{post.post_title}</h1>
-                    <p className="text">{post.post_body_html}</p>
-                    <p className='user'>{post.users.user_detail.user_nickname}</p>
+                    <h1 className="title">{post.posts?.post_title}</h1>
+                    <div className='user-info'>
+                      <img src={post.posts?.users?.user_detail.user_img} alt="사용자 이미지" />
+                      <span className='user'>{post.posts?.users?.user_detail.user_unique_id}</span>
+                    </div>
                   </div>
-                  <ThumbnailIMG img={postImg} alt='썸네일' />
+                  <div className="post-img-wrap">
+                    <img src={imgSrc} onError={onErrorImg} alt='썸네일' />
+                  </div>
                 </Post>
               )
             })
@@ -183,11 +225,32 @@ const CalendarWrap = styled.div`
   @media screen and (max-width:1024px){
     width: 400px;
   }
+
+  .react-calendar__tile{
+    padding-top: 0;
+    position: relative;
+
+    >abbr{
+      margin-top: 10px;
+      z-index: 99;
+    }
+
+      .highlight{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(72, 226, 17, 0.1);
+    }
+  }
+
+
 `
 
 const PostWrap = styled.div`
   width: 40%;
-  height: 97%;
+  height: 60vh;
   margin-top: 20px;
   overflow-y: scroll;
   position: relative;
@@ -208,16 +271,22 @@ const PostWrap = styled.div`
     background-color: white;
     padding: 0 5px;
     z-index: 999;
-  }
-  .menu > ion-icon{
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
+    .link{
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+
+      ion-icon{
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
 `
 
 const Post = styled.div`
+  border: none;
   width: 98%;
   height: 230px;
   background-color: rgb(235, 235, 235);
@@ -230,55 +299,60 @@ const Post = styled.div`
   .text-box{ 
     flex-grow: 1;
     flex-basis: 50%;
+    width: 50%;
     position: relative;
-  }
-  .title{
-    position: absolute;
-    top: 10px;
-    left: 20px;
-  }
-  .text{ 
-    position: absolute;
-    width: 80%;
-    top: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    overflow: hidden;
-    color: rgba(0,0,0,0.7);
-    font-size: 1rem;
+    .title{
+      position: absolute;
+      top: 10px;
+      left: 20px;
+  
+      text-overflow: ellipsis;
+      overflow: hidden;
+      word-break: break-all;
+        
+      display: -webkit-box;
+      -webkit-line-clamp: 2; // 원하는 라인수
+      -webkit-box-orient: vertical
+    }
 
-    display: -webkit-box;
-    word-break: break-word;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    text-overflow: ellipsis;
-  }
-  .user{
-    position: absolute;
-    bottom: 10px;
-    left: 20px;
-    font-weight: bold;
+    .user-info{
+      position: absolute;
+      left: 50%;
+      bottom: 15px;
+      transform: translateX(-50%);
+      display: flex;
+      width: 85%;
+      img{
+        width: 15%;
+        height: 15%;
+        border-radius: 50%;
+      }
+      .user{
+        font-size: 1.3rem;
+        align-items: center;
+        margin-left: 10px;
+      }
+    }
   }
 
   @media screen and (max-width: 1024px){
     height: 180px;
   }
-`
-// 썸네일
-const ThumbnailIMG = styled.div`
-display: ${(props) => props.img ? 'flex' : 'none'};
-width: 50%;
-height: 100%;
-background: url(${(props) => props.img});
-background-size: cover;
-border-top-right-radius: 20px;
-border-bottom-right-radius: 20px;
-flex-grow: 1;
-`
 
-const HightLight = styled.div`
-/* display: flex; */
-/* position: absolute; */
-/* background-color: rgba(0, 0, 0, 0, 0.2); */
-  background-color: red;
+  .post-img-wrap{
+    width: 50%;
+    height: 100%;
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img{
+      width: 95%;
+      height: 95%;
+      border-radius: 15px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
 `

@@ -178,6 +178,12 @@ router
  * commnets
  */
 router
+	.route("/comments/g/:postid")
+	.get(
+		validate(personalValidation.output.getPersonalComments),
+		personalController.output.getPersonalComments
+	);
+router
 	.route("/comments")
 	.post(
 		auth("user"),

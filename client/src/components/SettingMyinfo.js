@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { IoClose } from "react-icons/io5";
 import '../App.css'
 import axios from 'axios';
-import { personal, user } from '../api';
+import { personal, user, img } from '../api';
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login, logout } from "../reducers/Action";
+
 
 // 글자를 입력하면 하나씩 밖에 입력되는 현상 해결해야함.
 
@@ -190,56 +194,81 @@ const BtnWithdraw = styled.button`
   }
 `
 
+
 const Myinfo = () => {
 
   const [isLoaded, setLoad] = useState(false);
   const [nameValue, setName] = useState('');
   // 기본 정보
-  const [inputInfo, setInfo] = useState({
-    user_name: "임효현",  // 백엔드에서 받아온 기본 정보를 넣어줌
-    nick_name: "",
-    info_line: ""
-  })
-  // 내 이름
-  const MyName = '이묘';
-  const { user_name, user_nickname, user_info } = inputInfo;
-
+  const [myName, setMyName] = useState({})
+  const [myUniqueName, setMyUniqueName] = useState({})
+  const [myIntro, setMyIntro] = useState({})
+  const [myProfileImg, setMyProfileImg] = useState("")
+  const [myProfileImgUrl, setMyProfileImgrul] = useState("")
+  const dispatch = useDispatch();
+  const nevigate = useNavigate();
+  const fileInput = React.createRef();
   // 회원탈퇴(setting에서) 버튼 클릭
   const clickWithdraw = () => {
     setLoad((prev) => !prev)
   }
 
+  /**
+   * 내 정보 가져오기
+   */
+  useEffect(() => {
+    const getMyInfoFun = async () => {
+      const getMyInfo = await axios.get(
+        user.getMyInfo(),
+        { withCredentials: true }
+      );
+      setMyName(getMyInfo.data.result_data.user_detail.user_name);
+      setMyUniqueName(getMyInfo.data.result_data.user_detail.user_unique_id);
+      setMyIntro(getMyInfo.data.result_data.user_detail.user_introduce);
+      setMyProfileImg(getMyInfo.data.result_data.user_detail.user_img);
+      setMyProfileImgrul(img.getImg(getMyInfo.data.result_data.user_detail.user_img));
+
+    };
+    getMyInfoFun();
+  }, []);
+
   // 내 정보 수정 onChange
   const onChange = (e) => {
-    const { name, value } = e.target;
-    const nextInputs = {
-      ...inputInfo,
-      [name]: value
-    };
-    setInfo(nextInputs);
+    const { id, value } = e.target;
+    if (id === "user_nickname") {
+      setMyUniqueName(value);
+    } else {
+      setMyIntro(value);
+    }
   }
 
   // 적용 버튼 클릭 이벤트
   const clickSubmit = async () => {
     // 적어놓은 정보 백엔드에 전달
     if (window.confirm("적용하시겠습니까?")) {
-      // TODO: 이거 적용 안됨...ㅜㅜ
-      if (user_nickname === '' || user_info === '') {
+      if (myUniqueName === '' || myIntro === '') {
         alert('빈칸을 모두 채운 후에 적용 버튼을 눌러주세요.');
       } else {
-        // TODO: body 부분 넣으세요
-        await axios.patch(user.updateUser(),
+        const changeMyInfo = await axios.patch(user.updateUser(),
           {
-            "user_unique_id": "front test unique id1",
-            "user_nickname": "front test nickname",
-            "user_introduce": "front test introduce",
-            "user_img": "front test img url"
+            user_unique_id: myUniqueName,
+            user_introduce: myIntro,
+            user_img: myProfileImg
           },
           {
             withCredentials: true
           })
-          alert("적용되었습니다.");
-          // 백엔드에 정보 전달
+        setMyName(changeMyInfo.data.result_data.user_detail.user_name)
+        setMyUniqueName(changeMyInfo.data.result_data.user_detail.user_unique_id)
+        setMyIntro(changeMyInfo.data.result_data.user_detail.user_introduce)
+        setMyProfileImg(changeMyInfo.data.result_data.user_detail.user_img)
+        setMyProfileImgrul(img.getImg(changeMyInfo.data.result_data.user_detail.user_img));
+
+        dispatch(login({  
+          uniqueid: changeMyInfo.data.result_data.user_detail.user_unique_id,
+          user_role: changeMyInfo.data.result_data.user_detail.user_role,
+        }));
+
       }
     } else {
       alert("취소합니다.");
@@ -255,15 +284,17 @@ const Myinfo = () => {
   // 회원탈퇴 확인 버튼
   const realWithdraw = async () => {
 
-    if (nameValue === MyName) {   // 백엔드에서 받아온 내 이름 확인
+    if (nameValue === myName) {   // 백엔드에서 받아온 내 이름 확인
       // 유저 삭제
       await axios.delete(user.deleteUser(), {
         withCredentials: true
       });
-      // codiary 메인화면으로 이동
+      dispatch(logout(""))
+      nevigate("/")
     } else {
       alert('이름이 올바르지 않습니다. 다시 확인해주세요.')
     }
+
   }
 
   // 회원탈퇴창 취소(닫기)버튼
@@ -271,33 +302,78 @@ const Myinfo = () => {
     setLoad(false);
   }
 
+  /**
+   * 파일 탐색기 띄우기
+   */
+  const callFileInput = () => {
+    fileInput.current.click();
 
+  }
+
+  /**
+   * 이미지 변경
+   * 
+   * @param {*} e 이벤트 파라미터
+   * @returns 
+   */
+  const changeMyImg = async (e) => {
+    const blob = e.target.files[0]
+    // blob -> file로 만든 후
+    const fileReader = new File([blob], blob.name, {
+      type: blob.type,
+    });
+    const filetype = blob.type.split("/")[1];
+    if (
+      !["jpg", "jpeg", "png"].includes(filetype)
+    ) {
+      alert("이미지 파일을 넣어주십시오");
+      return;
+    }
+    // formdata에 삽입
+    const formdata = new FormData();
+    formdata.append("file", fileReader);
+    // axios로 formdata 넣어서 전송
+    const imgFile = await axios.post(
+      img.createImg(),
+      formdata,
+      {
+        "Content-Type": "multipart/form-data",
+      }
+    );
+    setMyProfileImg(imgFile.data.result_data.fid);
+    setMyProfileImgrul(img.getImg(imgFile.data.result_data.fid));
+  }
 
 
   return (
     <MainWrap>
-      <ImgBox> 클릭해서 <br /> 이미지 변경 </ImgBox>
+      <ImgBox onClick={callFileInput}>
+        {/* TODO(경민 -> 이묘): 이미지랑 글자 css 적용 */}
+        클릭 후 이미지 변경
+        <img src={myProfileImgUrl} alt='asdf'></img>
+        <input type="file" ref={fileInput} onChange={changeMyImg} style={{ display: "none" }}></input>
+      </ImgBox>
 
       <InputGroup>
         <div className="user-name">
           <p>이름</p>
           <InputField disabled type="text" id="user_name"
             name='user_name'
-            onChange={onChange} value={user_name}></InputField>
+            onChange={onChange} value={myName}></InputField>
         </div>
 
         <div className="user-nickname">
           <p>닉네임</p>
           <InputField type="text" id="user_nickname"
-            name='user_nickname' placeholder="이묘"
-            onChange={onChange} value={user_nickname}></InputField>
+            name='user_nickname' placeholder="닉네임을 넣어주세요"
+            onChange={onChange} value={myUniqueName}></InputField>
         </div>
 
         <div className="user-info">
           <p>한줄소개</p>
           <InputField type="text" id="user_info"
-            name='user_info' placeholder="프론트엔드 개발자가 될거야"
-            onChange={onChange} value={user_info}></InputField>
+            name='user_info' placeholder="나만의 한줄소개를 넣어주세요"
+            onChange={onChange} value={myIntro}></InputField>
         </div>
       </InputGroup>
 

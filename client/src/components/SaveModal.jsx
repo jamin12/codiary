@@ -3,17 +3,15 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { personal } from "../api/index";
 import '../css/reset.css';
-
-// bootstrap
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
+import { useSelector } from "react-redux";
 function OptionModal(props) {
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
-  const [selected, setSelected] = useState("");
-  const [category, setCategory] = useState({});
-
+  const [selected, setSelected] = useState(0);
+  const [category, setCategory] = useState([]);
+  const { uniqueid } = useSelector((state) => state.auth.User);
 
 
   // tag입력 input onChange 이벤트
@@ -32,6 +30,18 @@ function OptionModal(props) {
     }
   }
 
+  useEffect(() => {
+    const getMyCategoryFun = async () => {
+      const getMyCategory = await axios.get(
+        personal.getPersonalMyCategory(),
+        { withCredentials: true }
+      );
+      setCategory(getMyCategory.data.result_data);
+      setSelected(getMyCategory.data.result_data[0].category_id)
+    };
+    getMyCategoryFun();
+  }, []);
+
   // 태그를 클릭하면 없어지는 클릭 이벤트
   const deleteList = (e) => {
     // tags 배열에서 클릭한 요소 삭제
@@ -42,50 +52,61 @@ function OptionModal(props) {
     setSelected(e.target.value);
   }
 
-  const testList = [];
-
-  /**
-   * 서버에서 유저의 카테고리들을 받아와야 함
-   */
-  useEffect(() => {
-    const getCategorys = async() => {
-      const getCategory = await axios.get(
-        personal.getPersonalMyCategory(),
-        { withCredentials: true }
-      );
-      setCategory(getCategory.data.result_data);
-      console.log(category);
-    }
-    getCategorys();
-  }, []);
-
 
   /**
    * 포스트 저장
    */
   const onClickSave = async () => {
-    alert("save")
-    // TODO: body부분 값 변경
-    // 일단 수정 했는데 확인 바람
-    await axios.post(
-      personal.createPersonalPost(),
-      {
-        post: {
-          post_title: props.title,
-          post_body_md: props.dataMd,
-          post_body_html: props.dataHtml,
-          post_txt: props.dataTxt,
-          category_id: 2,
+    if (props.postId) {
+      await axios.patch(
+        personal.updatePersonalPost(parseInt(props.postId)),
+        {
+          post: {
+            post_title: props.title,
+            post_body_md: props.dataMd,
+            post_body_html: props.dataHtml,
+            post_txt: props.dataTxt,
+            category_id: selected,
+          },
+          tag: {
+            // TODO(경민 -> 이묘): 태그 바꾸세요
+            tag_name: ["테스트 태그", "리스트 테스트2"],
+          },
         },
-        tag: {
-          tag_name: ["테스트 태그", "리스트 테스트2"],
-        },
-      },
-      {
-        withCredentials: true,
-        headers: { "Content-Type": `application/json` },
+        {
+          withCredentials: true,
+          headers: { "Content-Type": `application/json` },
+        }
+      );
+      document.location.href = `/${uniqueid}/${props.postId}`
+    } else {
+      // 임시 게시글이면 삭제하고 게시글로 올린다.
+      if (props.tmpPostId) {
+        await axios.delete(personal.deletePersonalTmpPost(parseInt(props.tmpPostId)), { withCredentials: true });
       }
-    );
+      const createdPost = await axios.post(
+        personal.createPersonalPost(),
+        {
+          post: {
+            post_title: props.title,
+            post_body_md: props.dataMd,
+            post_body_html: props.dataHtml,
+            post_txt: props.dataTxt,
+            category_id: selected,
+          },
+          tag: {
+            // TODO(경민 -> 이묘): 태그 바꾸세요
+            tag_name: ["테스트 태그", "리스트 테스트2"],
+          },
+        },
+        {
+          withCredentials: true,
+          headers: { "Content-Type": `application/json` },
+        }
+      );
+      document.location.href = `/${uniqueid}/${createdPost.data.result_data.post_id}`
+
+    }
     // 서버에 toHTML과 toMARKDOWN 전송
   };
   return (
@@ -131,14 +152,13 @@ function OptionModal(props) {
           <select className='selectBox' onChange={onChangeSelect} value={selected}>
             {
               // TODO: testList 서버에서 받아온 카테고리 리스트로 변경
-              testList.map(list => (
-                <option value={list} key={list}>
-                  {list}
+              category.map(list => (
+                <option value={list.category_id} key={list.category_id}>
+                  {list.category_name}
                 </option>
               ))
             }
           </select>
-
         </CategoryWrap>
       </Modal.Body>
       <Modal.Footer>
