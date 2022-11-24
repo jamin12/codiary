@@ -6,20 +6,18 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import SearchProfile from "../components/SearchProfile";
 import { personal } from "../api/index";
 import axios from "axios";
+
 import default_img from '../IMG/codiary_default_img.png'
+import { ButtonGroup, Button, Dropdown, SplitButton } from "react-bootstrap";
 
 const Mypage = () => {
   const { userId } = useParams();
 
   const [userUniqueId, setUserUniqueId] = useState("Emyo");
   // TODO: 하위 카테고리도 설정 넣어놔야함
-  const [category, setCategory] = useState([
-    // {
-    //   "category_id": 1,
-    //   "sub_category_id": null,
-    //   "category_name": "알고리즘"
-    // },
-  ]);
+  const [category, setCategory] = useState([]);
+  const [subCategory, setSubCategory] = useState([]);
+  const [categoryFolder, setCategoryFolder] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
   const [posts, setPosts] = useState([]);
 
@@ -36,6 +34,38 @@ const Mypage = () => {
     };
     getCategoryFun();
   }, [userId]);
+  console.log(category)
+
+
+  useEffect(() => {
+    const subArr = []
+    category.map(findSubCate => {
+      if (findSubCate.sub_category_id !== null) {
+        subArr.push(findSubCate)
+      }
+      setSubCategory(subArr)
+    })
+  }, [category])
+  console.log(subCategory)
+
+  useEffect(() => {
+    const Total = [];
+
+    category.map(categorys => {
+      const arr = [];
+      if (categorys.sub_category_id === null) {
+        arr.push(categorys)
+        subCategory.map(subCategorys => {
+          if (categorys.category_id === subCategorys.sub_category_id) {
+            arr.push(subCategorys)
+          }
+        })
+        Total.push(arr)
+      }
+      setCategoryFolder(Total)
+    })
+  }, [category, subCategory])
+  console.log(categoryFolder)
 
   /**
    *  사용자 카테고리별 포스트 목록 조회
@@ -55,6 +85,7 @@ const Mypage = () => {
   }, [userId, categoryId]);
 
   const clickFolder = (e) => {
+    console.log(e.target)
     setCategoryId(e.target.id)
   }
   const openAllPost = () => {
@@ -81,9 +112,32 @@ const Mypage = () => {
    */
   const location = useLocation();
   useEffect(() => {
-    console.log(location.pathname.substring(1))
+    // console.log(location.pathname.substring(1))
     setUserUniqueId(location.pathname.substring(1))
   })
+
+  // const test = (categorys) => {
+  //   for(let i=0; i<categorys.length; i++){
+  //     if(categorys[i].sub_category_id === null){
+  //       return(
+  //       <div className="folder"
+  //       id={categorys[i].category_id}
+  //       onClick={clickFolder}
+  //     >
+  //       <span>{categorys[i].category_name}</span>
+  //       <ion-icon name="chevron-down-outline" onClick={() => { console.log("hi") }}></ion-icon>
+  //     </div>
+  //       )
+  //     }
+  //     else{
+
+  //     }
+  //   }
+  // }
+
+  const btnCategory = {
+
+  }
 
 
   return (
@@ -104,22 +158,51 @@ const Mypage = () => {
 
           <div className="folder full-view"
             onClick={openAllPost}
+            id="test"
           >
             전체보기
           </div>
 
           <div className="category-folder-box">
             {
-              category.map((category) => {
-                return (
-                  <div className="folder"
-                    id={category.category_id}
-                    onClick={clickFolder}
-                  >
-                    <span>{category.category_name}</span>
-                    <ion-icon name="chevron-down-outline"></ion-icon>
-                  </div>
-                )
+              categoryFolder.map(categoryArr => {
+                if (categoryArr.length === 1) {
+                  return (
+                    <div className="folder"
+                      id={categoryArr[0].category_id}
+                      onClick={clickFolder}
+                    >
+                      <span>{categoryArr[0].category_name}</span>
+                      {/* <ion-icon name="chevron-down-outline" onClick={() => { console.log("hi") }}></ion-icon> */}
+                    </div>
+                  )
+                }
+                else {
+                  return (
+                    <Dropdown as={ButtonGroup}>
+                      <Button variant="success"
+                        onClick={() => setCategoryId(categoryArr[0].category_id)}>
+                        <span>{categoryArr[0].category_name}</span>
+                      </Button>
+
+                      <Dropdown.Toggle split
+                        variant="success"
+                        id="dropdown-split-basic" />
+
+                      <Dropdown.Menu>
+                        {
+                          categoryArr.map((category, index) => {
+                            if (categoryArr[index] !== categoryArr[0]) {
+                              return (
+                                <Dropdown.Item onClick={() => setCategoryId(category.category_id)}>{category.category_name}</Dropdown.Item>
+                              )
+                            }
+                          })
+                        }
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  )
+                }
               })
             }
           </div>
@@ -130,8 +213,7 @@ const Mypage = () => {
             posts.map(post => {
 
               const html = post.post_body_html
-              console.log(html)
-              const imgStart = html.indexOf('src="')+5
+              const imgStart = html.indexOf('src="') + 5
               const imgEnd = html.indexOf('"', imgStart)
               const imgSrc = html.slice(imgStart, imgEnd)
 
@@ -148,16 +230,6 @@ const Mypage = () => {
             })
           }
 
-          {/* <Carousel
-            posts={posts}
-            dots={false}
-            slidesToShow={3}
-            vertical={true}
-            verticalSwiping={true}
-            centerMode={true}
-            centerPadding={'60px'}
-            className={'center'}
-          /> */}
         </CarouselWrap>
       </Contents>
     </MainWrap>
@@ -245,13 +317,15 @@ const Folders = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-
+    
     .folder{
       background-color: var(--gray100);
       height: 40px;
       box-sizing: border-box;
-      padding: 0 0 0 10px;
-      /* margin: 5px 0; */
+      padding: 0 10px;
+      display: flex;
+      justify-content: space-between;
+      position: relative;
       :hover{
         background-color: var(--gray200);
       }
@@ -262,6 +336,37 @@ const Folders = styled.div`
 
       :first-child, :nth-child(2){
         margin-top: 10px;
+      }
+    }
+
+    .dropdown.btn-group{
+      :first-child{
+        margin-top: 10px;
+      }
+      
+      button{
+        background-color: var(--gray100);
+        height: 40px;
+        color: black;
+        border: none;
+        padding: 0 10px;
+        text-align: left;
+        border-radius: 13px;
+        span{
+        font-size: 1.1rem;
+        font-weight: 500;
+        }
+        :hover{
+          background-color: var(--gray300);
+        }
+      }
+      .btn{
+        border-radius: 13px 0 0 13px;
+      }
+      .btn.dropdown-toggle{
+        border-radius: 0 13px 13px 0;
+        text-align: center;
+        width: 0%;
       }
     }
   }
