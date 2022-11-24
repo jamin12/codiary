@@ -3,6 +3,8 @@ import Slider from "react-slick";
 import styled from "styled-components";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { img } from '../api';
+
 
 // const MainCanvas = styled.SliderItem`
 //   position: relative;
@@ -40,7 +42,7 @@ import 'slick-carousel/slick/slick-theme.css';
  * @param {string} userUniqueId 
  * @param {number} postId 
  */
-const movePost = (userUniqueId,postId) => {
+const movePost = (userUniqueId, postId) => {
   document.location.href = `/${userUniqueId}/${postId}`;
 };
 
@@ -72,8 +74,9 @@ export default class Carousel extends Component {
               <PostWrap onClick={() => {
                 movePost(post.users.user_detail.user_unique_id, post.post_id);
               }}>
-
-                <h3>{post.post_title}</h3>
+                <div className="popul-title">
+                  <h3>{post.post_title}</h3>
+                </div>
 
                 <div className="thumbnail">
                   <img src={ImgSearch(post.post_txt)} alt="" />
@@ -82,12 +85,14 @@ export default class Carousel extends Component {
                 <div className="user">
                   <img
                     className="user-profile"
-                    src={post.users?.user_detail.user_img}
-                    alt="사용자 프로필 이미지"
+                    src={img.getImg(post.users?.user_detail.user_img)}
+                    alt=""
                   ></img>
-                  <span>{post.users?.user_detail.user_nickname}</span>
+                  <span>{post.users?.user_detail.user_unique_id}</span>
                 </div>
-
+                <div>
+                  <p className="post-txt">{post.post_txt}</p>
+                </div>
                 <p className="date">{post.updated_at.substring(0, 10)}</p>
 
                 <div className="like-box">
@@ -113,14 +118,21 @@ const PostWrap = styled.button`
   border: none;
 
   h3{
-    margin: 0 auto;
+    width: 100%;
+    height: 100%;
     white-space : nowrap;
     overflow : hidden;
   }
+  .popul-title{
+    position: relative;
+    bottom: 60px;
+  }
   .thumbnail{
+    position: relative;
+    bottom: 50px;
     width: 100%;
     height: 45%;
-    margin-top: 10px
+    margin-top: 5px
   }
 
   .user-profile{
@@ -130,16 +142,36 @@ const PostWrap = styled.button`
   }
   .user{
     display: flex;
+    position: relative;
     width: 90%;
     align-items: center;
-    margin: 10px auto 0 auto;
-
+    margin: 0 auto;
+    bottom: 30px;
     span{
       margin-left: 5px;
     }
   }
+  .post-txt{
+    position: absolute;
+    margin-left: 20px;
+    display: block;
+    width: 85%;
+    bottom: 12%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    height: 3.6em;
+    word-wrap : break-word;
+    text-align : left;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+
+  }
   .date{
     width: 90%;
+    position: relative;
+    top: 60px;
     margin: 0 auto;
     font-size: 0.8rem;
     color: var(--gray500);

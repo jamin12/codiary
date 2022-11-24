@@ -7,7 +7,8 @@ export const LOGOUT = "AUTH/LOGOUT";
 
 const initalState = {
   User: {
-    uniqueid: ''
+    uniqueid: '',
+    user_role: '',
   }
 };
 
@@ -18,7 +19,8 @@ const userChecker = (state = initalState, action) => {
         ...state,
         User: {
           ...state.User,
-          uniqueid: action.payload
+          uniqueid: action.payload.uniqueid,
+          user_role: action.payload.user_role
         }
 
       };

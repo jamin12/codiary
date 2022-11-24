@@ -6,7 +6,6 @@ import axios from "axios";
 import SearchProfile from "../components/SearchProfile";
 import SimilarPost from "../components/SimilarPost";
 import { personal } from "../api/index";
-import { useCookies } from 'react-cookie';
 import { useSelector } from "react-redux";
 
 
@@ -14,12 +13,16 @@ const WritePage = () => {
 	// 가변 인수 가져오기
 	const { userId, postId } = useParams();
 	const [post, setPost] = useState({});
+	const [refindePost, setrefindePost] = useState("");
 	const [comments, setComments] = useState([]);
 	const [checkCommentChange, setCheckCommentChange] = useState(0);
+	const [taglist, setTaglist] = useState([]);
 	const [associatePost, setAssociatePost] = useState({});
 	const [isCheckingBox, setIsCheckingBox] = useState(false)
 	const [commentValue, setCommentValue] = useState("");
 	const { uniqueid } = useSelector((state) => state.auth.User);
+	const tagh1IdList = [];
+	const tagh2IdList = [];
 
 
 	/**
@@ -33,8 +36,28 @@ const WritePage = () => {
 			);
 			setPost(getPost.data.result_data);
 			setIsCheckingBox(getPost.data.result_data.checkLike)
+			// 정규식 이용해 h1 h2 태그에 id값 넣어주기
+			const p = getPost.data.result_data.getPost.post_body_html.replaceAll("&lt;", "<").match(/<h(1|2)>(.*?)<\/h(1|2)>/g);
+			for (let index = 0; index < p?.length; index++) {
+				taglist.push(`${p[index].replaceAll(/<[^>]*>?/g, "")}${index}`);
+				console.log(taglist)
+				if (p[index][2] === '1') {
+					tagh1IdList.push(`${p[index].replaceAll(/<[^>]*>?/g, "")}${index}`);
+				} else {
+					tagh2IdList.push(`${p[index].replaceAll(/<[^>]*>?/g, "")}${index}`);
+				}
+			}
+			let datahtml = getPost.data.result_data.getPost.post_body_html;
+			tagh1IdList.forEach((tagId) => {
+				datahtml = datahtml.replaceAll("&lt;", "<").replace(/<h(1)>/i, `<h1 id= "${tagId}">`);
+			})
+			tagh2IdList.forEach((tagId) => {
+				datahtml = datahtml.replaceAll("&lt;", "<").replace(/<h(2)>/i, `<h2 id= "${tagId}">`);
+			})
+			setrefindePost(datahtml);
 		};
 		getPostFun();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [postId, userId, isCheckingBox]);
 	/**
 	 * 연관 포스트 가져오기
@@ -50,6 +73,19 @@ const WritePage = () => {
 		getAssociatePostFun();
 	}, [postId]);
 
+	/**
+	 * 방문 기록 저장
+	 */
+	useEffect(() => {
+		if (uniqueid !== '') {
+			const createVisitRecordFun = async () => {
+				await axios.post(personal.createPersonalVisitRecord(),
+					{ post_id: postId },
+					{ withCredentials: true });
+			};
+			createVisitRecordFun();
+		}
+	}, [postId, uniqueid])
 	/**
  * 댓글 가져오기
  */
@@ -93,21 +129,27 @@ const WritePage = () => {
 	 * 좋아요 체크
 	 */
 	const checkingCheckedBox = () => {
-		setIsCheckingBox(!isCheckingBox)
+		if (uniqueid !== '') {
+			setIsCheckingBox(!isCheckingBox)
+		}
 	}
 
 	const checkLike = async () => {
-		if (!isCheckingBox) {
-			await axios.post(personal.createPersonalLikeRecord(),
-				{
-					post_id: postId,
-				},
-				{ withCredentials: true }
-			);
+		if (uniqueid !== '') {
+			if (!isCheckingBox) {
+				await axios.post(personal.createPersonalLikeRecord(),
+					{
+						post_id: postId,
+					},
+					{ withCredentials: true }
+				);
+			} else {
+				await axios.delete(personal.deletePersonalLikeRecordByPostId(postId),
+					{ withCredentials: true }
+				);
+			}
 		} else {
-			await axios.delete(personal.deletePersonalLikeRecordByPostId(postId),
-				{ withCredentials: true }
-			);
+			alert("로그인을 해주십시오")
 		}
 	}
 	const deletePost = async () => {
@@ -117,6 +159,9 @@ const WritePage = () => {
 		document.location.href = `/${userId}`;
 	}
 
+	useEffect(() => {
+
+	}, [post.getPost?.post_body_html])
 	// HTML
 	return (
 		<>
@@ -160,7 +205,7 @@ const WritePage = () => {
 
 					{/* 본문내용 */}
 					<ContentBox>
-						<div dangerouslySetInnerHTML={{ __html: post.getPost?.post_body_html.replaceAll("&lt;", "<") }}>
+						<div dangerouslySetInnerHTML={{ __html: refindePost }}>
 						</div>
 					</ContentBox>
 
@@ -255,9 +300,14 @@ const WritePage = () => {
 				{/* TODO(경민 -> 이묘): h1 h2 태그 기준으로 이동 태그 만들기*/}
 				<SubTitleBox className="sticky-box">
 					<ul>
-						<li>Subtitle</li>
-						<li>What is Lorem Ipsum?</li>
-						<li>Why do we use it?</li>
+						{
+							taglist.map((tag) => {
+								console.log(tag);
+								return (
+									<li><a href={`#${tag}`}>{tag}</a></li>
+								)
+							})
+						}
 					</ul>
 				</SubTitleBox>
 			</Wrap>
@@ -432,6 +482,7 @@ const VisiteBox = styled.div`
 	.like-good p {
 		position: absolute;
 		right: 2px;
+		top: 0.5px;
 	}
 	.like-good ion-icon {
 		position: absolute;

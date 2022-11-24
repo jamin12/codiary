@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useCookies } from "react-cookie"
 import { personal } from "../api";
 
 import SearchProfile from "../components/SearchProfile";
@@ -12,7 +11,7 @@ const Presave = () => {
 		display: block;
 		margin-top: 150px;
 		text-align: center;
-
+		
 		font-size: 1.3rem;
 	`;
 
@@ -21,6 +20,7 @@ const Presave = () => {
 		display: flex;
 		flex-wrap: wrap;
 		margin: 50px auto;
+		transform: translate(5.5%,0);
 
 		div {
 			margin: 0 50px 40px 0;

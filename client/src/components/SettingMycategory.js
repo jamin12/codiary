@@ -97,15 +97,15 @@ const MyCategory = ({ categoryList }) => {
   const addMainCategory = async () => {
     // 백엔드에 정보 추가한다는 내용 전달
     // TODO: body 데이터 부분 넣어주세요
-    await axios.post(personal.createPersonalCategory(),
-      {
-        category_name: "front create test",
-        sub_category_id: 1
-      },
-      {
-        withCredentials: true,
-        headers: { "Content-Type": `application/json` },
-      });
+    // await axios.post(personal.createPersonalCategory(),
+    //   {
+    //     category_name: "front create test",
+    //     sub_category_id: 1
+    //   },
+    //   {
+    //     withCredentials: true,
+    //     headers: { "Content-Type": `application/json` },
+    //   });
     setCategory(categorys.concat(<MainCategory />));
   }
 
