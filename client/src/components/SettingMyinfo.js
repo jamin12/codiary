@@ -264,7 +264,10 @@ const Myinfo = () => {
         setMyProfileImg(changeMyInfo.data.result_data.user_detail.user_img)
         setMyProfileImgrul(img.getImg(changeMyInfo.data.result_data.user_detail.user_img));
 
-        dispatch(login(changeMyInfo.data.result_data.user_detail.user_unique_id));
+        dispatch(login({  
+          uniqueid: changeMyInfo.data.result_data.user_detail.user_unique_id,
+          user_role: changeMyInfo.data.result_data.user_detail.user_role,
+        }));
 
       }
     } else {

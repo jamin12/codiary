@@ -41,7 +41,7 @@ class PersonalService {
 		this.userJoin = {
 			model: users,
 			as: "users",
-			attributes: ["user_email"],
+			attributes: ["user_email", "user_role"],
 			include: [
 				{
 					model: user_detail,

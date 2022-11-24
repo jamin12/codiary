@@ -11,7 +11,7 @@ const Login = () => {
   useEffect(() => {
     const loginSuccessFun = async () => {
       const success = await axios.get(`${baseUrl}/loginsuccess`, { withCredentials: true })
-      dispatch(login(success.data.result_data.uniqueid));
+      dispatch(login(success.data.result_data));
       navigate("/")
     }
     loginSuccessFun();

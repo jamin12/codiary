@@ -16,7 +16,7 @@ class UserService {
 	 */
 	async getUserByUserId(userId) {
 		const user = await users.findOne({
-			attributes: ["user_email"],
+			attributes: ["user_email","user_role"],
 			include: [
 				{
 					model: user_detail,

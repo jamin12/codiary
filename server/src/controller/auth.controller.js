@@ -15,7 +15,8 @@ const output = {
 		const getUser = await uService.getUserByUserId(req.user?.user_id);
 
 		res.send(resultDto(httpStatus.OK, "login success", {
-			uniqueid: getUser?.user_detail?.user_unique_id
+			uniqueid: getUser?.user_detail?.user_unique_id,
+			user_role: getUser?.user_role
 		}))
 	}),
 
