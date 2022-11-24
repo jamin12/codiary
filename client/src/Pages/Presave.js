@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useCookies } from "react-cookie"
 import { personal } from "../api";
 
 import SearchProfile from "../components/SearchProfile";

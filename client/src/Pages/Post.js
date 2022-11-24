@@ -6,7 +6,6 @@ import axios from "axios";
 import SearchProfile from "../components/SearchProfile";
 import SimilarPost from "../components/SimilarPost";
 import { personal } from "../api/index";
-import { useCookies } from 'react-cookie';
 import { useSelector } from "react-redux";
 
 
@@ -40,8 +39,7 @@ const WritePage = () => {
 			// 정규식 이용해 h1 h2 태그에 id값 넣어주기
 			const p = getPost.data.result_data.getPost.post_body_html.replaceAll("&lt;", "<").match(/<h(1|2)>(.*?)<\/h(1|2)>/g);
 			for (let index = 0; index < p?.length; index++) {
-				// TODO: 태그 리스트 만들기(왜 안들어가냐?)
-				setTaglist(taglist.concat(`${p[index].replaceAll(/<[^>]*>?/g, "")}${index}`));
+				taglist.push(`${p[index].replaceAll(/<[^>]*>?/g, "")}${index}`);
 				console.log(taglist)
 				if (p[index][2] === '1') {
 					tagh1IdList.push(`${p[index].replaceAll(/<[^>]*>?/g, "")}${index}`);
@@ -484,6 +482,7 @@ const VisiteBox = styled.div`
 	.like-good p {
 		position: absolute;
 		right: 2px;
+		top: 0.5px;
 	}
 	.like-good ion-icon {
 		position: absolute;
