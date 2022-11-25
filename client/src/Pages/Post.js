@@ -40,7 +40,6 @@ const WritePage = () => {
 			const p = getPost.data.result_data.getPost.post_body_html.replaceAll("&lt;", "<").match(/<h(1|2)>(.*?)<\/h(1|2)>/g);
 			for (let index = 0; index < p?.length; index++) {
 				taglist.push(`${p[index].replaceAll(/<[^>]*>?/g, "")}${index}`);
-				console.log(taglist)
 				if (p[index][2] === '1') {
 					tagh1IdList.push(`${p[index].replaceAll(/<[^>]*>?/g, "")}${index}`);
 				} else {
@@ -191,7 +190,7 @@ const WritePage = () => {
 					{/* 제목 및 헤더 */}
 					<HeaderBox>
 						<span className="write-data-box">
-							<p className="userName">{post.user?.user_detail?.user_unique_id}</p>
+							<a className="userName" href={`/${post.user?.user_detail?.user_unique_id}`}>{post.user?.user_detail?.user_unique_id}</a>
 							<p className="writeDate">{post.getPost?.updated_at}</p>
 						</span>
 						<h1 className="title">{post.getPost?.post_title}</h1>
@@ -260,8 +259,10 @@ const WritePage = () => {
 								return (
 									<CommentBox>
 										<ProfileBox>
-											<img src={e.users.user_detail?.user_img} alt=""></img>
-											<p>{e.users.user_detail?.user_unique_id}</p>
+											<a href={`/${e.users.user_detail?.user_unique_id}`}>
+												<img src={e.users.user_detail?.user_img} alt=""></img>
+											</a>
+											<a href={`/${e.users.user_detail?.user_unique_id}`}>{e.users.user_detail?.user_unique_id}</a>
 										</ProfileBox>
 										<p className="text-box">
 											{e.comments_body}
@@ -278,8 +279,10 @@ const WritePage = () => {
 									// {/* 덧글 */ }
 									<ReplyBox>
 										<ProfileBox>
-											<img src={e.users.user_detail?.user_img} alt=""></img>
-											<p>{e.users.user_detail?.user_unique_id}</p>
+											<a href={`/${e.users.user_detail?.user_unique_id}`}>
+												<img src={e.users.user_detail?.user_img} alt=""></img>
+											</a>
+											<a href={`/${e.users.user_detail?.user_unique_id}`}>{e.users.user_detail?.user_unique_id}</a>
 										</ProfileBox>
 										<p className="text-box">
 											{e.comments_body}
@@ -302,7 +305,6 @@ const WritePage = () => {
 					<ul>
 						{
 							taglist.map((tag) => {
-								console.log(tag);
 								return (
 									<li><a href={`#${tag}`}>{tag}</a></li>
 								)
