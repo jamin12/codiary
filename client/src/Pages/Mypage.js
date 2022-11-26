@@ -109,7 +109,6 @@ const Mypage = () => {
   //       onClick={clickFolder}
   //     >
   //       <span>{categorys[i].category_name}</span>
-  //       <ion-icon name="chevron-down-outline" onClick={() => { console.log("hi") }}></ion-icon>
   //     </div>
   //       )
   //     }
@@ -157,7 +156,6 @@ const Mypage = () => {
                       onClick={clickFolder}
                     >
                       <span>{categoryArr[0].category_name}</span>
-                      {/* <ion-icon name="chevron-down-outline" onClick={() => { console.log("hi") }}></ion-icon> */}
                     </div>
                   )
                 }
