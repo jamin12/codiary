@@ -5,14 +5,13 @@ import '../css/Calendar.css'; // css import
 import '../css/reset.css'
 import styled from 'styled-components';
 import moment from 'moment';
-import { personal } from '../api';
+import { personal, img } from '../api';
 import axios from 'axios';
 import default_img from '../IMG/codiary_default_img.png';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const MyCalendar = () => {
-  const [userUniqueId, setUserUniqueId] = useState("Emyo");
-
+  const { userId } = useParams();
   const date = new Date();
   const [postDate, changeDate] = useState(date);
   const sendDate = new Date(+postDate + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '').substring(0, 10) + " 00:00:00"
@@ -49,7 +48,7 @@ const MyCalendar = () => {
   useEffect(() => {
     const getPostCountByMonthFun = async () => {
       const getPostCountByMonth = await axios.get(
-        personal.getPersonalPostCountByDate("test"),
+        personal.getPersonalPostCountByDate(userId),
         {
           params: {
             startdate: `${sendYear}-${sendMonth}-01 00:00:00`,
@@ -60,7 +59,7 @@ const MyCalendar = () => {
       setMark(getPostCountByMonth.data.result_data);
     };
     getPostCountByMonthFun()
-  }, [sendYear, sendMonth])
+  }, [sendYear, sendMonth, userId])
 
 
 
@@ -70,13 +69,13 @@ const MyCalendar = () => {
   useEffect(() => {
     const getPostsByDateFun = async () => {
       const getPostsByDate = await axios.get(
-        personal.getPersonalPostsByDate(userUniqueId),
+        personal.getPersonalPostsByDate(userId),
         { params: { startdate: sendDate/** postDate */, enddate: sendDate.substring(0, 8) + (postDate.getDate() + 1) + " " + sendDate.substring(11,)/** postDate에서 하루 뒤 */ } }
       );
       setPostByDate(getPostsByDate.data.result_data);
     };
     getPostsByDateFun();
-  }, [postDate, sendDate, userUniqueId]);
+  }, [postDate, sendDate, userId]);
 
 
 
@@ -102,15 +101,6 @@ const MyCalendar = () => {
   const onErrorImg = (e) => {
     e.target.src = default_img;
   }
-  console.log(mark)
-
-  /**
- * 현재 url
- */
-  const location = useLocation();
-  useEffect(() => {
-    setUserUniqueId(location.pathname.split("/")[1])
-  }, [location.pathname])
 
   return (
     <Main>
@@ -154,7 +144,7 @@ const MyCalendar = () => {
         <PostWrap>
           <div className='menu'>
             <h2>{postDate.getDate()}일</h2>
-            <Link className='link' to={`/${userUniqueId}`}><ion-icon name="library-outline"></ion-icon></Link>
+            <Link className='link' to={`/${userId}`}><ion-icon name="library-outline"></ion-icon></Link>
           </div>
 
           {
@@ -165,14 +155,13 @@ const MyCalendar = () => {
               const imgEnd = html.indexOf('"', imgStart)
               const imgSrc = html.slice(imgStart, imgEnd)
 
-              console.log(post)
-
               return (
                 <Post onClick={() => onClickPost(post.post_id, post.posts?.users?.user_detail.user_unique_id)}>
                   <div className='text-box'>
                     <h1 className="title">{post.posts?.post_title}</h1>
                     <div className='user-info'>
-                      <img src={post.posts?.users?.user_detail.user_img} alt="사용자 이미지" />
+                      {/* TODO: 구글에서 받은 이미지는 이미지 서버를 거칠 필요 없음 */}
+                      <img src={img.getImg(post.posts?.users?.user_detail.user_img)} alt="사용자 이미지" />
                       <span className='user'>{post.posts?.users?.user_detail.user_unique_id}</span>
                     </div>
                   </div>

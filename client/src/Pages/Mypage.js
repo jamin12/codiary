@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../css/reset.css";
 import styled from "styled-components";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import SearchProfile from "../components/SearchProfile";
 import { personal } from "../api/index";
 import axios from "axios";
 
 import default_img from '../IMG/codiary_default_img.png'
-import { ButtonGroup, Button, Dropdown, SplitButton } from "react-bootstrap";
+import { ButtonGroup, Button, Dropdown } from "react-bootstrap";
 
 const Mypage = () => {
   const { userId } = useParams();
 
-  const [userUniqueId, setUserUniqueId] = useState("Emyo");
   // TODO: 하위 카테고리도 설정 넣어놔야함
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
@@ -34,8 +33,6 @@ const Mypage = () => {
     };
     getCategoryFun();
   }, [userId]);
-  console.log(category)
-
 
   useEffect(() => {
     const subArr = []
@@ -46,8 +43,6 @@ const Mypage = () => {
       setSubCategory(subArr)
     })
   }, [category])
-  console.log(subCategory)
-
   useEffect(() => {
     const Total = [];
 
@@ -65,7 +60,6 @@ const Mypage = () => {
       setCategoryFolder(Total)
     })
   }, [category, subCategory])
-  console.log(categoryFolder)
 
   /**
    *  사용자 카테고리별 포스트 목록 조회
@@ -85,7 +79,6 @@ const Mypage = () => {
   }, [userId, categoryId]);
 
   const clickFolder = (e) => {
-    console.log(e.target)
     setCategoryId(e.target.id)
   }
   const openAllPost = () => {
@@ -106,15 +99,6 @@ const Mypage = () => {
   const onErrorImg = (e) => {
     e.target.src = default_img;
   }
-
-  /**
-   * 현재 url
-   */
-  const location = useLocation();
-  useEffect(() => {
-    // console.log(location.pathname.substring(1))
-    setUserUniqueId(location.pathname.substring(1))
-  })
 
   // const test = (categorys) => {
   //   for(let i=0; i<categorys.length; i++){
@@ -147,13 +131,13 @@ const Mypage = () => {
       <Contents>
         {/* 가운데 홈 글씨 */}
         <div className="mypage-main-txt">
-          <h3>{userUniqueId}'s</h3>
+          <h3>{userId}'s</h3>
           <h1>CODIARY</h1>
         </div>
 
         <Folders>
           <div className="folder link-wrap">
-            <Link className='link' to={`/${userUniqueId}/calender`}><ion-icon name="calendar-outline"></ion-icon></Link>
+            <Link className='link' to={`/${userId}/calender`}><ion-icon name="calendar-outline"></ion-icon></Link>
           </div>
 
           <div className="folder full-view"
