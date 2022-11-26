@@ -24,6 +24,8 @@ const WritePage = () => {
 	const tagh1IdList = [];
 	const tagh2IdList = [];
 
+	const [replyToggle, setReplyToggle] = useState([]);
+
 
 	/**
 	 * 포스트 가져오기
@@ -87,8 +89,8 @@ const WritePage = () => {
 		}
 	}, [postId, uniqueid])
 	/**
- * 댓글 가져오기
- */
+   * 댓글 가져오기
+   */
 	useEffect(() => {
 		const getCommentsFun = async () => {
 			const getComments = await axios.get(
@@ -99,6 +101,7 @@ const WritePage = () => {
 		setCheckCommentChange(0);
 		getCommentsFun();
 	}, [postId, checkCommentChange]);
+	console.log(comments)
 
 	/**
 	 * 댓글 입력
@@ -159,10 +162,16 @@ const WritePage = () => {
 		document.location.href = `/${userId}`;
 	}
 
-	useEffect(() => {
+	const onClickCommnetModify = () => {
 
-	}, [post.getPost?.post_body_html])
-	// HTML
+	}
+
+	const onClickCommnetDelete = () => {
+
+	}
+
+
+
 	return (
 		<>
 			<Header style={{ zIndex: "999" }}>
@@ -267,7 +276,9 @@ const WritePage = () => {
 											{e.comments_body}
 										</p>
 										<DateBox>
-											<p className="btn-reply">답글 쓰기</p>
+											<p className="btn-reply reply-toggle" onClick={setReplyToggle(!replyToggle)}>답글 쓰기</p>
+											<p className="btn-reply" onClick={ (e) => onClickCommnetModify(e) }>수정</p>
+											<p className="btn-reply" onClick={ (e) => onClickCommnetDelete(e) }>삭제</p>
 											{/* TODO(경민 -> 이묘): 생성 수정 삭제 텍스트 박스 만들기*/}
 											<p className="date">{e.updated_at}</p>
 										</DateBox>
@@ -285,6 +296,8 @@ const WritePage = () => {
 											{e.comments_body}
 										</p>
 										<DateBox>
+											<p className="btn-reply">수정</p>
+											<p className="btn-reply">삭제</p>
 											<p className="date">{e.updated_at}</p>
 										</DateBox>
 									</ReplyBox>
