@@ -7,7 +7,8 @@ import SearchProfile from "../components/SearchProfile";
 import SimilarPost from "../components/SimilarPost";
 import { personal } from "../api/index";
 import { useSelector } from "react-redux";
-import { IoClose } from "react-icons/io5";
+import PostReply from "../components/PostReply";
+import PostUpdate from "../components/PostUpdate";
 
 
 const WritePage = () => {
@@ -16,6 +17,8 @@ const WritePage = () => {
   const [post, setPost] = useState({});
   const [refindePost, setrefindePost] = useState("");
   const [comments, setComments] = useState([]);
+	const [commentArr, setCommentArr] = useState([]);
+	const [test, setTest] = useState([]);
   const [checkCommentChange, setCheckCommentChange] = useState(0);
   const [taglist, setTaglist] = useState([]);
   const [associatePost, setAssociatePost] = useState({});
@@ -25,8 +28,8 @@ const WritePage = () => {
   const tagh1IdList = [];
   const tagh2IdList = [];
 
-  const [replyToggle, setReplyToggle] = useState([]);
-  const [replyValue, setReplyValue] = useState("");
+	const [commentUpdate, setCommentUpdate] = useState([]);
+
 
   /**
    * 포스트 가져오기
@@ -106,8 +109,18 @@ const WritePage = () => {
     };
     setCheckCommentChange(0);
     getCommentsFun();
+
   }, [postId, checkCommentChange]);
   console.log(comments);
+	
+	
+	useEffect(() => {
+		const Arr = new Array(comments.length)
+		for(let i=0; i<Arr.length; i++){
+			Arr[i] = false;
+		}
+		setCommentUpdate(Arr)
+	}, [comments])
 
   /**
    * 댓글 입력
@@ -171,32 +184,80 @@ const WritePage = () => {
   };
 
   // 답글쓰기 버튼 onClick
-  const onClickReply = () => {
-    alert("hi");
+  const onClickReply = (e) => {
+		console.log(e.target.id)
+		document.getElementById(`inputReply_${e.target.id}`).style.display = 'block';
   };
   /**
    * 답글 저장
-   * @param {*} e 
    */
-  const onClickReplySave = (e) => {
+  const onClickReplySave = async(content, id) => {
+		console.log(content);
+		console.log(id)
 
+		if(content.trim() === ""){
+			alert("댓글 내용을 입력해주세요")
+		}else{
+			await axios.post(
+				personal.createComment(),
+				{
+					post_id: postId,
+					comments_body: content,
+					sub_comments_id: id
+				},
+				{ withCredentials: true }
+			);
+			setCheckCommentChange(1);
+		}
   };
 
-  const onChangeInputReply = (e) => {
-    setReplyValue(e.target.value);
-  };
 
-  // 댓글 수정 버튼
-  const onClickCommnetModify = (e) => {
+  /**
+	 * 댓글 수정
+	 */
+  const onClickCommnetModify = async(id, content) => {
     // TODO: 서버에 수정 요청
-    alert("수정 기능 넣어주세요");
+		console.log(id)
+		// console.log(comments.findIndex(i => i.comments_id === id))
+		console.log(content)
+
+		await axios.patch(
+			personal.updateComment(),
+			{
+				comment_id: id,
+				comments_body: content,
+			},
+			{ withCredentials: true }
+		);
+		setCheckCommentChange(1);
+  };
+	/**
+	 * 댓글 수정창 on 함수
+	 */
+	const onClickCommnetUpdateOn = (id) => {
+		const copyUpdateList = commentUpdate.map(item => item)
+		copyUpdateList.fill(false).splice(comments.findIndex(i => i.comments_id === id), 1, true)
+		setCommentUpdate(copyUpdateList);
+	}
+
+
+  /**
+	 * 댓글 삭제
+	 */
+  const onClickCommnetDelete = async(id) => {
+		console.log(id)
+
+		// TODO: 왜 안될까?
+		await axios.delete(
+			personal.deleteComment(),
+			{
+				commentid: id,
+			},
+			{ withCredentials: true }
+		);
+		setCheckCommentChange(1);
   };
 
-  // 댓글 삭제 버튼
-  const onClickCommnetDelete = (e) => {
-    // TODO: 서버에 삭제 요청
-    alert("삭제 기능 넣어주세요");
-  };
 
   return (
     <>
@@ -296,9 +357,11 @@ const WritePage = () => {
           </InputCommnetBox>
 
           {/* 댓글 */}
-          {comments.map((comment) => {
+          {comments.map((comment, index) => {
             if (comment.sub_comments_id === null) {
+							const subComments = (comments.filter(test => test.sub_comments_id === comment.comments_id))
               return (
+								<>
                 <CommentBox>
                   <ProfileBox>
                     <a href={`/${comment.users.user_detail?.user_unique_id}`}>
@@ -308,75 +371,84 @@ const WritePage = () => {
                       {comment.users.user_detail?.user_unique_id}
                     </a>
                   </ProfileBox>
-                  <p className="text-box">{comment.comments_body}</p>
-                  <DateBox>
+
+									{
+										commentUpdate[index] ? <PostUpdate 
+										id={comment.comments_id} 
+										update={onClickCommnetModify}
+										content={comment.comments_body}/> : <p className="text-box">{comment.comments_body}</p>
+									}
+  
+	                <DateBox>
                     <p
                       className="btn-reply reply-toggle"
                       onClick={onClickReply}
-                    >
-                      답글 쓰기
+											id={comment.comments_id}
+                    >답글 쓰기
                     </p>
                     {/* TODO: 작성자 본인에게만 수정 삭제 버튼이 보이도록*/}
                     <p
                       className="btn-reply"
-                      onClick={(e) => onClickCommnetModify(e)}
+                      onClick={() => onClickCommnetUpdateOn(comment.comments_id)}
                     >
                       수정
                     </p>
                     <p
                       className="btn-reply"
-                      onClick={(e) => onClickCommnetDelete(e)}
-                    >
-                      삭제
-                    </p>
-                    <p className="date">{comment.updated_at}</p>
-                  </DateBox>
-                </CommentBox>
-              );
-            } else {
-              return (
-                // {/* 덧글 */ }
-                <ReplyBox>
-                  <ProfileBox>
-                    <a href={`/${comment.users.user_detail?.user_unique_id}`}>
-                      <img src={comment.users.user_detail?.user_img} alt=""></img>
-                    </a>
-                    <a href={`/${comment.users.user_detail?.user_unique_id}`}>
-                      {comment.users.user_detail?.user_unique_id}
-                    </a>
-                  </ProfileBox>
-                  <p className="text-box">{comment.comments_body}</p>
-                  <DateBox>
-                    <p
-                      className="btn-reply"
-                      onClick={(e) => onClickCommnetModify(e)}
-                    >
-                      수정
-                    </p>
-                    <p
-                      className="btn-reply"
-                      onClick={(e) => onClickCommnetDelete(e)}
-                    >
-                      삭제
+                      onClick={(e) => onClickCommnetDelete(comment.comments_id)}
+                    >삭제
                     </p>
                     <p className="date">{comment.updated_at}</p>
                   </DateBox>
 
-                  <InputReplyBox>
-                    <div className='input-wrap'>
-                      <IoClose className='btn-cancel'
-                        // onClick={}
-                        />
-                      <textarea
-                        className="input-reply"
-                        placeholder="답글을 입력하세요"
-                        value={replyValue}
-                        onChange={(e) => onChangeInputReply(e)}
-                      ></textarea>
-                    </div>
-                    <button onClick={(e) => {onClickReplySave(e); console.log(comment.sub_comments_id)}}>저장</button>
-                  </InputReplyBox>
-                </ReplyBox>
+
+									<PostReply 
+									save={onClickReplySave} 
+									id={`inputReply_${comment.comments_id}`}
+									input={""}/>
+                </CommentBox>
+								{
+									subComments.map((replyComment, replyIndex) => {
+										return(
+										// {/* 덧글 */ }
+										<ReplyBox>
+											<ProfileBox>
+												<a href={`/${replyComment.users.user_detail?.user_unique_id}`}>
+													<img src={replyComment.users.user_detail?.user_img} alt=""></img>
+												</a>
+												<a href={`/${replyComment.users.user_detail?.user_unique_id}`}>
+													{replyComment.users.user_detail?.user_unique_id}
+												</a>
+											</ProfileBox>
+
+											{
+												commentUpdate[comments.findIndex(i => i.comments_id === replyComment.comments_id)] ? <PostUpdate 
+												id={replyComment.comments_id} 
+												update={onClickCommnetModify}
+												content={replyComment.comments_body}/> :	<p className="text-box">{replyComment.comments_body}</p>
+											}
+
+											<DateBox>
+												<p
+													className="btn-reply"
+													onClick={() => onClickCommnetUpdateOn(replyComment.comments_id)}
+												>
+													수정
+												</p>
+												<p
+													className="btn-reply"
+													onClick={() => onClickCommnetDelete(replyComment.comments_id)}
+												>
+													삭제
+												</p>
+												<p className="date">{replyComment.updated_at}</p>
+											</DateBox>
+
+										</ReplyBox>
+										)
+									})
+								}
+								</>
               );
             }
           })}
@@ -647,57 +719,6 @@ const ReplyBox = styled.div`
   @media screen and (max-width: 1024px) {
     width: 85%;
     margin-left: 120px;
-  }
-`;
-// 덧글 입력
-const InputReplyBox = styled.div`
-  display: block;
-  width: 100%;
-  height: 100%;
-  /* background-color: red; */
-
-  .input-wrap{
-    display: flex;
-
-    .btn-cancel{
-      width: 5%;
-      height:5%;
-      cursor: pointer;
-      color: var(--gray400);
-      transition: 0.3s;
-
-      :hover{
-        color: var(--gray600);
-      }
-    }
-  }
-
-  .input-reply {
-    width: 100%;
-    height: 80px;
-    resize: none;
-    margin: 0;
-    border: 2px solid var(--gray200);
-    border-radius: 10px;
-    box-sizing: border-box;
-    padding: 5px;
-    
-    :focus {
-      outline: none;
-    }
-  }
-  button {
-    margin-top: 0%;
-    float: right;
-    padding: 2px 15px;
-    border: 2px solid var(--gray400);
-    border-radius: 10px;
-    transition: 0.3s;
-
-    :hover{
-      color: var(--gray100);
-      background-color: var(--gray500);
-    }
   }
 `;
 
