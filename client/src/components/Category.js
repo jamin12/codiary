@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from 'styled-components';
 import { IoChevronDown, IoClose, IoRemove, IoAdd } from "react-icons/io5";
 import axios from "axios";
 import { personal } from "../api";
+import InputMain from "./CategoryInput/Main";
+import InputSub from "./CategoryInput/Sub";
+
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 
 
 // CSS
@@ -19,7 +25,7 @@ const Category = styled.div`
     right: 0;
     transform: translate(30%,-40%);
     font-size: 1.7rem;
-    background-color: var(--gray800);
+    background-color: var(--gray700);
     color: var(--gray50);
     border-radius: 50%;
     cursor: pointer;
@@ -36,7 +42,7 @@ const Category = styled.div`
     height: 70px;   // 카테고리박스와 같은 높이
     margin: 0 auto;
     background-color: var(--gray100);
-    border-radius: 20px;
+    border-radius: 20px 20px 0 0;
     overflow: hidden; 
     box-sizing: border-box;
     align-items: center;
@@ -76,13 +82,13 @@ const Category = styled.div`
   }
 
   .category-subfolder{
-    display: none;
+    /* display: none; */
     position: relative;
     z-index: 999;
     background-color: var(--gray200);
     padding: 0px 0 50px 0;
     // margin-top: -50px;
-    border-radius: 0 0 50px 50px;
+    border-radius: 0 0 20px 20px;
     overflow: hidden;
 
   .category-subtitle{
@@ -92,7 +98,7 @@ const Category = styled.div`
     border-bottom: 1px solid var(--gray800);
     align-items: center;
 
-    #subtitle{
+    .input-sub-category{
       border: none;
       width: 80%;
       height: 60%;
@@ -100,11 +106,11 @@ const Category = styled.div`
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      background-color: transparent;
-      font-weight: 700;
+      background-color: rgba(0,0,0,0);
+      font-weight: 600;
       :focus {
         background-color: var(--gray100);
-        font-weight: 300;
+        font-weight: 400;
       }
     }
 
@@ -132,57 +138,152 @@ const Category = styled.div`
       }
     }
   }
+
+  .btn-save{
+    margin: 0 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: var(--gray400);
+    color: white;
+    width: 3rem;
+  }
 `
 // CSS END
-const MainCategory = (category_id, sub_category_id) => {
 
-  // TODO: 카테고리 이름 가져오기
-  // Add sub category
-  const addSubCategory = async () => {
-    // await axios.post(personal.createPersonalCategory(),
-    //   {
-    //     category_name: "",
-    //     sub_category_id: sub_category_id
-    //   },
-    //   {
-    //     withCredentials: true,
-    //     headers: { "Content-Type": "application/json" }
-    //   }
-    // )
-    alert("서브카테고리 추가")
+
+const MainCategory = (props) => {
+
+  const categorys = props.category;
+  const subCategorys = props.subCategory;
+  const deleteC = props.deleteCategory;
+
+  const [show, setShow] = useState(false);
+  const [subValue, setSubValue] = useState("");
+  const [wantAddSub, setWantAddSub] = useState(0);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+
+  const deleteCategory = (id) => {
+    deleteC(id)
   }
 
-  // delete main Category
-  const deleteCategory = async (category_id) => {
-    // await axios.delete(personal.deletePersonalCategory(category_id),
-    //   {
-    //     withCredentials: true,
-    //   });
-    alert('메인카테고리 삭제')
+  const addCategory = (id) => {
+    handleShow();
+    setWantAddSub(id);
   }
 
+  /**
+ * 수정 버튼 onClick
+ * @param {int} id 
+ * @param {String} name 
+ * @param {int} sub_id 
+ */
+  const updateCategory = async (id, name, sub_id) => {
+    await axios.patch(
+      personal.updatePersonalCategory(id),
+      {
+        category_name: name,
+        sub_category_id: sub_id
+      },
+      { withCredentials: true }
+    );
+  }
 
+  /**
+   * 서브 폴더 추가 onClick
+   * @param {String} subValue 
+   * @param {int} wantAddSub 
+   */
+  const onClickAddSubCategory = (subValue, wantAddSub) => {
+    props.addCategory(subValue, wantAddSub);
+    setSubValue("");
+    handleClose();
+  }
 
-
+  /**
+   * 서브폴더 추가 취소 onClick
+   */
+  const onClickCancle = () => {
+    setSubValue("");
+    handleClose();
+  }
 
   return (
-    <Category>
-      <IoClose className='category-delete' onClick={deleteCategory} />
+    <>
+      {
+        categorys.map(category => {
+          if (category.sub_category_id === null) {
+            return (
+              <Category className="category">
+                <IoClose className='category-delete' onClick={() => deleteCategory(category.category_id)} />
 
-      <div className='category-mainfolder'>
-        
-        <input id='mainT1' className='maintitle' type='text' name='maintitle'></input>
-        <IoChevronDown className='drop-down off' />
-      </div>
+                <div className='category-mainfolder'>
 
-      <div className="category-subfolder">
-        <div className="category-subtitle">
-          <input id='subtitle' type='text' name='subtitle'></input>
-          <IoRemove className='folder-remove' onClick={deleteCategory} />
-        </div>
-        <IoAdd className='add-subfolder' onClick={addSubCategory} />
-      </div>
-    </Category>
+                  <InputMain
+                    id={category.category_id}
+                    sub_id={category.sub_category_id}
+                    value={category.category_name}
+                    updateCategory={updateCategory} />
+
+                </div>
+
+
+                <div className="category-subfolder">
+                  {
+                    subCategorys.map(subCategory => {
+                      if (category.category_id === subCategory.sub_category_id) {
+                        return (
+                          <div className="category-subtitle">
+                            <InputSub
+                              id={subCategory.category_id}
+                              sub_id={subCategory.sub_category_id}
+                              value={subCategory.category_name}
+                              updateCategory={updateCategory}
+                              onClickDelete={deleteCategory}
+                            />
+                          </div>
+                        )
+                      }
+                    })
+                  }
+                  <IoAdd className='add-subfolder' onClick={() => addCategory(category.category_id)} />
+                </div>
+              </Category>
+            )
+          }
+        })
+      }
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>서브 카테고리 이름을 입력해주세요</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Control
+                type="text"
+                value={subValue}
+                onChange={(e) => setSubValue(e.target.value)}
+                autoFocus
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={onClickCancle}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={() => onClickAddSubCategory(subValue, wantAddSub)}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   )
 }
 export default MainCategory;
+
+

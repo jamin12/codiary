@@ -23,7 +23,7 @@ const ContentsWrap = styled.div`
 	height: 70vh;
 
 	margin: 0 auto;
-	margin-top: 100px;
+	/* margin-top: 100px; */
 
 	@media screen and (max-width: 1300px) {
 	}
