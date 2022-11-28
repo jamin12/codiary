@@ -9,8 +9,6 @@ import { useDispatch } from "react-redux";
 import { login, logout } from "../reducers/Action";
 
 
-// 글자를 입력하면 하나씩 밖에 입력되는 현상 해결해야함.
-
 const InputField = styled.input`
   width: 100%;
   padding-left: 10px;
@@ -46,6 +44,15 @@ const ImgBox = styled.div`
     width: 201px;
     height: 184px;
   }
+
+  p{
+    position: absolute;
+    font-weight: 600;
+    color: var(--gray200);
+    background-color: rgba(10, 10, 20, 0.3);
+    padding: 5px 10px;
+    border-radius: 20px;
+  }
 `
 const InputGroup = styled.div`
   div{
@@ -67,12 +74,13 @@ const InputGroup = styled.div`
     }
 
     p{
+      width: 10%;
+      height: 100%;
       background-color: var(--gray200);
       color: var(--gray600);
       display: flex;
       align-items: center;
-      
-      padding: 10px 20px;
+      justify-content: center;
       font-size: 1rem;
     }
   }
@@ -349,8 +357,8 @@ const Myinfo = () => {
     <MainWrap>
       <ImgBox onClick={callFileInput}>
         {/* TODO(경민 -> 이묘): 이미지랑 글자 css 적용 */}
-        클릭 후 이미지 변경
-        <img src={myProfileImgUrl} alt='asdf'></img>
+        <img src={myProfileImgUrl} alt='프로필 이미지'></img>
+        <p>클릭 후 이미지 변경</p>
         <input type="file" ref={fileInput} onChange={changeMyImg} style={{ display: "none" }}></input>
       </ImgBox>
 
