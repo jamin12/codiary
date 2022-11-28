@@ -5,7 +5,6 @@ import default_img from '../IMG/codiary_default_img.png'
 const SimilarPost = (props) => {
 
   const simPosts = props.post;
-  console.log(simPosts);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -42,7 +41,6 @@ const SimilarPost = (props) => {
                 
                 // 관련 태그가 있는 경우
                 if(post.tag_id>0 && post.posts !== null){
-                  console.log(post)
 
                   const postDate = (post.posts?.updated_at).split(" ")[0]
                   

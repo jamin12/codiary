@@ -18,11 +18,7 @@ const WritePage = () => {
   const [post, setPost] = useState({});
   const [refindePost, setrefindePost] = useState("");
   const [comments, setComments] = useState([]);
-<<<<<<< HEAD
-=======
   const [commentArr, setCommentArr] = useState([]);
-  const [test, setTest] = useState([]);
->>>>>>> c162e6cf044e7bae1476682ea29f05392199d559
   const [checkCommentChange, setCheckCommentChange] = useState(0);
   const [taglist, setTaglist] = useState([]);
   const [associatePost, setAssociatePost] = useState([]);
@@ -126,7 +122,6 @@ const WritePage = () => {
     getCommentsFun();
 
   }, [postId, checkCommentChange]);
-  console.log(comments);
 
 
   useEffect(() => {
@@ -200,15 +195,12 @@ const WritePage = () => {
 
   // 답글쓰기 버튼 onClick
   const onClickReply = (e) => {
-    console.log(e.target.id)
     document.getElementById(`inputReply_${e.target.id}`).style.display = 'block';
   };
   /**
    * 답글 저장
    */
   const onClickReplySave = async (content, id) => {
-    console.log(content);
-    console.log(id)
 
     if (content.trim() === "") {
       alert("댓글 내용을 입력해주세요")
@@ -232,9 +224,7 @@ const WritePage = () => {
    */
   const onClickCommnetModify = async (id, content) => {
     // TODO: 서버에 수정 요청
-    console.log(id)
     // console.log(comments.findIndex(i => i.comments_id === id))
-    console.log(content)
 
     await axios.patch(
       personal.updateComment(id),
@@ -259,7 +249,6 @@ const WritePage = () => {
    * 댓글 삭제
    */
   const onClickCommnetDelete = async (id) => {
-    console.log(id)
 
     // TODO: 왜 안될까?
     await axios.delete(
