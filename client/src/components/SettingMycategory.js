@@ -24,6 +24,7 @@ const CategoryBox = styled.div`
   height: 100%;
   /* overflow-x: hidden; */
   overflow-y: scroll;
+  overflow-x: hidden;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
