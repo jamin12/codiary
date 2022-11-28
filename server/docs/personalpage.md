@@ -909,7 +909,7 @@
     }
 - |속성|타입|설명|
     |---|---|---|
-    |postid *|int|댓글 아이디(필수)|
+    |postid *|int|포스트 아이디(필수)|
     |comments_body *|string|댓글 본문(필수)|
     |sub_comments_id|int|상위 댓글 아이디|
 - authentication 쿠키 필요

@@ -17,8 +17,8 @@ const WritePage = () => {
   const [post, setPost] = useState({});
   const [refindePost, setrefindePost] = useState("");
   const [comments, setComments] = useState([]);
-	const [commentArr, setCommentArr] = useState([]);
-	const [test, setTest] = useState([]);
+  const [commentArr, setCommentArr] = useState([]);
+  const [test, setTest] = useState([]);
   const [checkCommentChange, setCheckCommentChange] = useState(0);
   const [taglist, setTaglist] = useState([]);
   const [associatePost, setAssociatePost] = useState({});
@@ -28,7 +28,7 @@ const WritePage = () => {
   const tagh1IdList = [];
   const tagh2IdList = [];
 
-	const [commentUpdate, setCommentUpdate] = useState([]);
+  const [commentUpdate, setCommentUpdate] = useState([]);
 
 
   /**
@@ -44,8 +44,8 @@ const WritePage = () => {
       setIsCheckingBox(getPost.data.result_data.checkLike);
       // 정규식 이용해 h1 h2 태그에 id값 넣어주기
       const p = getPost.data.result_data.getPost.post_body_html
-        .replaceAll("&lt;", "<")
-        .match(/<h(1|2)>(.*?)<\/h(1|2)>/g);
+      .replaceAll("&lt;", "<")
+      .match(/<h(1|2)>(.*?)<\/h(1|2)>/g);
       for (let index = 0; index < p?.length; index++) {
         taglist.push(`${p[index].replaceAll(/<[^>]*>?/g, "")}${index}`);
         if (p[index][2] === "1") {
@@ -112,15 +112,15 @@ const WritePage = () => {
 
   }, [postId, checkCommentChange]);
   console.log(comments);
-	
-	
-	useEffect(() => {
-		const Arr = new Array(comments.length)
-		for(let i=0; i<Arr.length; i++){
-			Arr[i] = false;
-		}
-		setCommentUpdate(Arr)
-	}, [comments])
+
+
+  useEffect(() => {
+    const Arr = new Array(comments.length)
+    for (let i = 0; i < Arr.length; i++) {
+      Arr[i] = false;
+    }
+    setCommentUpdate(Arr)
+  }, [comments])
 
   /**
    * 댓글 입력
@@ -185,77 +185,73 @@ const WritePage = () => {
 
   // 답글쓰기 버튼 onClick
   const onClickReply = (e) => {
-		console.log(e.target.id)
-		document.getElementById(`inputReply_${e.target.id}`).style.display = 'block';
+    console.log(e.target.id)
+    document.getElementById(`inputReply_${e.target.id}`).style.display = 'block';
   };
   /**
    * 답글 저장
    */
-  const onClickReplySave = async(content, id) => {
-		console.log(content);
-		console.log(id)
+  const onClickReplySave = async (content, id) => {
+    console.log(content);
+    console.log(id)
 
-		if(content.trim() === ""){
-			alert("댓글 내용을 입력해주세요")
-		}else{
-			await axios.post(
-				personal.createComment(),
-				{
-					post_id: postId,
-					comments_body: content,
-					sub_comments_id: id
-				},
-				{ withCredentials: true }
-			);
-			setCheckCommentChange(1);
-		}
+    if (content.trim() === "") {
+      alert("댓글 내용을 입력해주세요")
+    } else {
+      await axios.post(
+        personal.createComment(),
+        {
+          post_id: postId,
+          comments_body: content,
+          sub_comments_id: id
+        },
+        { withCredentials: true }
+      );
+      setCheckCommentChange(1);
+    }
   };
 
 
   /**
-	 * 댓글 수정
-	 */
-  const onClickCommnetModify = async(id, content) => {
+   * 댓글 수정
+   */
+  const onClickCommnetModify = async (id, content) => {
     // TODO: 서버에 수정 요청
-		console.log(id)
-		// console.log(comments.findIndex(i => i.comments_id === id))
-		console.log(content)
+    console.log(id)
+    // console.log(comments.findIndex(i => i.comments_id === id))
+    console.log(content)
 
-		await axios.patch(
-			personal.updateComment(),
-			{
-				comment_id: id,
-				comments_body: content,
-			},
-			{ withCredentials: true }
-		);
-		setCheckCommentChange(1);
+    await axios.patch(
+      personal.updateComment(id),
+      {
+        comments_body: content,
+      },
+      { withCredentials: true }
+    );
+    setCheckCommentChange(1);
   };
-	/**
-	 * 댓글 수정창 on 함수
-	 */
-	const onClickCommnetUpdateOn = (id) => {
-		const copyUpdateList = commentUpdate.map(item => item)
-		copyUpdateList.fill(false).splice(comments.findIndex(i => i.comments_id === id), 1, true)
-		setCommentUpdate(copyUpdateList);
-	}
+  /**
+   * 댓글 수정창 on 함수
+   */
+  const onClickCommnetUpdateOn = (id) => {
+    const copyUpdateList = commentUpdate.map(item => item)
+    copyUpdateList.fill(false).splice(comments.findIndex(i => i.comments_id === id), 1, true)
+    setCommentUpdate(copyUpdateList);
+  }
 
 
   /**
-	 * 댓글 삭제
-	 */
-  const onClickCommnetDelete = async(id) => {
-		console.log(id)
+   * 댓글 삭제
+   */
+  const onClickCommnetDelete = async (id) => {
+    console.log(id)
 
-		// TODO: 왜 안될까?
-		await axios.delete(
-			personal.deleteComment(),
-			{
-				commentid: id,
-			},
-			{ withCredentials: true }
-		);
-		setCheckCommentChange(1);
+    // TODO: 왜 안될까?
+    await axios.delete(
+      personal.deleteComment(id),
+      { withCredentials: true }
+    );
+    setCheckCommentChange(1);
   };
 
 
@@ -359,96 +355,96 @@ const WritePage = () => {
           {/* 댓글 */}
           {comments.map((comment, index) => {
             if (comment.sub_comments_id === null) {
-							const subComments = (comments.filter(test => test.sub_comments_id === comment.comments_id))
+              const subComments = (comments.filter(test => test.sub_comments_id === comment.comments_id))
               return (
-								<>
-                <CommentBox>
-                  <ProfileBox>
-                    <a href={`/${comment.users.user_detail?.user_unique_id}`}>
-                      <img src={comment.users.user_detail?.user_img} alt=""></img>
-                    </a>
-                    <a href={`/${comment.users.user_detail?.user_unique_id}`}>
-                      {comment.users.user_detail?.user_unique_id}
-                    </a>
-                  </ProfileBox>
+                <>
+                  <CommentBox>
+                    <ProfileBox>
+                      <a href={`/${comment.users.user_detail?.user_unique_id}`}>
+                        <img src={comment.users.user_detail?.user_img} alt=""></img>
+                      </a>
+                      <a href={`/${comment.users.user_detail?.user_unique_id}`}>
+                        {comment.users.user_detail?.user_unique_id}
+                      </a>
+                    </ProfileBox>
 
-									{
-										commentUpdate[index] ? <PostUpdate 
-										id={comment.comments_id} 
-										update={onClickCommnetModify}
-										content={comment.comments_body}/> : <p className="text-box">{comment.comments_body}</p>
-									}
-  
-	                <DateBox>
-                    <p
-                      className="btn-reply reply-toggle"
-                      onClick={onClickReply}
-											id={comment.comments_id}
-                    >답글 쓰기
-                    </p>
-                    {/* TODO: 작성자 본인에게만 수정 삭제 버튼이 보이도록*/}
-                    <p
-                      className="btn-reply"
-                      onClick={() => onClickCommnetUpdateOn(comment.comments_id)}
-                    >
-                      수정
-                    </p>
-                    <p
-                      className="btn-reply"
-                      onClick={(e) => onClickCommnetDelete(comment.comments_id)}
-                    >삭제
-                    </p>
-                    <p className="date">{comment.updated_at}</p>
-                  </DateBox>
+                    {
+                      commentUpdate[index] ? <PostUpdate
+                        id={comment.comments_id}
+                        update={onClickCommnetModify}
+                        content={comment.comments_body} /> : <p className="text-box">{comment.comments_body}</p>
+                    }
+
+                    <DateBox>
+                      <p
+                        className="btn-reply reply-toggle"
+                        onClick={onClickReply}
+                        id={comment.comments_id}
+                      >답글 쓰기
+                      </p>
+                      {/* TODO: 작성자 본인에게만 수정 삭제 버튼이 보이도록*/}
+                      <p
+                        className="btn-reply"
+                        onClick={() => onClickCommnetUpdateOn(comment.comments_id)}
+                      >
+                        수정
+                      </p>
+                      <p
+                        className="btn-reply"
+                        onClick={(e) => onClickCommnetDelete(comment.comments_id)}
+                      >삭제
+                      </p>
+                      <p className="date">{comment.updated_at}</p>
+                    </DateBox>
 
 
-									<PostReply 
-									save={onClickReplySave} 
-									id={`inputReply_${comment.comments_id}`}
-									input={""}/>
-                </CommentBox>
-								{
-									subComments.map((replyComment, replyIndex) => {
-										return(
-										// {/* 덧글 */ }
-										<ReplyBox>
-											<ProfileBox>
-												<a href={`/${replyComment.users.user_detail?.user_unique_id}`}>
-													<img src={replyComment.users.user_detail?.user_img} alt=""></img>
-												</a>
-												<a href={`/${replyComment.users.user_detail?.user_unique_id}`}>
-													{replyComment.users.user_detail?.user_unique_id}
-												</a>
-											</ProfileBox>
+                    <PostReply
+                      save={onClickReplySave}
+                      id={`inputReply_${comment.comments_id}`}
+                      input={""} />
+                  </CommentBox>
+                  {
+                    subComments.map((replyComment, replyIndex) => {
+                      return (
+                        // {/* 덧글 */ }
+                        <ReplyBox>
+                          <ProfileBox>
+                            <a href={`/${replyComment.users.user_detail?.user_unique_id}`}>
+                              <img src={replyComment.users.user_detail?.user_img} alt=""></img>
+                            </a>
+                            <a href={`/${replyComment.users.user_detail?.user_unique_id}`}>
+                              {replyComment.users.user_detail?.user_unique_id}
+                            </a>
+                          </ProfileBox>
 
-											{
-												commentUpdate[comments.findIndex(i => i.comments_id === replyComment.comments_id)] ? <PostUpdate 
-												id={replyComment.comments_id} 
-												update={onClickCommnetModify}
-												content={replyComment.comments_body}/> :	<p className="text-box">{replyComment.comments_body}</p>
-											}
+                          {
+                            commentUpdate[comments.findIndex(i => i.comments_id === replyComment.comments_id)] ? <PostUpdate
+                              id={replyComment.comments_id}
+                              update={onClickCommnetModify}
+                              content={replyComment.comments_body} /> : <p className="text-box">{replyComment.comments_body}</p>
+                          }
 
-											<DateBox>
-												<p
-													className="btn-reply"
-													onClick={() => onClickCommnetUpdateOn(replyComment.comments_id)}
-												>
-													수정
-												</p>
-												<p
-													className="btn-reply"
-													onClick={() => onClickCommnetDelete(replyComment.comments_id)}
-												>
-													삭제
-												</p>
-												<p className="date">{replyComment.updated_at}</p>
-											</DateBox>
+                          <DateBox>
+                            <p
+                              className="btn-reply"
+                              onClick={() => onClickCommnetUpdateOn(replyComment.comments_id)}
+                            >
+                              수정
+                            </p>
+                            <p
+                              className="btn-reply"
+                              onClick={() => onClickCommnetDelete(replyComment.comments_id)}
+                            >
+                              삭제
+                            </p>
+                            <p className="date">{replyComment.updated_at}</p>
+                          </DateBox>
 
-										</ReplyBox>
-										)
-									})
-								}
-								</>
+                        </ReplyBox>
+                      )
+                    })
+                  }
+                </>
               );
             }
           })}
