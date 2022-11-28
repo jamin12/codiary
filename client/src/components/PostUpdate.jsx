@@ -37,7 +37,6 @@ const Main = styled.div`
     width: 95%;
     height: 80px;
     float: right;
-    background-color: red;
 
     textarea{
         width: 100%;
