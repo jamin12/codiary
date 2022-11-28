@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import $ from "jquery";
 
 import SearchProfile from "../components/SearchProfile";
 import SimilarPost from "../components/SimilarPost";
@@ -17,11 +18,9 @@ const WritePage = () => {
   const [post, setPost] = useState({});
   const [refindePost, setrefindePost] = useState("");
   const [comments, setComments] = useState([]);
-	const [commentArr, setCommentArr] = useState([]);
-	const [test, setTest] = useState([]);
   const [checkCommentChange, setCheckCommentChange] = useState(0);
   const [taglist, setTaglist] = useState([]);
-  const [associatePost, setAssociatePost] = useState({});
+  const [associatePost, setAssociatePost] = useState([]);
   const [isCheckingBox, setIsCheckingBox] = useState(false);
   const [commentValue, setCommentValue] = useState("");
   const { uniqueid } = useSelector((state) => state.auth.User);
@@ -83,6 +82,17 @@ const WritePage = () => {
 
     getAssociatePostFun();
   }, [postId]);
+
+
+	/**
+	 * 포스트에서 h1, h2태그만 가져오는 함수
+	 */
+	useEffect(() => {
+		// console.log(post.getPost?.post_body_html)
+		// console.log(post.getPost.post_body_html)
+		// console.log($('h2').html())
+	})
+
 
   /**
    * 방문 기록 저장
@@ -469,7 +479,7 @@ const WritePage = () => {
         </SubTitleBox>
       </Wrap>
       {/* 비슷한 게시물 props로 태그같은거 보내야함 */}
-      <SimilarPost />
+      <SimilarPost post={associatePost}/>
     </>
   );
 };
