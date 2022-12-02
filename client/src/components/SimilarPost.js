@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import default_img from '../IMG/codiary_default_img.png'
+import getImg from '../utils/ImgUtil';
 
 const SimilarPost = (props) => {
 
@@ -55,7 +56,7 @@ const SimilarPost = (props) => {
                       <h3>{post.posts?.post_title}</h3>
 
                       <div className='user'>
-                        <img src={post.posts?.users.user_detail.user_img} alt="사용자 프로필 이미지"/>
+                        <img src={getImg(post.posts?.users.user_detail.user_img)} alt="사용자 프로필 이미지"/>
                         <span>{post.posts?.users.user_detail.user_unique_id}</span>
                       </div>
 
@@ -82,7 +83,7 @@ const SimilarPost = (props) => {
                         <h3>{post.post_title}</h3>
 
                         <div className='user'>
-                          <img src={post.users.user_detail.user_img} alt="사용자 프로필 이미지"/>
+                          <img src={getImg(post.users.user_detail.user_img)} alt="사용자 프로필 이미지"/>
                           <span>{post.users.user_detail.user_unique_id}</span>
                         </div>
 

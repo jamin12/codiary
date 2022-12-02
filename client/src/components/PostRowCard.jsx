@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import getImg from '../utils/ImgUtil';
 
 const PostRowCard = (props) => {
 
@@ -23,7 +24,7 @@ const PostRowCard = (props) => {
       <div className='text-box'>
         <h1 className="title">{title}</h1>
         <div className="user">
-          <img src={img} alt="사용자 프로필"/>
+          <img src={getImg(img)} alt="사용자 프로필"/>
           <span className='user'>{user}</span>
         </div>
         <p className='date'>{date}</p>

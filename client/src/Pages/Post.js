@@ -10,6 +10,7 @@ import { personal } from "../api/index";
 import { useSelector } from "react-redux";
 import PostReply from "../components/PostReply";
 import PostUpdate from "../components/PostUpdate";
+import getImg from "../utils/ImgUtil";
 
 
 const WritePage = () => {
@@ -365,7 +366,7 @@ const WritePage = () => {
                   <CommentBox>
                     <ProfileBox>
                       <a href={`/${comment.users.user_detail?.user_unique_id}`}>
-                        <img src={comment.users.user_detail?.user_img} alt=""></img>
+                        <img src={getImg(comment.users.user_detail?.user_img)} alt=""></img>
                       </a>
                       <a href={`/${comment.users.user_detail?.user_unique_id}`}>
                         {comment.users.user_detail?.user_unique_id}
@@ -414,7 +415,7 @@ const WritePage = () => {
                         <ReplyBox>
                           <ProfileBox>
                             <a href={`/${replyComment.users.user_detail?.user_unique_id}`}>
-                              <img src={replyComment.users.user_detail?.user_img} alt=""></img>
+                              <img src={getImg(replyComment.users.user_detail?.user_img)} alt=""></img>
                             </a>
                             <a href={`/${replyComment.users.user_detail?.user_unique_id}`}>
                               {replyComment.users.user_detail?.user_unique_id}

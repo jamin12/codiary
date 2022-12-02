@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { IoClose } from "react-icons/io5";
 import '../App.css'
 import axios from 'axios';
-import { personal, user, img } from '../api';
+import { user, img } from '../api';
+import getImg from '../utils/ImgUtil'
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login, logout } from "../reducers/Action";
@@ -234,7 +235,7 @@ const Myinfo = () => {
       setMyUniqueName(getMyInfo.data.result_data.user_detail.user_unique_id);
       setMyIntro(getMyInfo.data.result_data.user_detail.user_introduce);
       setMyProfileImg(getMyInfo.data.result_data.user_detail.user_img);
-      setMyProfileImgrul(img.getImg(getMyInfo.data.result_data.user_detail.user_img));
+      setMyProfileImgrul(getImg(getMyInfo.data.result_data.user_detail.user_img));
 
     };
     getMyInfoFun();
@@ -270,9 +271,9 @@ const Myinfo = () => {
         setMyUniqueName(changeMyInfo.data.result_data.user_detail.user_unique_id)
         setMyIntro(changeMyInfo.data.result_data.user_detail.user_introduce)
         setMyProfileImg(changeMyInfo.data.result_data.user_detail.user_img)
-        setMyProfileImgrul(img.getImg(changeMyInfo.data.result_data.user_detail.user_img));
+        setMyProfileImgrul(getImg(changeMyInfo.data.result_data.user_detail.user_img));
 
-        dispatch(login({  
+        dispatch(login({
           uniqueid: changeMyInfo.data.result_data.user_detail.user_unique_id,
           user_role: changeMyInfo.data.result_data.user_detail.user_role,
         }));
@@ -349,7 +350,7 @@ const Myinfo = () => {
       }
     );
     setMyProfileImg(imgFile.data.result_data.fid);
-    setMyProfileImgrul(img.getImg(imgFile.data.result_data.fid));
+    setMyProfileImgrul(getImg(imgFile.data.result_data.fid));
   }
 
 

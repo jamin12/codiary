@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import styled from "styled-components";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { img } from '../api';
+import getImg from "../utils/ImgUtil";
 
 
 // const MainCanvas = styled.SliderItem`
@@ -85,7 +85,7 @@ export default class Carousel extends Component {
                 <div className="user">
                   <img
                     className="user-profile"
-                    src={img.getImg(post.users?.user_detail.user_img)}
+                    src={getImg(post.users?.user_detail.user_img)}
                     alt=""
                   ></img>
                   <span>{post.users?.user_detail.user_unique_id}</span>
@@ -125,7 +125,7 @@ const PostWrap = styled.button`
   }
   .popul-title{
     position: relative;
-    bottom: 60px;
+    bottom: 13.5%;
   }
   .thumbnail{
     position: relative;
@@ -156,7 +156,7 @@ const PostWrap = styled.button`
     margin-left: 20px;
     display: block;
     width: 85%;
-    bottom: 12%;
+    bottom: 9%;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.2;
@@ -164,7 +164,7 @@ const PostWrap = styled.button`
     word-wrap : break-word;
     text-align : left;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 
   }
