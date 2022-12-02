@@ -42,6 +42,48 @@
     |user_detail.user_img|string|유저 이미지 url|
     |sns_info.sns_name|string|유저 sns 이름|
 
+## __<span style="color:#9999ff">유저 리스트 검색(admin유저만 가능)</span>__
+## __<span style="color:#ff9933">요청</span>__ **[GET] user/s/:searchword?offset=1&limit=5**
+- |속성|타입|설명|
+    |---|---|---|
+    |searchword *|string|검색할 단어 (필수)|
+    |offset *|int|현재 페이지 번호 (필수)|
+    |limit|int|보여줄 개수|
+- authentication 쿠키 필요
+## __<span style="color:#ff9933">응답</span>__
+- ``` json
+    {
+        "status": 200,
+        "message": "searchUsers",
+        "result_data": [
+            {
+                "user_email": "rudals951004@gmail.com",
+                "user_detail": {
+                    "user_name": "min ja",
+                    "user_unique_id": "jamina",
+                    "user_introduce": "한줄소개 입니다앙오",
+                    "user_img": "82f7b5d4-5547-49e5-a52e-a674b8b738bf"
+                },
+                "sns_info": {
+                    "sns_name": "min ja"
+                }
+            }
+        ]
+    }
+- |속성|타입|설명|
+    |---|---|---|
+    |status|int|상태코드|
+    |message|string|메시지|
+    |**result_data**|json|결과 값|
+    |||
+    |user_email|string|유저 이메일|
+    |user_detail.user_name|string|유저 이름|
+    |user_detail.user_unique_id|string|유저 유니크 아이디|
+    |user_detail.user_nickname|string|유저 닉네임|
+    |user_detail.user_introduce|string|유저 소개|
+    |user_detail.user_img|string|유저 이미지 url|
+    |sns_info.sns_name|string|유저 sns 이름|
+
 ## __<span style="color:#9999ff">신고 목록 조회</span>__
 ## __<span style="color:#ff9933">요청</span>__ **[GET] /:reporttype/:reporttargettype?startDate=datetime&endDate=datetime&offset=1&limit=5**
 - |속성|타입|설명|

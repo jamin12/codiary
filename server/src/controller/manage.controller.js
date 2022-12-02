@@ -20,6 +20,11 @@ const output = {
     const result_contents = await mService.getReport(req.params.reportid);
     res.send(resultDto(httpStatus.OK, "getReport", result_contents));
   }),
+  searchUsers: catchAsync(async (req, res) => {
+    const result_contents = await mService.searchUsers(req.params.searchword, req.query.offset, req.query.limit);
+    res.send(resultDto(httpStatus.OK, "searchUsers", result_contents));
+  }),
+
 };
 
 const input = {

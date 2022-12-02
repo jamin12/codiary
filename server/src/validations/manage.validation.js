@@ -12,6 +12,18 @@ const output = {
 		}),
 	},
 	/**
+	 * 유저 검색
+	 */
+	searchword: {
+		params: joi.object().keys({
+			searchword: joi.string().required(),
+		}),
+		query: joi.object().keys({
+			offset: joi.number().required(),
+			limit: joi.number(),
+		}),
+	},
+	/**
 	 * 신고 목록 조회
 	 */
 	getReports: {

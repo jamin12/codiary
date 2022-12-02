@@ -95,6 +95,56 @@ class manageService {
 			throw new CustomError(httpStatus.BAD_REQUEST, "User not found");
 		return user;
 	}
+	/**
+ * 신고 있는지 체크
+ * @param {number} reportId
+ * @return {object}
+ */
+	async checkReportExists(reportId) {
+		const getreport = await report.findOne({
+			where: {
+				report_id: reportId,
+			},
+		});
+		if (!getreport) {
+			throw new CustomError(httpStatus.BAD_REQUEST, "Report not found");
+		}
+	}
+
+	/**
+	 * 유져 검색
+	 * 
+	 * @param  {string} searchWord 유저 검색 문자열
+	 * @param  {...any} paging
+	 * @returns {object}
+	 */
+	async searchUsers(searchWord, ...paging) {
+		const pageResult = this.paging.pageResult(paging[0], paging[1]);
+		const user = await users.findAll({
+			attributes: ["user_email"],
+			include: [
+				{
+					model: user_detail,
+					as: "user_detail",
+					attributes: [
+						"user_name",
+						"user_unique_id",
+						"user_introduce",
+						"user_img",
+					],
+					where: {
+						user_unique_id:{
+							[Op.substring]: searchWord,
+						}
+					}
+				},
+				{ model: sns_info, as: "sns_info", attributes: ["sns_name"] },
+			],
+			offset: pageResult.offset,
+			limit: pageResult.limit,
+		});
+		return user;
+	}
 
 	/**
 	 * 신고 목록 조회

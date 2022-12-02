@@ -19,5 +19,8 @@ router
   .route('/:reporttype/:reporttargettype')
   .get(auth('admin'), validate(manageValidation.output.getReports), manageController.output.getReports);
 
+router
+  .route("/user/s/:searchword")
+  .get(auth('admin'), validate(manageValidation.output.searchword), manageController.output.searchUsers);
 // TODO: delete user
 module.exports = router;
