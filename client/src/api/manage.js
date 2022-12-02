@@ -1,6 +1,5 @@
 import { baseUrl } from ".";
 
-let manageUrl = baseUrl + "/manage";
 
 /**
  * url 만들기
@@ -9,6 +8,7 @@ let manageUrl = baseUrl + "/manage";
  * @returns
  */
 const createUrl = (startUrl, params) => {
+	let manageUrl = baseUrl + "/manage";
 	manageUrl += startUrl;
 	for (let index = 0; index < params.length; index++) {
 		manageUrl = manageUrl + "/" + params[index];
@@ -21,12 +21,12 @@ const manage = {
 	 * 유저 목록 조회URL  [GET]
 	 * @return {string}
 	 */
-	getUsers: manageUrl,
+	getUsers: (...params) => createUrl("", params),
 	/**
 	 * 신고 하기 URL [POST]
 	 * @return {string}
 	 */
-	createReport: manageUrl,
+	createReport: (...params) => createUrl("", params),
 	/**
 	 * 신고 조회 URL [GET]
 	 * @return {string}

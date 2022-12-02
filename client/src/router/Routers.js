@@ -16,6 +16,8 @@ import VisiterStats from "../Pages/VisiterStats";
 import Search from "../Pages/SearchPage";
 import NotFound from '../Pages/NotFound';
 import Login from "../Pages/Login"
+import SettingMember from "../components/SettingMember";
+import SettingReport from "../components/SettingReport";
 
 const Routers = () => {
     return (
@@ -34,6 +36,9 @@ const Routers = () => {
                 <Route path="/setting" element={<Setting />}>
                     <Route path="category" element={<MyCategory />} />
                     <Route path="info" element={<MyInfo />} />
+                    {/* 관리자만 볼 수 있는 페이지 */}
+                    <Route path="member" element={<SettingMember/>}/>
+                    <Route path="report" element={<SettingReport/>}/>
                 </Route>
                 <Route path="/presave" element={<Presave />}></Route>
                 <Route path="/presave/:tmpposttId" element={<PreSavePost />}></Route>
