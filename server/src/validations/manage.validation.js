@@ -70,6 +70,14 @@ const input = {
 			report_body: joi.string(),
 		}),
 	},
+	/**
+	 * 유저 삭제
+	 */
+	deleteUser: {
+		params: joi.object().keys({
+			uniqueid: joi.string().required(),
+		}),
+	},
 };
 
 module.exports = {

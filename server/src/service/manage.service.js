@@ -8,7 +8,7 @@ const httpStatus = require("http-status"),
 		sns_info,
 	} = require("../models/index"),
 	CustomError = require("../utils/Error/customError"),
-	{ personalService } = require("./index"),
+	{ personalService, userService } = require("./index"),
 	{ Op } = require("sequelize"),
 	reportDto = require("../dto/reportDto"),
 	commentsDto = require("../dto/commentsDto"),
@@ -20,6 +20,7 @@ class manageService {
 	constructor() {
 		this.paging = new Paging();
 		this.pService = new personalService();
+		this.uService = new userService();
 
 		this.userJoin = {
 			model: users,
@@ -133,7 +134,7 @@ class manageService {
 						"user_img",
 					],
 					where: {
-						user_unique_id:{
+						user_unique_id: {
 							[Op.substring]: searchWord,
 						}
 					}
@@ -144,6 +145,18 @@ class manageService {
 			limit: pageResult.limit,
 		});
 		return user;
+	}
+
+	/**
+ * 유져 검색
+ * 
+ * @param  {string} uniqueid 유저 검색 문자열
+ * @returns {object}
+ */
+	async deletehUser(uniqueid) {
+		const findedUser = await this.uService.getUserByUniqueId(uniqueid);
+		await this.uService.deleteUser(findedUser.user_id);
+		return;
 	}
 
 	/**

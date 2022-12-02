@@ -84,6 +84,25 @@
     |user_detail.user_img|string|유저 이미지 url|
     |sns_info.sns_name|string|유저 sns 이름|
 
+## __<span style="color:#9999ff">유저 삭제(admin유저만 가능)</span>__
+## __<span style="color:#ff9933">요청</span>__ **[DELETE] /user/d/:uniqueid**
+- |속성|타입|설명|
+    |---|---|---|
+    |uniqueid *|string|유저 유니크 아이디 (필수)|
+    |offset *|int|현재 페이지 번호 (필수)|
+    |limit|int|보여줄 개수|
+- authentication 쿠키 필요
+## __<span style="color:#ff9933">응답</span>__
+- ``` json
+    {
+        "status": 200,
+        "message": "deleteUser"
+    }
+- |속성|타입|설명|
+    |---|---|---|
+    |status|int|상태코드|
+    |message|string|메시지|
+
 ## __<span style="color:#9999ff">신고 목록 조회</span>__
 ## __<span style="color:#ff9933">요청</span>__ **[GET] /:reporttype/:reporttargettype?startDate=datetime&endDate=datetime&offset=1&limit=5**
 - |속성|타입|설명|

@@ -22,5 +22,9 @@ router
 router
   .route("/user/s/:searchword")
   .get(auth('admin'), validate(manageValidation.output.searchword), manageController.output.searchUsers);
-// TODO: delete user
+
+router
+  .route("/user/d/:uniqueid")
+  .delete(auth('admin'), validate(manageValidation.input.deleteUser), manageController.input.deleteUser);
+
 module.exports = router;

@@ -36,6 +36,11 @@ const input = {
     const result_contents = await mService.createReport(req.body);
     res.send(resultDto(httpStatus.OK, "createReport", result_contents));
   }),
+  deleteUser: catchAsync(async (req, res) => {
+    const result_contents = await mService.deletehUser(req.params.uniqueid);
+    res.send(resultDto(httpStatus.OK, "deleteUser", result_contents));
+  }),
+
 };
 
 module.exports = {
