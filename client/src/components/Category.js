@@ -181,11 +181,22 @@ const MainCategory = (props) => {
  * @param {int} sub_id 
  */
   const updateCategory = async (id, name, sub_id) => {
-    await axios.patch(
+    console.log(sub_id)
+    if (sub_id !== null) {
+      await axios.patch(
+        personal.updatePersonalCategory(id),
+        {
+          category_name: name,
+          sub_category_id: parseInt(sub_id)
+        },
+        { withCredentials: true }
+      );
+    }
+    else {
+    } await axios.patch(
       personal.updatePersonalCategory(id),
       {
         category_name: name,
-        sub_category_id: sub_id
       },
       { withCredentials: true }
     );

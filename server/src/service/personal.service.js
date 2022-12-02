@@ -199,11 +199,11 @@ class PersonalService {
 			);
 		}
 		if (categoryBody.sub_category_id) {
-			await this.checkCategoryExists(
+			const checkSubCategory = await this.checkCategoryExists(
 				userId,
 				categoryBody.sub_category_id
 			);
-			if (checkedCategory.sub_category_id) {
+			if (checkSubCategory.sub_category_id) {
 				throw new CustomError(
 					httpStatus.BAD_REQUEST,
 					"sub category already exists"
