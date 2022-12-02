@@ -68,7 +68,7 @@ const AddCategory = styled.div`
 // CSS END
 
 
-const MyCategory = ({ categoryList }) => {
+const MyCategory = () => {
 
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
