@@ -23,6 +23,17 @@ const manage = {
 	 */
 	getUsers: (...params) => createUrl("", params),
 	/**
+ 	 * 유저 검색 조회URL  [GET]
+ 	 * @return {string}
+ 	 */
+	getUsersSearch: (...params) => createUrl("/user/s", params),	
+	/**
+	 * 유저 삭제URL  [GET]
+	 * @return {string}
+	 */
+	deleteUsers: (...params) => createUrl("/user/d", params),
+	
+	/**
 	 * 신고 하기 URL [POST]
 	 * @return {string}
 	 */
