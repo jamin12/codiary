@@ -301,3 +301,20 @@
     |---|---|---|
     |status|int|상태코드|
     |message|string|메시지|
+
+## __<span style="color:#9999ff">신고 대상(게시글/ 댓글) 삭제</span>__
+## __<span style="color:#ff9933">요청</span>__ **[POST] /target/d/:reporttype/:reporttargetid**
+- |속성|타입|설명|
+    |---|---|---|
+    |report_target_type *|int|신고 타겟 타입</br>0. 게시글</br>1. 댓글</br>(필수)|
+    |report_target_id *|int|신고 타겟 아이디 (필수)|
+## __<span style="color:#ff9933">응답</span>__
+- ``` json
+    {
+        "status": 200,
+        "message": "deleteReportTarget",
+    }  
+- |속성|타입|설명|
+    |---|---|---|
+    |status|int|상태코드|
+    |message|string|메시지|

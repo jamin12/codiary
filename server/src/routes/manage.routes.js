@@ -27,4 +27,8 @@ router
   .route("/user/d/:uniqueid")
   .delete(auth('admin'), validate(manageValidation.input.deleteUser), manageController.input.deleteUser);
 
+router
+  .route("/target/d/:reporttype/:reporttargetid")
+  .delete(auth('admin'), validate(manageValidation.input.deleteReporTarget), manageController.input.deleteReportTarget);
+
 module.exports = router;
