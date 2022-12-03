@@ -164,6 +164,7 @@ const WritePage = () => {
    */
   const checkingCheckedBox = () => {
     if (uniqueid !== "") {
+      setTaglist([]);
       setIsCheckingBox(!isCheckingBox);
     }
   };
