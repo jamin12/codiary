@@ -5,7 +5,7 @@ import { img } from "../api";
  * @param {string} imgUrl 
  */
 export default function getImg(imgUrl) {
-  if (imgUrl.startsWith("http")) {
+  if (imgUrl?.startsWith("http")) {
     return imgUrl;
   } else {
     return img.getImg(imgUrl);
