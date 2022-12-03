@@ -70,12 +70,23 @@ const input = {
 			report_body: joi.string(),
 		}),
 	},
+
 	/**
 	 * 유저 삭제
 	 */
 	deleteUser: {
 		params: joi.object().keys({
 			uniqueid: joi.string().required(),
+		}),
+	},
+	
+	/**
+	 * 신고 대상(게시글/ 댓글) 삭제
+	 */
+	deleteReporTarget: {
+		params: joi.object().keys({
+			reporttype: joi.number().required().valid(0,1),
+			reporttargetid: joi.number().required(),
 		}),
 	},
 };

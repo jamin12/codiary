@@ -40,7 +40,10 @@ const input = {
     const result_contents = await mService.deletehUser(req.params.uniqueid);
     res.send(resultDto(httpStatus.OK, "deleteUser", result_contents));
   }),
-
+  deleteReportTarget: catchAsync(async (req, res) => {
+    const result_contents = await mService.deleteReportTarget(req.params.reporttype,req.params.reporttargetid);
+    res.send(resultDto(httpStatus.OK, "deleteReportTarget", result_contents));
+  }),
 };
 
 module.exports = {

@@ -277,6 +277,29 @@ class manageService {
 		await report.create(reportBody);
 		return;
 	}
+
+	/**
+ * 신고 대상(게시글/ 댓글)삭제
+ * @param {number} report_type
+ * @param {number} report_target_id
+ * @returns
+ */
+	async deleteReportTarget(report_type, report_target_id) {
+		if (report_type === 0) {
+			await posts.destroy({
+				where: {
+					post_id: report_target_id,
+				},
+			});
+		} else {
+			await comments.destroy({
+				where: {
+					comments_id: report_target_id,
+				},
+			});
+		}
+		return;
+	}
 }
 
 module.exports = manageService;
