@@ -98,7 +98,7 @@ const SettingReport = () => {
    * 신고 삭제버튼 onClick 함수
    */
   const onClickReportDelete = (rid) => {
-    if (window.confirm("정말로 삭제하시겠습니까?")){
+    if (window.confirm("목록에서 정말로 제거하시겠습니까?")){
       axios.delete(manage.deleteReport(rid),
       {
         withCredentials: true
@@ -110,8 +110,14 @@ const SettingReport = () => {
   /**
    * 신고 삭제 게시글 & 댓글 삭제 onClick 함수
    */
-  const onClickReport_PC_Delete = () => {
-
+  const onClickReport_PC_Delete = (rtid, rtype) => {
+    if (window.confirm("해당 게시글(또는 댓글)을 정말로 삭제하시겠습니까?")){
+      axios.delete(manage.deleteReportTarget(rtype, rtid),
+      {
+        withCredentials: true
+      })
+      setRender(true);
+    }
   }
 
 
@@ -181,7 +187,7 @@ const SettingReport = () => {
                     </td>
                     <td>
                       <button className='btn-report-delete btn-post-delete' style={{float: 'right'}}
-                        onClick={() => onClickReport_PC_Delete()}>
+                        onClick={() => onClickReport_PC_Delete(item.report_target_id, item.report_target_type)}>
                         삭제
                       </button>
                     </td>

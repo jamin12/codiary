@@ -42,6 +42,11 @@ const manage = {
 	 * @return {string}
 	 */
 	getReports: (...params) => createUrl("", params),
+	/**
+	 * 신고 타겟 삭제 URL [DELETE]
+	 * @return {string}
+	 */
+	deleteReportTarget: (...params) => createUrl("/target/d", params),
 };
 
 export default manage;
