@@ -14,7 +14,7 @@ const Header = styled.div`
 	position: relative;
 	width: 100%;
 	height: 100%;
-	padding-bottom: 50px;
+	/* padding-bottom: 50px; */
 `;
 const ContentsWrap = styled.div`
 	display: flex;

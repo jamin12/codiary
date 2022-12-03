@@ -270,7 +270,7 @@
     |status|int|상태코드|
     |message|string|메시지|
 
-## __<span style="color:#9999ff">신고 삭제</span>__
+## __<span style="color:#9999ff">신고 생성</span>__
 ## __<span style="color:#ff9933">요청</span>__ **[POST] /**
 - |속성|타입|설명|
     |---|---|---|
