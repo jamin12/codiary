@@ -167,8 +167,8 @@ const Main = styled.div`
     display: flex;
 
     >div{
-      margin-left: 10px;
-      margin-right: 10px;
+      margin-left: 20px;
+      margin-right: 20px;
     }
   }
 `
