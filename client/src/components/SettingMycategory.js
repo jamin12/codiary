@@ -11,64 +11,6 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
-// CSS
-const MainWrap = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  float: left;
-`
-const CategoryBox = styled.div`
-  // background-color: var(--gray50);
-  width: 100%;
-  height: 100%;
-  /* overflow-x: hidden; */
-  overflow-y: scroll;
-  overflow-x: hidden;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 20px;
-  /* background-color: red; */
-  box-sizing: border-box;
-
-  // 스크롤 스타일
-  ::-webkit-scrollbar{
-    background-color: inherit;
-    width: 10px;
-  }
-  ::-webkit-scrollbar-thumb{
-    border-radius: 50px;
-    background-color: var(--gray200);
-  }
-
-
-`
-
-const AddCategory = styled.div`
-  width: 30%;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content:center;
-  border-radius: 20px;
-  overflow: hidden;
-
-  .btn-add{
-    width: 100%;
-    height: 100%;
-    background-color: var(--gray100);
-    cursor: pointer;
-    transition: 0.3s;
-
-    :hover{
-      background-color: var(--gray700);
-      color: var(--gray50);
-    }
-  }
-`
-// CSS END
-
-
 const MyCategory = () => {
 
   const [category, setCategory] = useState([]);
@@ -137,7 +79,7 @@ const MyCategory = () => {
    * 카테고리 추가
    */
   const addCategory = async (name, sub_id) => {
-    if (sub_id === null) {
+    if (sub_id === null) {  // 메인카테고리 추가
       await axios.post(personal.createPersonalCategory(),
         {
           category_name: name,
@@ -148,7 +90,7 @@ const MyCategory = () => {
           headers: { "Content-Type": `application/json` },
         });
     }
-    else {
+    else {  // 서브카테고리 추가
       await axios.post(personal.createPersonalCategory(),
         {
           category_name: name,
@@ -193,19 +135,20 @@ const MyCategory = () => {
       </CategoryBox>
 
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>메인카테고리 이름을 입력해주세요</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Control
-                type="text"
+              <Input
+                type={"text"}
                 value={mainValue}
                 onChange={(e) => setMainValue(e.target.value)}
-                autoFocus
-              />
+                autoFocus>
+              </Input>
+              <input style={{display:"none"}}></input>
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -222,3 +165,70 @@ const MyCategory = () => {
   )
 }
 export default MyCategory;
+
+
+// CSS
+const MainWrap = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  float: left;
+`
+const Input = styled.input`
+  width: 100%;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: 2px solid var(--gray200);
+  :focus{
+    outline: none;
+  }
+`
+const CategoryBox = styled.div`
+  // background-color: var(--gray50);
+  width: 100%;
+  height: 100%;
+  /* overflow-x: hidden; */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  /* background-color: red; */
+  box-sizing: border-box;
+
+  // 스크롤 스타일
+  ::-webkit-scrollbar{
+    background-color: inherit;
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb{
+    border-radius: 50px;
+    background-color: var(--gray200);
+  }
+
+
+`
+
+const AddCategory = styled.div`
+  width: 30%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  border-radius: 20px;
+  overflow: hidden;
+
+  .btn-add{
+    width: 100%;
+    height: 100%;
+    background-color: var(--gray100);
+    cursor: pointer;
+    transition: 0.3s;
+
+    :hover{
+      background-color: var(--gray700);
+      color: var(--gray50);
+    }
+  }
+`
+// CSS END

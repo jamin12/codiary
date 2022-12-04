@@ -266,7 +266,7 @@ const MainCategory = (props) => {
         })
       }
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>서브 카테고리 이름을 입력해주세요</Modal.Title>
         </Modal.Header>
@@ -279,6 +279,7 @@ const MainCategory = (props) => {
                 onChange={(e) => setSubValue(e.target.value)}
                 autoFocus
               />
+              <input style={{display:"none"}}></input>
             </Form.Group>
           </Form>
         </Modal.Body>
