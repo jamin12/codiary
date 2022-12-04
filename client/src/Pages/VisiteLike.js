@@ -133,7 +133,7 @@ const VisitLike = () => {
 						posts={visitLikeRecords}
 						centerMode={false}
 						dots={true}
-						slidesToShow={3}
+						slidesToShow={4}
 						vertical={false}
 						verticalSwiping={false}
 						// arrows={true}

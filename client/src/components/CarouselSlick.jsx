@@ -9,18 +9,18 @@ export default class Carousel extends Component {
     const posts = this.props.posts  // props로 post들을 받아옴
 
     const settings = {
-      className: this.props.className,
-      centerMode: this.props.centerMode,
+      // className: this.props.className,
+      // centerMode: this.props.centerMode,
       dots: this.props.dots,
       infinite: true,
       slidesToShow: this.props.slidesToShow,
       slidesToScroll: 1,
       vertical: this.props.vertical,
-      verticalSwiping: this.props.verticalSwiping,
-      centerPadding: this.props.centerPadding,
-      arrows: this.props.arrows,
-      nextArrow: this.props.nextArrows,
-      prevArrow: this.props.prevArrows,
+      // verticalSwiping: this.props.verticalSwiping,
+      // centerPadding: this.props.centerPadding,
+      // arrows: this.props.arrows,
+      // nextArrow: this.props.nextArrows,
+      // prevArrow: this.props.prevArrows,
 
 
       beforeChange: function (currentSlide, nextSlide) {
@@ -38,70 +38,110 @@ export default class Carousel extends Component {
 
     return (
       <Main type={settings.vertical}>
-        <Slider {...settings}>
-          {
-            posts.map((post) => {
-              let html = post.posts?.post_body_html;
-              const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
-              html = html?.replaceAll("&lt;", "<");
-              let imgSrc = "";
-              if (imgSrcRex.exec(html)) {
-                imgSrc = RegExp.$2
-              } else {
-                imgSrc = default_img
+        {
+          posts.length > 3 ?
+            (<Slider {...settings}>
+              {
+                posts.map((post) => {
+                  let html = post.posts?.post_body_html;
+                  const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+                  html = html?.replaceAll("&lt;", "<");
+                  let imgSrc = "";
+                  if (imgSrcRex.exec(html)) {
+                    imgSrc = RegExp.$2
+                  } else {
+                    imgSrc = default_img
+                  }
+                  // 세로 캐러셀
+                  if (settings.vertical === true) {
+                    return (
+                      <>
+                        <Post43>
+                          <div className="text-wrap">
+                            <h3 className="post-title">{post.post_title}</h3>
+                            <div className="user-info-box">
+                              <img src={getImg(post.users.user_detail.user_img)} alt="사용자이미지" />
+                              <span>{post.users.user_detail.user_nickname}</span>
+                            </div>
+                            <p className="post-date">{post.updated_at}</p>
+                          </div>
+
+                          <div className="post-img-wrap">
+                            {
+                              <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
+                            }
+                          </div>
+                        </Post43>
+                      </>
+                    )
+                  }
+                  // 가로 캐러셀
+                  else if (settings.vertical === false) {
+                    return (
+                      <div className="horizon">
+                        <Post34 onClick={() => onClickGoPost(post.post_id, post.posts?.users.user_detail.user_unique_id)} >
+                          <h3 className="post-title">{post.posts?.post_title}</h3>
+
+                          <div className="post-img-wrap">
+                            {
+                              <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
+                            }
+                          </div>
+
+                          <div className="user-info-box">
+                            <div>
+                              <img src={getImg(post.posts?.users.user_detail.user_img)} alt="사용자이미지" />
+                              <span>{post.posts?.users.user_detail.user_unique_id}</span>
+                            </div>
+                            {/* <p className="post-date">{post.posts.updated_at}</p> */}
+                          </div>
+
+                        </Post34>
+                      </div>
+                    )
+                  }
+
+                })
               }
-              // 세로 캐러셀
-              if (settings.vertical === true) {
-                return (
-                  <>
-                    <Post43>
-                      <div className="text-wrap">
-                        <h3 className="post-title">{post.post_title}</h3>
+            </Slider>)
+            :
+            <div className="under3">
+              {
+                posts.map(post => {
+
+                  let html = post.posts?.post_body_html;
+                  const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+                  html = html?.replaceAll("&lt;", "<");
+                  let imgSrc = "";
+                  if (imgSrcRex.exec(html)) {
+                    imgSrc = RegExp.$2
+                  } else {
+                    imgSrc = default_img
+                  }
+                  return (
+                      <Post34 onClick={() => onClickGoPost(post.post_id, post.posts?.users.user_detail.user_unique_id)} >
+                        <h3 className="post-title">{post.posts?.post_title}</h3>
+
+                        <div className="post-img-wrap">
+                          {
+                            <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
+                          }
+                        </div>
+
                         <div className="user-info-box">
-                          <img src={getImg(post.users.user_detail.user_img)} alt="사용자이미지" />
-                          <span>{post.users.user_detail.user_nickname}</span>
+                          <div>
+                            <img src={getImg(post.posts?.users.user_detail.user_img)} alt="사용자이미지" />
+                            <span>{post.posts?.users.user_detail.user_unique_id}</span>
+                          </div>
+                          {/* <p className="post-date">{post.posts.updated_at}</p> */}
                         </div>
-                        <p className="post-date">{post.updated_at}</p>
-                      </div>
-
-                      <div className="post-img-wrap">
-                        {
-                          <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
-                        }
-                      </div>
-                    </Post43>
-                  </>
-                )
+                      </Post34>
+                  )
+                })
               }
-              // 가로 캐러셀
-              else if (settings.vertical === false) {
-                return (
-                  <div className="horizon">
-                    <Post34 onClick={() => onClickGoPost(post.post_id, post.posts?.users.user_detail.user_unique_id)} >
-                      <h3 className="post-title">{post.posts?.post_title}</h3>
+            </div>
 
-                      <div className="post-img-wrap">
-                        {
-                          <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
-                        }
-                      </div>
-
-                      <div className="user-info-box">
-                        <div>
-                          <img src={getImg(post.posts?.users.user_detail.user_img)} alt="사용자이미지" />
-                          <span>{post.posts?.users.user_detail.user_unique_id}</span>
-                        </div>
-                        {/* <p className="post-date">{post.posts.updated_at}</p> */}
-                      </div>
-
-                    </Post34>
-                  </div>
-                )
-              }
-
-            })
-          }
-        </Slider>
+        }
       </Main>
     );
   }
@@ -109,6 +149,28 @@ export default class Carousel extends Component {
 
 // 메인
 const Main = styled.div`
+
+  .slick-prev:before,
+  .slick-next:before{
+    color: var(--gray700);
+    font-size: 25px;
+  }
+  .slick-list{
+    /* display: flex; */
+  }
+
+  .slick-slider{
+    /* overflow-y: hidden; */
+  }
+
+  .under3{
+    display: flex;
+
+    >div{
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
 `
 
 // 가로가 긴 카드
