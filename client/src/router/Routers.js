@@ -14,7 +14,6 @@ import Presave from '../Pages/Presave';
 import VisiteLike from '../Pages/VisiteLike';
 import VisiterStats from "../Pages/VisiterStats";
 import Search from "../Pages/SearchPage";
-import NotFound from '../Pages/NotFound';
 import Login from "../Pages/Login"
 import SettingMember from "../components/SettingMember";
 import SettingReport from "../components/SettingReport";
@@ -49,7 +48,6 @@ const Routers = () => {
                 <Route path="/:userId/calender" element={<MyCalender />}></Route>
                 <Route path="/:userId/:postId" element={<Post />}></Route>
 
-                <Route path="*" element={<NotFound />}></Route>
             </Routes>
         </BrowserRouter>
 
