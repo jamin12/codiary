@@ -276,6 +276,7 @@ const Myinfo = () => {
         dispatch(login({
           uniqueid: changeMyInfo.data.result_data.user_detail.user_unique_id,
           user_role: changeMyInfo.data.result_data.user_detail.user_role,
+          user_img: changeMyInfo.data.result_data.user_detail.user_img
         }));
 
       }
