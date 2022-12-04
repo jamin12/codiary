@@ -72,48 +72,55 @@ const Home = () => {
       {
         loginOpen && <Login setLogin={setLogin} />
       }
-      <ProfileIMG
-        img={getImg(user_img)}
-        onClick={toggleMenu}
-        className={isOpen ? "menuToggleON" : "menuToggleOFF"}
-      ></ProfileIMG>
-        <Menu>
-          {uniqueid !== '' &&
-            <div className={isOpen ? "menuON" : "menuOFF"}>
-              <p>
-                <Link to="/write">새 글쓰기</Link>
-              </p>
-              <p>
-                <Link to={`/${uniqueid}`}>내 글 목록</Link>
-              </p>
-              <p>
-                <Link to={`/${uniqueid}/calender`}>내 코디어리</Link>
-              </p>
-              <p>
-                <Link to="/presave">임시글 목록</Link>
-              </p>
-              <p>
-                <Link to="/visite-like">방문&좋아요 목록</Link>
-              </p>
-              <p>
-                <Link to="/setting">설정</Link>
-              </p>
-              <p>
-                <Link to="/visiterstat">방문자 통계</Link>
-              </p>
-              <p className="logout" onClick={logoutClick}>로그아웃</p>
-            </div>
-          }
-          {
-            uniqueid === '' &&
-            <div className={isOpen ? "menuON" : "menuOFF"}>
-              <p className="logout" onClick={loginModal}>로그인</p>
-            </div>
-          }
-        </Menu>
 
       {/* 메인 검색 화면 */}
       <div className="home-search">
+        {
+          uniqueid !== "" ?
+          <>
+            <ProfileIMG
+              img={getImg(user_img)}
+              onClick={toggleMenu}
+              className={isOpen ? "menuToggleON" : "menuToggleOFF"}
+            ></ProfileIMG>
+              <Menu>
+                {uniqueid !== '' &&
+                  <div className={isOpen ? "menuON" : "menuOFF"}>
+                    <p>
+                      <Link to="/write">새 글쓰기</Link>
+                    </p>
+                    <p>
+                      <Link to={`/${uniqueid}`}>내 글 목록</Link>
+                    </p>
+                    <p>
+                      <Link to={`/${uniqueid}/calender`}>내 코디어리</Link>
+                    </p>
+                    <p>
+                      <Link to="/presave">임시글 목록</Link>
+                    </p>
+                    <p>
+                      <Link to="/visite-like">방문&좋아요 목록</Link>
+                    </p>
+                    <p>
+                      <Link to="/setting">설정</Link>
+                    </p>
+                    <p>
+                      <Link to="/visiterstat">방문자 통계</Link>
+                    </p>
+                    <p className="logout" onClick={logoutClick}>로그아웃</p>
+                  </div>
+                }
+                {
+                  uniqueid === '' &&
+                  <div className={isOpen ? "menuON" : "menuOFF"}>
+                    <p className="logout" onClick={loginModal}>로그인</p>
+                  </div>
+                }
+              </Menu>
+          </>
+          :
+          <BtnLogin onClick={loginModal}>로그인</BtnLogin>
+        }
         {/* 홈화면 */}
         <HomeTitle>CODIARY</HomeTitle>
         {/* 검색창 */}
@@ -211,6 +218,8 @@ const FooterText = styled.p`
 		padding-top: 60px;
 	}
 `;
+
+
 const ProfileIMG = styled.div`
 	width: 40px;
 	height: 40px;
@@ -222,7 +231,6 @@ const ProfileIMG = styled.div`
 	z-index: 100;
 	cursor: pointer;
 
-	/* background-color: red; */
 	background-image: url(${(props) => props.img || "https://images.unsplash.com/photo-1662581871665-f299ba8ace07?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80"});
 	background-size: cover;
 	background-repeat: no-repeat;
@@ -286,6 +294,23 @@ const Menu = styled.div`
 		}
 	}
 `;
+const BtnLogin = styled.p`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 5px 18px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  background-color: var(--gray100);
+  border-radius: 50px;
+  cursor: pointer;
+  color: var(--gray700);
+  transition: 0.3s;
+
+  :hover{
+    background-color: var(--gray50);
+  }
+`
 
 const CarouselWrap = styled.div`
   width: 80%;
