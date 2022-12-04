@@ -76,7 +76,7 @@ const Mypage = () => {
   }, [userId, categoryId]);
 
   const clickFolder = (e) => {
-    setCategoryId(e.target.id)
+    setCategoryId(e.currentTarget.id)
   }
   const openAllPost = () => {
     setCategoryId(0)
