@@ -5,11 +5,12 @@ import '../css/Calendar.css'; // css import
 import '../css/reset.css'
 import styled from 'styled-components';
 import moment from 'moment';
-import { personal, img } from '../api';
+import { personal } from '../api';
 import axios from 'axios';
 import default_img from '../IMG/codiary_default_img.png';
 import { Link, useParams } from 'react-router-dom';
 import { addDays, addMonths, format } from "date-fns"
+import getImg from '../utils/ImgUtil'
 
 const MyCalendar = () => {
   const { userId } = useParams();
@@ -146,7 +147,7 @@ const MyCalendar = () => {
                   <div className='text-box'>
                     <h1 className="title">{post.posts?.post_title}</h1>
                     <div className='user-info'>
-                      <img src={img.getImg(post.posts?.users?.user_detail.user_img)} alt="사용자 이미지" />
+                      <img src={getImg(post.posts?.users?.user_detail.user_img)} alt="사용자 이미지" />
                       <span className='user'>{post.posts?.users?.user_detail.user_unique_id}</span>
                     </div>
                   </div>
