@@ -72,7 +72,6 @@ export default class Carousel extends Component {
             let imgSrc = "";
             if (imgSrcRex.exec(html)) {
               imgSrc = RegExp.$2
-              console.log(imgSrc)
             } else {
               imgSrc = default_img
             }
