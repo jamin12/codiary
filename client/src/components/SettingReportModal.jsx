@@ -1,17 +1,11 @@
-import axios from 'axios';
-import React, { useState } from 'react';
+import React from 'react';
+import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { manage } from '../api';
-import styled from 'styled-components';
+import { IoArrowDown } from "react-icons/io5";
 
 const SettingReportModal = (props) => {
 
-  const user = props.user;
-  const reportType = props.reportType;
-  const postId = props.postId;
-
-  // 신고 타입
   const optionRType = [
     "욕설",
     "음란물",
@@ -19,113 +13,102 @@ const SettingReportModal = (props) => {
     "불법 정보",
     "기타"
   ]
-  const [selectValueRtype, setselectValueRtype] = useState("");
-  const [reportValue, setReportValue] = useState("");
 
-  const show = props.show;
+  const show = props.modalShow;
   const onClickModalClose = props.onClickModalClose;
-  console.log( optionRType.indexOf(selectValueRtype))
-
-  /**
-   * 신고버튼 onClick
-   */
-  const onClickReport = async(reportUserID, ) => {
-    if(reportValue.trim() === ""){
-      await axios.post(manage.createReport(),
-      {
-        report_user: reportUserID,
-        report_target_type: reportType,
-        report_type: optionRType.indexOf(selectValueRtype),
-        report_target_id: postId
-      })
-    }
-    else{
-      await axios.post(manage.createReport(),
-      {
-        report_user: reportUserID,
-        report_target_type: reportType,
-        report_type: optionRType.indexOf(selectValueRtype),
-        report_body: reportValue,
-        report_target_id: postId
-      })
-    }
-  }
+  const data = props.data;
+  
+  console.log(data)
+  
 
   return (
     <Modal centered show={show} onHide={onClickModalClose}>
       <Modal.Header closeButton>
-        <Modal.Title>
-          {
-            reportType === 0 ? "게시글 " : "댓글 "
-          }
-          신고하기</Modal.Title>
+        <Modal.Title>신고 상세 정보</Modal.Title>
       </Modal.Header>
+
       <Modal.Body>
-        <Report>
-          <p>
-          신고 이유
-          </p>
-          <select onChange={(e) => setselectValueRtype(e.target.value)} value={selectValueRtype}>
+
+
+        <Section>
+          <p>신고 사유 : {optionRType[data?.report?.report_type]}</p>
+        </Section>
+
+        <Section>
+          <p className='title'>신고 내용</p>
+          <p className='contents'>
             {
-              optionRType.map((item, index) => {
-                return (
-                  <option key={index} value={item}>
-                    {item}
-                  </option>
-                )
-              })
+              data?.report?.report_body !== null ?
+              data?.report?.report_body
+              : 
+              "-"
             }
-          </select>
-        </Report>
-        
-        <Report>
-          <p>
-            신고 내용
           </p>
-          <input
-          value={reportValue}
-          onChange={(e) => setReportValue(e.target.value)}
-          ></input>
-        </Report>
+        </Section>
+
+        <Section>
+          <span>{data?.report?.report_user}</span>
+          <IoArrowDown/>
+          {
+            data?.report?.report_target_type === 0 ? 
+            //게시글
+            <span>{data?.post?.users?.user_detail?.user_unique_id}</span>
+            :
+            //댓글
+            <span>{data?.comment?.users?.user_detail.user_unique_id}</span>
+          }
+        </Section>
+
+        <Section>
+          {
+            data?.report?.report_target_type === 0 ? 
+            <a href={`/${data?.post?.users?.user_detail?.user_unique_id}/${data?.post?.post_id}`}>해당 포스트로 이동</a>
+            :
+            <a href={`/${data?.report?.report_user}/${data?.comment?.post_id}`}>해당 댓글이 있는 포스트로 이동</a>
+          }
+        </Section>
+
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary"
-          onClick={() => { onClickReport(user); onClickModalClose(); }}>
-          신고
-        </Button>
-      </Modal.Footer>
     </Modal>
   );
 }
 
 export default SettingReportModal;
 
-const Report = styled.div`
-  margin-bottom: 20px;
-  &:last-child{
-    margin-bottom: 0;
-  }
+const Section = styled.div`
 
-  p{
-    margin: 0;
-    font-size: 1.2rem;
-    margin-bottom: 5px;
-  }
-
-  select{
-    border-radius: 10px;
-    border: 2px solid var(--gray400);
-  }
-
-  input{
-    border-radius: 10px;
-    border: 2px solid var(--gray400);
-    width: 100%;
-    padding: 3px 10px;
-
-    :focus{
-      outline: none;
+  :nth-child(2){
+    .title{
+      margin-bottom: 5px;
+    }
+    .contents{
+      border: 1.5px solid var(--gray300);
+      border-radius: 10px;
+      padding: 3px 10px;
+      margin-top: 0;
     }
   }
 
+  :nth-child(3){
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 0.89rem;
+    color: var(--gray600)
+  }
+
+  :nth-child(4){
+    text-align: right;
+    a{
+      color: var(--blue);
+      transition: 0.3s;
+
+      :hover{
+        color: var(--hover-blue)
+      }
+    }
+  }
 `

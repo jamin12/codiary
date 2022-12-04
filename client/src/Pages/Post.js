@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import PostReply from "../components/PostReply";
 import PostUpdate from "../components/PostUpdate";
 import getImg from "../utils/ImgUtil";
-import SettingReportModal from "../components/SettingReportModal";
+import PostReportModal from "../components/PostReportModal";
 
 
 const WritePage = () => {
@@ -318,7 +318,7 @@ const WritePage = () => {
                   onClick={() => { setShow(true); setReportType(0) }}>신고</span>
               )
             }
-            <SettingReportModal user={uniqueid} postId={post.getPost?.post_id}
+            <PostReportModal user={uniqueid} postId={post.getPost?.post_id}
               onClickModalClose={onClickModalClose} show={show} reportType={reportType} />
           </HeaderBox>
 
