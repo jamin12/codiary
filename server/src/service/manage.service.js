@@ -42,7 +42,7 @@ class manageService {
 		this.postJoin = {
 			model: posts,
 			as: "posts",
-			attributes: ["post_title"],
+			attributes: ["post_title","post_id"],
 		};
 
 		this.commentJoin = {
@@ -225,7 +225,7 @@ class manageService {
 				where: {
 					comments_id: getReport.report_target_id,
 				},
-				include: [this.userJoin],
+				include: [this.userJoin,this.postJoin],
 			});
 		}
 		return {
