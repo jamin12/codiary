@@ -130,7 +130,7 @@ const Mypage = () => {
       <Contents>
         {/* 가운데 홈 글씨 */}
         <div className="mypage-main-txt">
-          <h3>{userId}'s</h3>
+          <h3><span>{userId}</span>'s</h3>
           <h1>CODIARY</h1>
         </div>
 
@@ -233,6 +233,13 @@ const MainWrap = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;
+    max-width: 250px;
+    word-break: break-all;
+    h3{
+      span{
+        
+      }
+    }
   }
 `
 const Contents = styled.div`
