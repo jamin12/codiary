@@ -10,29 +10,167 @@ import { baseUrl } from "../api";
 import { logout } from "../reducers/Action";
 import getImg from "../utils/ImgUtil";
 
+const Home = () => {
+  const [isOpen, setMenu] = useState(false);
+  const [popularPost, setPopularPost] = useState([]);
+  const [loginOpen, setLogin] = useState(false);
+  const { uniqueid } = useSelector((state) => state.auth.User);
+  const { user_img } = useSelector((state) => state.auth.User);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
+
+  /**
+   * 로그인 모달 여는 onClick
+   */
+  const loginModal = () => {
+    setLogin(true);
+  }
+
+  const navigation = useNavigate();
+  /**
+   * search page 로 이동하는 onClick
+   */
+  const goToSearchPage = () => {
+    navigation("/search", { state: { type: 'home' } });
+  }
+
+
+
+  /**
+   * 인기 게시글 가져오기
+   */
+  useEffect(() => {
+    const getPopularPostFun = async () => {
+      const getPopularPost = await axios.get(main.mainPage(), {
+        // offset 으로 페이징 하세요
+        params: { offset: 0, limit: 50 },
+      });
+      setPopularPost(getPopularPost.data.result_data);
+    };
+    getPopularPostFun();
+  }, []);
+
+  // 프로필 이미지 클릭했을 때 메뉴 on off
+  const toggleMenu = () => {
+    setMenu((isOpen) => !isOpen);
+  };
+
+  const logoutClick = async () => {
+    axios.get(`${baseUrl}/logout`, { withCredentials: true });
+    dispatch(logout(""))
+    navigate("/")
+  }
+
+
+  console.log(getImg(user_img))
+
+  return (
+    <MainWrap>
+
+      {
+        loginOpen && <Login setLogin={setLogin} />
+      }
+      <ProfileIMG
+        img={getImg(user_img)}
+        onClick={toggleMenu}
+        className={isOpen ? "menuToggleON" : "menuToggleOFF"}
+      ></ProfileIMG>
+        <Menu>
+          {uniqueid !== '' &&
+            <div className={isOpen ? "menuON" : "menuOFF"}>
+              <p>
+                <Link to="/write">새 글쓰기</Link>
+              </p>
+              <p>
+                <Link to={`/${uniqueid}`}>내 글 목록</Link>
+              </p>
+              <p>
+                <Link to={`/${uniqueid}/calender`}>내 코디어리</Link>
+              </p>
+              <p>
+                <Link to="/presave">임시글 목록</Link>
+              </p>
+              <p>
+                <Link to="/visite-like">방문&좋아요 목록</Link>
+              </p>
+              <p>
+                <Link to="/setting">설정</Link>
+              </p>
+              <p>
+                <Link to="/visiterstat">방문자 통계</Link>
+              </p>
+              <p className="logout" onClick={logoutClick}>로그아웃</p>
+            </div>
+          }
+          {
+            uniqueid === '' &&
+            <div className={isOpen ? "menuON" : "menuOFF"}>
+              <p className="logout" onClick={loginModal}>로그인</p>
+            </div>
+          }
+        </Menu>
+
+      {/* 메인 검색 화면 */}
+      <div className="home-search">
+        {/* 홈화면 */}
+        <HomeTitle>CODIARY</HomeTitle>
+        {/* 검색창 */}
+        <MainSearchBar
+          type="button"
+          onClick={goToSearchPage}
+          value="SEARCH"
+        ></MainSearchBar>
+      </div>
+
+      {/* 인기 게시글 */}
+      <div className="popular-posts" id="popularity-text">
+        <h2 className="home-title-popular">인기 게시글</h2>
+        <CarouselWrap>
+          <Carousel
+            posts={popularPost}
+          />
+        </CarouselWrap>
+      </div>
+
+      {/* 푸터 */}
+      <div className="home-footer">
+        <FooterText>
+          <p>제작자: 강경민, 임효현</p>
+          <p>이 이상 넣을 얘기가 없어서 고민하다 이거까지만 적음ㅎ</p>
+          <p>Copyright ⓒ whs12skeocndwjrdma.</p>
+        </FooterText>
+      </div>
+    </MainWrap>
+  );
+};
+
+export default Home;
+
 
 const MainWrap = styled.div`
-	.container {
+  margin: 0;
+  padding: 0;
+  background-color: red;
+  width: 100%;
+  .home-search {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+		background-color: var(--gray600);
+	}
+
+  .popular-posts{
 		width: 100%;
 		height: 100vh;
-		background-color: var(--gray100);
+		background-color: var(--gray50);
 		position: relative;
-
-		.home-title-popular {
+    .home-title-popular {
 			text-align: center;
 			padding: 70px 0 50px 0;
 		}
-	}
-  #popularity-text{
-
   }
-
-  .home-search {
-		background-color: #38393d;
-		/* background-image: linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.0) ),
-          url(../../IMG/얼룩무늬.svg); */
-		background-size: cover;
-	}
 
 	.home-footer {
 		width: 100%;
@@ -148,149 +286,6 @@ const Menu = styled.div`
 		}
 	}
 `;
-
-const Home = () => {
-	const [isOpen, setMenu] = useState(false);
-	const [popularPost, setPopularPost] = useState([]);
-	const [loginOpen, setLogin] = useState(false);
-	const { uniqueid } = useSelector((state) => state.auth.User);
-	const { user_img } = useSelector((state) => state.auth.User);
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
-
-
-
-	/**
-	 * 로그인 모달 여는 onClick
-	 */
-	const loginModal = () => {
-		setLogin(true);
-	}
-
-	const navigation = useNavigate();
-	/**
-	 * search page 로 이동하는 onClick
-	 */
-	const goToSearchPage = () => {
-		navigation("/search", { state: { type: 'home' } });
-	}
-
-
-
-	/**
-	 * 인기 게시글 가져오기
-	 */
-	useEffect(() => {
-		const getPopularPostFun = async () => {
-			const getPopularPost = await axios.get(main.mainPage(), {
-				// offset 으로 페이징 하세요
-				params: { offset: 0, limit: 50 },
-			});
-			setPopularPost(getPopularPost.data.result_data);
-		};
-		getPopularPostFun();
-	}, []);
-
-	// 프로필 이미지 클릭했을 때 메뉴 on off
-	const toggleMenu = () => {
-		setMenu((isOpen) => !isOpen);
-	};
-
-	const logoutClick = async () => {
-		axios.get(`${baseUrl}/logout`, { withCredentials: true });
-		dispatch(logout(""))
-		navigate("/")
-	}
-
-
-	console.log(getImg(user_img))
-
-	return (
-		<MainWrap>
-
-			{
-				loginOpen && <Login setLogin={setLogin} />
-			}
-
-			{/* 메인 검색 화면 */}
-			<div className="container home-search">
-				{/* 프로필 이미지 */}
-				<ProfileIMG
-					img={getImg(user_img)}
-					onClick={toggleMenu}
-					className={isOpen ? "menuToggleON" : "menuToggleOFF"}
-				></ProfileIMG>
-				{/* 메뉴창 */}
-				<Menu>
-					{uniqueid !== '' &&
-						<div className={isOpen ? "menuON" : "menuOFF"}>
-							<p>
-								<Link to="/write">새 글쓰기</Link>
-							</p>
-							<p>
-								<Link to={`/${uniqueid}`}>내 글 목록</Link>
-							</p>
-							<p>
-								<Link to={`/${uniqueid}/calender`}>내 코디어리</Link>
-							</p>
-							<p>
-								<Link to="/presave">임시글 목록</Link>
-							</p>
-							<p>
-								<Link to="/visite-like">방문&좋아요 목록</Link>
-							</p>
-							<p>
-								<Link to="/setting">설정</Link>
-							</p>
-							<p>
-								<Link to="/visiterstat">방문자 통계</Link>
-							</p>
-							<p className="logout" onClick={logoutClick}>로그아웃</p>
-						</div>
-					}
-					{
-						uniqueid === '' &&
-						<div className={isOpen ? "menuON" : "menuOFF"}>
-							<p className="logout" onClick={loginModal}>로그인</p>
-						</div>
-					}
-				</Menu>
-
-				{/* 홈화면 */}
-				<HomeTitle>CODIARY</HomeTitle>
-				{/* 검색창 */}
-				<MainSearchBar
-					type="button"
-					onClick={goToSearchPage}
-					value="SEARCH"
-				></MainSearchBar>
-
-			</div>
-
-			{/* 인기 게시글 */}
-			<div className="container" id="popularity-text">
-				<h2 className="home-title-popular">인기 게시글</h2>
-				<CarouselWrap>
-					<Carousel
-						posts={popularPost}
-					/>
-				</CarouselWrap>
-			</div>
-
-			{/* 푸터 */}
-			<div className="home-footer">
-				<FooterText>
-					<p>제작자: 강경민, 임효현</p>
-					<p>이 이상 넣을 얘기가 없어서 고민하다 이거까지만 적음ㅎ</p>
-					<p>Copyright ⓒ whs12skeocndwjrdma.</p>
-				</FooterText>
-			</div>
-		</MainWrap>
-	);
-};
-
-export default Home;
-
 
 const CarouselWrap = styled.div`
   width: 80%;
