@@ -9,17 +9,12 @@ import { personal, img } from '../api';
 import axios from 'axios';
 import default_img from '../IMG/codiary_default_img.png';
 import { Link, useParams } from 'react-router-dom';
-import { getYear, getMonth, addDays, addMonths, format } from "date-fns"
+import { addDays, addMonths, format } from "date-fns"
 
 const MyCalendar = () => {
   const { userId } = useParams();
   const date = new Date();
   const [postDate, changeDate] = useState(date);
-  const sendDate = new Date(+postDate + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '').substring(0, 10) + " 00:00:00"
-  // console.log(sendDate)
-
-  const [sendYear, setSendYear] = useState(sendDate.substring(0, 4));
-  const [sendMonth, setsendMonth] = useState(sendDate.substring(5, 7));
 
   const [postsByDate, setPostByDate] = useState([]);
   // 받은 날짜에 대한 포스팅 기록 저장해서 표시
@@ -46,8 +41,6 @@ const MyCalendar = () => {
     };
     getPostCountByMonthFun()
   }, [userId, postDate])
-  console.log(mark)
-
 
 
   /**
@@ -81,7 +74,6 @@ const MyCalendar = () => {
   const viewChange = () => {
     const year = document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0, 4)
     const month = document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length - 1)
-    console.log(month)
     var newD = new Date(`${year}-${month}-01`)
     changeDate(newD)
   }
@@ -141,17 +133,21 @@ const MyCalendar = () => {
           {
             postsByDate.map(post => {
 
-              const html = post.posts?.post_body_html
-              const imgStart = html.indexOf('src="') + 5
-              const imgEnd = html.indexOf('"', imgStart)
-              const imgSrc = html.slice(imgStart, imgEnd)
+              let html = post.posts?.post_body_html;
+              const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+              html = html?.replaceAll("&lt;", "<");
+              let imgSrc = "";
+              if (imgSrcRex.exec(html)) {
+                imgSrc = RegExp.$2
+              } else {
+                imgSrc = default_img
+              }
 
               return (
                 <Post onClick={() => onClickPost(post.post_id, post.posts?.users?.user_detail.user_unique_id)}>
                   <div className='text-box'>
                     <h1 className="title">{post.posts?.post_title}</h1>
                     <div className='user-info'>
-                      {/* TODO: 구글에서 받은 이미지는 이미지 서버를 거칠 필요 없음 */}
                       <img src={img.getImg(post.posts?.users?.user_detail.user_img)} alt="사용자 이미지" />
                       <span className='user'>{post.posts?.users?.user_detail.user_unique_id}</span>
                     </div>

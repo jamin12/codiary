@@ -194,10 +194,15 @@ const Mypage = () => {
           {
             posts.map(post => {
 
-              const html = post.post_body_html
-              const imgStart = html.indexOf('src="') + 5
-              const imgEnd = html.indexOf('"', imgStart)
-              const imgSrc = html.slice(imgStart, imgEnd)
+              let html = post.post_body_html;
+              const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+              html = html?.replaceAll("&lt;", "<");
+              let imgSrc = "";
+              if (imgSrcRex.exec(html)) {
+                imgSrc = RegExp.$2
+              } else {
+                imgSrc = default_img
+              }
 
               return (
                 <Post onClick={() => onClickPost(post.post_id, post.users.user_detail.user_unique_id)}>
