@@ -210,9 +210,12 @@ const Myinfo = () => {
   const [nameValue, setName] = useState('');
   // 기본 정보
   const [myName, setMyName] = useState({})
-  const [myUniqueName, setMyUniqueName] = useState({})
+  const [myUniqueName, setMyUniqueName] = useState("")
+  const [myInitUniqueName, setmyInitUniqueName] = useState("")
   const [myIntro, setMyIntro] = useState({})
+  const [myInitIntro, setMyInitIntro] = useState({})
   const [myProfileImg, setMyProfileImg] = useState("")
+  const [myInitProfileImg, setMyInitProfileImg] = useState("")
   const [myProfileImgUrl, setMyProfileImgrul] = useState("")
   const dispatch = useDispatch();
   const nevigate = useNavigate();
@@ -236,7 +239,9 @@ const Myinfo = () => {
       setMyIntro(getMyInfo.data.result_data.user_detail.user_introduce);
       setMyProfileImg(getMyInfo.data.result_data.user_detail.user_img);
       setMyProfileImgrul(getImg(getMyInfo.data.result_data.user_detail.user_img));
-
+      setmyInitUniqueName(getMyInfo.data.result_data.user_detail.user_unique_id)
+      setMyInitIntro(getMyInfo.data.result_data.user_detail.user_introduce)
+      setMyInitProfileImg(getMyInfo.data.result_data.user_detail.user_img)
     };
     getMyInfoFun();
   }, []);
@@ -258,12 +263,22 @@ const Myinfo = () => {
       if (myUniqueName === '' || myIntro === '') {
         alert('빈칸을 모두 채운 후에 적용 버튼을 눌러주세요.');
       } else {
+        const myInfoUpdateData = {
+        };
+        if (myUniqueName !== myInitUniqueName) {
+          myInfoUpdateData.user_unique_id = myUniqueName;
+          setmyInitUniqueName(myUniqueName)
+        }
+        if (myIntro !== myInitIntro) {
+          myInfoUpdateData.user_introduce = myIntro;
+          setMyInitIntro(myIntro)
+        }
+        if (myProfileImg !== myInitProfileImg) {
+          myInfoUpdateData.user_img = myProfileImg;
+          setMyInitProfileImg(myProfileImg)
+        }
         const changeMyInfo = await axios.patch(user.updateUser(),
-          {
-            user_unique_id: myUniqueName,
-            user_introduce: myIntro,
-            user_img: myProfileImg
-          },
+          myInfoUpdateData,
           {
             withCredentials: true
           })
