@@ -8,6 +8,7 @@ import Login from "../components/Login.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { baseUrl } from "../api";
 import { logout } from "../reducers/Action";
+import getImg from "../utils/ImgUtil";
 
 
 const MainWrap = styled.div`
@@ -153,6 +154,7 @@ const Home = () => {
 	const [popularPost, setPopularPost] = useState([]);
 	const [loginOpen, setLogin] = useState(false);
 	const { uniqueid } = useSelector((state) => state.auth.User);
+	const { user_img } = useSelector((state) => state.auth.User);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -199,6 +201,10 @@ const Home = () => {
 		dispatch(logout(""))
 		navigate("/")
 	}
+
+
+	console.log(getImg(user_img))
+
 	return (
 		<MainWrap>
 
@@ -210,7 +216,7 @@ const Home = () => {
 			<div className="container home-search">
 				{/* 프로필 이미지 */}
 				<ProfileIMG
-					img="https://images.unsplash.com/photo-1661961110218-35af7210f803?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxMXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"
+					img={getImg(user_img)}
 					onClick={toggleMenu}
 					className={isOpen ? "menuToggleON" : "menuToggleOFF"}
 				></ProfileIMG>

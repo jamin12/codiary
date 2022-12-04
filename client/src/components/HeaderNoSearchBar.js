@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Login from './Login';
 import { devices } from '../css/DeviceSize';
 import { useSelector } from "react-redux";
+import getImg from '../utils/ImgUtil';
 
 
 
@@ -12,6 +13,7 @@ const HeaderNoSearchBar = () => {
   const [isOpen, setMenu] = useState(false);
   const [loginOpen, setLogin] = useState(false);
   const { uniqueid } = useSelector((state) => state.auth.User);
+  const { user_img } = useSelector((state) => state.auth.User);
 
   const toggleMenu = () => {
     setMenu(isOpen => !isOpen);
@@ -40,8 +42,7 @@ const HeaderNoSearchBar = () => {
 
         <Profile>
           <div className='userBox'>
-            <div className='imgBox' img='../IMG/profile_test.png'>
-            </div>
+            <img className='imgBox' src={getImg(user_img)} alt="사용자 이미지"/>
           </div>
           <div className={isOpen ? 'menuToggleON' : 'menuToggleOFF'} onClick={toggleMenu}></div>
         </Profile>
@@ -121,8 +122,6 @@ const Profile = styled.div`
       position: relative;
       min-width: 40px;
       height: 40px;
-      /* background-image: url(${(props) => props.img || '../IMG/KAKAO.png.png'}); */
-      background-color: orange;
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;

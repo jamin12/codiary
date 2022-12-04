@@ -70,6 +70,8 @@ const Menu = styled.ul`
 		margin: 10px auto;
 		background-color: transparent;
 		cursor: pointer;
+		word-break: break-all;
+		white-space: normal;
 
 		&:hover {
 			background-color: #ececec;

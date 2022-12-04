@@ -267,9 +267,30 @@ const WritePage = () => {
     setShow(false)
   }
 
+  const [reportCommentId, setReportCommentId] = useState();
+  console.log(comments)
+
+  /**
+   * 댓글 신고 버튼 onClick
+   */
+  const onClickCommentReport = (cid) => {
+    setShow(true);
+    setReportType(1);
+    setReportCommentId(cid)
+  }
 
   return (
     <>
+
+<PostReportModal user={uniqueid} 
+              postId={post.getPost?.post_id} 
+
+              onClickModalClose={onClickModalClose} 
+              show={show} 
+              reportType={reportType}
+              reportCommentId={reportCommentId}
+              />
+
       <Header style={{ zIndex: "999" }}>
         <SearchProfile />
       </Header>
@@ -318,8 +339,6 @@ const WritePage = () => {
                   onClick={() => { setShow(true); setReportType(0) }}>신고</span>
               )
             }
-            <PostReportModal user={uniqueid} postId={post.getPost?.post_id}
-              onClickModalClose={onClickModalClose} show={show} reportType={reportType} />
           </HeaderBox>
 
           {/* 본문내용 */}
@@ -423,7 +442,7 @@ const WritePage = () => {
                       {
                         uniqueid !== "" && uniqueid !== comment.users.user_detail?.user_unique_id && (
                           <p className="btn-reply"
-                            onClick={() => { setShow(true); setReportType(1) }}>신고</p>
+                            onClick={() => { onClickCommentReport(comment?.comments_id);}}>신고</p>
                         )
                       }
                       <p className="date">{comment.updated_at}</p>

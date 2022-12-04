@@ -24,30 +24,41 @@ const SettingReportModal = (props) => {
 
   const show = props.show;
   const onClickModalClose = props.onClickModalClose;
-  console.log( optionRType.indexOf(selectValueRtype))
+  const reportCommentId = props.reportCommentId;
+  console.log(optionRType.indexOf(selectValueRtype))
 
   /**
    * 신고버튼 onClick
    */
-  const onClickReport = async(reportUserID, ) => {
-    if(reportValue.trim() === ""){
-      await axios.post(manage.createReport(),
-      {
-        report_user: reportUserID,
-        report_target_type: reportType,
-        report_type: optionRType.indexOf(selectValueRtype),
-        report_target_id: postId
-      })
+  const onClickReport = async (reportUserID,) => {
+    const reportBody = {
+      report_user: reportUserID,
+      report_target_type: reportType,
+      report_type: optionRType.indexOf(selectValueRtype),
+    }
+    if(reportType === 0){
+      reportBody.report_target_id = postId
+      if (reportValue.trim() === "") {
+        await axios.post(manage.createReport(), reportBody
+        )
+      }
+      else {
+        reportBody.report_body = reportValue;
+        await axios.post(manage.createReport(), reportBody
+        )
+      }
     }
     else{
-      await axios.post(manage.createReport(),
-      {
-        report_user: reportUserID,
-        report_target_type: reportType,
-        report_type: optionRType.indexOf(selectValueRtype),
-        report_body: reportValue,
-        report_target_id: postId
-      })
+      reportBody.report_target_id = reportCommentId
+      if (reportValue.trim() === "") {
+        await axios.post(manage.createReport(), reportBody
+        )
+      }
+      else {
+        reportBody.report_body = reportValue;
+        await axios.post(manage.createReport(), reportBody
+        )
+      }
     }
   }
 
@@ -63,7 +74,7 @@ const SettingReportModal = (props) => {
       <Modal.Body>
         <Report>
           <p>
-          신고 이유
+            신고 이유
           </p>
           <select onChange={(e) => setselectValueRtype(e.target.value)} value={selectValueRtype}>
             {
@@ -77,14 +88,14 @@ const SettingReportModal = (props) => {
             }
           </select>
         </Report>
-        
+
         <Report>
           <p>
             신고 내용
           </p>
           <input
-          value={reportValue}
-          onChange={(e) => setReportValue(e.target.value)}
+            value={reportValue}
+            onChange={(e) => setReportValue(e.target.value)}
           ></input>
         </Report>
       </Modal.Body>

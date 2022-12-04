@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { baseUrl } from "../api";
 import { logout } from "../reducers/Action";
+import getImg from "../utils/ImgUtil";
 
 // 스타일 설정
 // 1680*900 기준 작성
@@ -58,9 +59,6 @@ const Profile = styled.div`
       position: relative;
       min-width: 40px;
       height: 40px;
-      /* background-image: url(${(props) =>
-    props.img || "../IMG/KAKAO.png.png"}); */
-      background-color: orange;
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
@@ -217,6 +215,7 @@ const SearchProfile = () => {
   const [isOpen, setMenu] = useState(false);
   const [loginOpen, setLogin] = useState(false);
   const { uniqueid } = useSelector((state) => state.auth.User);
+  const { user_img } = useSelector((state) => state.auth.User);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -271,7 +270,7 @@ const SearchProfile = () => {
 
           <Profile>
             <div className="userBox">
-              <div className="imgBox" img="../IMG/profile_test.png"></div>
+              <img className="imgBox" src={getImg(user_img)} alt="사용자 프로필 이미지"></img>
             </div>
             <div
               className={isOpen ? "menuToggleON" : "menuToggleOFF"}

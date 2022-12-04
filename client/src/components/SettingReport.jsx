@@ -208,7 +208,7 @@ const SettingReport = () => {
                       </button>
                     </td>
                     <td>
-                      <button className='btn-report-delete btn-post-delete' style={{float: 'right'}}
+                      <button className='btn-report-delete btn-post-delete' style={{float: 'right', zIndex: "999"}}
                         onClick={() => onClickReport_PC_Delete(item.report_target_id, item.report_target_type)}>
                         삭제
                       </button>
