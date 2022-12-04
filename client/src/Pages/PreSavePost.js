@@ -74,14 +74,15 @@ const Header = styled.div`
 	padding-bottom: 10px;
 `;
 const Wrap = styled.div`
-	width: 80vw;
-	@media screen and (max-width: 1600px) {
-		padding-right: 60px;
-		padding-left: 60px;
-	}
-	@media screen and (max-width: 1024px) {
-		width: 90%;
-	}
+  width: 80vw;
+  margin-top: 0;
+  /* @media screen and (max-width: 1600px) {
+    padding-right: 60px;
+    padding-left: 60px;
+  }
+  @media screen and (max-width: 1024px) {
+    width: 90%;
+  } */
 `;
 const ContentWrapBox = styled.div`
 	width: 70%;
