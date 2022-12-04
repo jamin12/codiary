@@ -168,6 +168,8 @@ const VisiterStats = () => {
 			);
 			setgraphInfo(getInitMesurementData.data.result_data.graphData);
 			setMyPosts(getInitMesurementData.data.result_data.myPosts);
+			setChartPostId(getInitMesurementData.data.result_data.bestPosts
+				.getBestTotalVisit.posts.post_id);
 			setChartPostTitle(
 				getInitMesurementData.data.result_data.bestPosts
 					.getBestTotalVisit.posts?.post_title

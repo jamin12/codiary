@@ -18,6 +18,7 @@ const compression = require("compression");
 const { authLimiter } = require("./src/middleware/rateLimiter");
 const CustomError = require("./src/utils/Error/customError");
 const httpStatus = require("http-status");
+const { urlencoded, json } = require('body-parser');
 
 const app = express();
 dotenv.config();
@@ -29,6 +30,10 @@ app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Credentials", true);
 	next();
 });
+
+// 대용량 데이터 받기 설정
+app.use(json({ limit: '50mb' }));
+app.use(urlencoded({ limit: '50mb', extended: true }));
 
 // set security HTTP headers
 app.use(helmet());
