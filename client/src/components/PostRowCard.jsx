@@ -4,11 +4,13 @@ import getImg from '../utils/ImgUtil';
 
 const PostRowCard = (props) => {
 
+  const id = props.id
   const title = props.title;
   const text = props.text;
   const user = props.user;
   const date = props.date;
   const img = props.img;    // TODO: props로 받은 주소가 없으면 아예 나타나지 않게 처리 해야함
+  const type = props.type;
 
   // TODO(이묘): 가장 처음 이미지 찾는 함수 구현바람.
   /**
@@ -19,12 +21,32 @@ const PostRowCard = (props) => {
     return "https://images.unsplash.com/photo-1664575196079-9ac04582854b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
   }
 
+    /**
+  * 해당 포스트로 이동하는 함수
+  * 
+  * @param {string} uid 
+  * @param {number} pid 
+  */
+  console.log(id)
+  const onClickGoPost = (pid, uid) => {
+    if (type === "presave") {
+      document.location.href = `/presave/${pid}`;
+    }
+    else {
+      document.location.href = `/${uid}/${pid}`;
+    }
+  }
+
   return (
-    <Post>
+    <Post
+      onClick={() => onClickGoPost(id, user)}>
       <div className='text-box'>
         <h1 className="title">{title}</h1>
         <div className="user">
-          <img src={getImg(img)} alt="사용자 프로필"/>
+          {
+            img !== "" &&
+            <img src={getImg(img)} alt="사용자 프로필" />
+          }
           <span className='user'>{user}</span>
         </div>
         <p className='date'>{date}</p>
@@ -52,10 +74,10 @@ const Post = styled.div`
     width: 50%;
 
     .title{
-      width: 49%;
+      width: 90%;
       text-align: left;
       margin-left: 10px;
-      margin-top: 5px;
+      margin-top: 20px;
       font-size: 1.6rem;
       overflow: hidden;
       white-space: nowrap;
