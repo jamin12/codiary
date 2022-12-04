@@ -48,9 +48,9 @@ const HeaderNoSearchBar = () => {
         <Menu>
           {uniqueid !== '' &&
             <div className={isOpen ? 'menuON' : 'menuOFF'}>
-              <Link className='tagP' to='/:userId'>내 글 목록</Link>
+              <Link className='tagP' to={`/${uniqueid}`}>내 글 목록</Link>
               <Link className='tagP' to='/write'>글쓰기</Link>
-              <Link className='tagP' to='/:userId/calender'>내 코디어리</Link>
+              <Link className='tagP' to={`/${uniqueid}/calender`}>내 코디어리</Link>
               <Link className='tagP' to='/presave'>임시글 목록</Link>
               <Link className='tagP' to='/visite-like'>방문&좋아요 목록</Link>
               <Link className='tagP' to='/setting'>설정</Link>
