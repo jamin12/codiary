@@ -20,10 +20,6 @@ const SimilarPost = (props) => {
 
 
 
-  // const [posts, setPosts] = useState([]);
-
-  // console.log(posts)
-
   const onErrorImg = (e) => {
     e.target.src = default_img;
   }

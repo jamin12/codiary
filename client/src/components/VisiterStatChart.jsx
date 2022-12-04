@@ -16,7 +16,6 @@ const BasicLineChart = (props) => {
      * 받아온 데이터를 정렬하고 전처리
      */
     useEffect(() => {
-        //TODO(이묘): 주차별 그래프 반대로 나오는데 reverse()해도 안고쳐짐
         if(graphtype===1){
             setBasicData(graphInfo.reverse().created_at)            
         }else{

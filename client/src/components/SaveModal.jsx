@@ -23,7 +23,6 @@ function OptionModal(props) {
   const keyEventEnter = (e) => {
     if (e.key === 'Enter') {
       // 배열에 input의 value 저장
-      alert(tagInput);
       setTagInput(tagInput);
       setTags(tags => [...tags, tagInput]);
       setTagInput('');
@@ -149,7 +148,6 @@ function OptionModal(props) {
           <h4>카테고리</h4>
           <select className='selectBox' onChange={onChangeSelect} value={selected}>
             {
-              // TODO: testList 서버에서 받아온 카테고리 리스트로 변경
               category.map(list => (
                 <option value={list.category_id} key={list.category_id}>
                   {list.category_name}

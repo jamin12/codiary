@@ -226,8 +226,6 @@ const WritePage = () => {
    * 댓글 수정
    */
   const onClickCommnetModify = async (id, content) => {
-    // TODO: 서버에 수정 요청
-
     await axios.patch(
       personal.updateComment(id),
       {
@@ -251,8 +249,6 @@ const WritePage = () => {
    * 댓글 삭제
    */
   const onClickCommnetDelete = async (id) => {
-
-    // TODO: 왜 안될까?
     await axios.delete(
       personal.deleteComment(id),
       { withCredentials: true }
@@ -371,7 +367,6 @@ const WritePage = () => {
                       <ion-icon name="heart"></ion-icon>
                   }
                 </label>
-                {/* TODO(경민 -> 이묘): 좋아요 숫자 밑으로 내리고 색 표시 나도록 하세용*/}
                 <input
                   type="checkbox"
                   id="good"
@@ -425,7 +420,6 @@ const WritePage = () => {
                         id={comment.comments_id}
                       >답글 쓰기
                       </p>
-                      {/* TODO: 작성자 본인에게만 수정 삭제 버튼이 보이도록*/}
                       {
                         uniqueid === comment.users.user_detail?.user_unique_id && (
                           <>

@@ -85,29 +85,6 @@ const MyCategory = () => {
 
 
 
-  // jQuery
-  // TODO(급한거 아님): 버튼을 누르면 그 버튼이 있는 폴더만 열도록 수정해야함!! ***
-  // 백엔드 데이터 받으면 거기서 중복안되는 데이터? 이름? 을 id에 넣고 id기준으로 실행시켜야할 듯
-  // useEffect(() => {
-  //   $('.drop-down').off('click').on('click', function (e) {
-  //     // var item = e.target.id;
-  //     // item .category-subfolder 이런식으로 쓰면 될 듯
-  //     $('.category-subfolder').slideToggle();
-  //     if ($('.drop-down').hasClass('off')) {
-  //       $('.drop-down').removeClass('off').addClass('on');
-  //       $('.category-mainfolder').css({
-  //         'border-radius': '20px 20px 0 0'
-  //       });
-  //     } else {
-  //       $('.drop-down').removeClass('on').addClass('off');
-  //       $('.category-mainfolder').css({
-  //         'border-radius': '20px'
-  //       });
-  //     }
-  //   });
-  // });
-
-
 
   /**
    * 내 카테고리 가져오기
@@ -190,7 +167,6 @@ const MyCategory = () => {
     setCheckCategoryChange(1)
   }
 
-  console.log(category)
 
 
 

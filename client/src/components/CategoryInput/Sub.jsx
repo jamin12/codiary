@@ -13,7 +13,6 @@ const InputSub = (props) => {
   }
 
   const onClickSave = (id, content, sub_id) => {
-    // console.log(save(id, content, sub_id))
     props.updateCategory(id, content, sub_id)
   }
 

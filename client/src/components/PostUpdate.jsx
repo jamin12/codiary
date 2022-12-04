@@ -51,7 +51,6 @@ const Main = styled.div`
 
     button {
 		/* margin-top: 5px; */
-		/* TODO(이묘): 버튼 우측정렬 나중에 해결할 것 */
 		float: right;
 		padding: 2px 15px;
 		width: 10%;

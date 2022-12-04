@@ -23,8 +23,6 @@ const HeaderNoSearchBar = () => {
     setLogin(true);
   }
 
-  //TODO: 로그인한 후에 프로필 사진 가져올 것
-
   return (
     <Main>
       {
