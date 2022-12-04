@@ -9,12 +9,14 @@ import { personal, img } from '../api';
 import axios from 'axios';
 import default_img from '../IMG/codiary_default_img.png';
 import { Link, useParams } from 'react-router-dom';
+import { getYear, getMonth, addDays, addMonths, format } from "date-fns"
 
 const MyCalendar = () => {
   const { userId } = useParams();
   const date = new Date();
   const [postDate, changeDate] = useState(date);
   const sendDate = new Date(+postDate + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '').substring(0, 10) + " 00:00:00"
+  // console.log(sendDate)
 
   const [sendYear, setSendYear] = useState(sendDate.substring(0, 4));
   const [sendMonth, setsendMonth] = useState(sendDate.substring(5, 7));
@@ -22,26 +24,11 @@ const MyCalendar = () => {
   const [postsByDate, setPostByDate] = useState([]);
   // 받은 날짜에 대한 포스팅 기록 저장해서 표시
   const [mark, setMark] = useState([]);
+  const [render, setRender] = useState(false);
 
   // TODO(이묘): mark에서 text에서 이미지 태그만 뽑아서 가장 첫번째 있는 이미지 태그만 뽑아서 넣기 - 함수구현
-  /**
-   * 가장 첫번째 이미지 태그 안에 주소를 postImg에 저장하는 함수
-   */
-  // const setPostImg = (htmlCode) => {
-
-  // }
-  // const postImg = setPostImg(mark.post_body_html)
 
 
-
-
-  const nextMonth = (sendMonth) => {
-    if (parseInt(sendMonth) < 9) {
-      return "0" + (parseInt(sendMonth) + 1)
-    } else {
-      return (parseInt(sendMonth) + 1)
-    }
-  }
   /**
    * 해당 월에 post가 있으면 mark에 넣어줌
    */
@@ -51,15 +38,18 @@ const MyCalendar = () => {
         personal.getPersonalPostCountByDate(userId),
         {
           params: {
-            startdate: `${sendYear}-${sendMonth}-01 00:00:00`,
-            enddate: `${sendYear}-${nextMonth(sendMonth)}-01 00:00:00`
+            startdate: `${format(postDate, "yyyy-MM")}-01 00:00:00`,
+            enddate:`${format(addMonths(postDate, 1), "yyyy-MM")}-01 00:00:00`
           }
         }
       );
       setMark(getPostCountByMonth.data.result_data);
+      setRender(false)
     };
     getPostCountByMonthFun()
-  }, [sendYear, sendMonth, userId])
+  }, [userId, postDate, sendMonth, render])
+  console.log(sendMonth)
+  console.log(mark)
 
 
 
@@ -70,12 +60,14 @@ const MyCalendar = () => {
     const getPostsByDateFun = async () => {
       const getPostsByDate = await axios.get(
         personal.getPersonalPostsByDate(userId),
-        { params: { startdate: sendDate/** postDate */, enddate: sendDate.substring(0, 8) + (postDate.getDate() + 1) + " " + sendDate.substring(11,)/** postDate에서 하루 뒤 */ } }
+        { params: { 
+          startdate: postDate.toISOString().split("T")[0] + " 00:00:00", 
+          enddate: format(addDays(postDate, 1), "yyyy-MM-dd") + " 00:00:00"/** postDate에서 하루 뒤 */ } }
       );
       setPostByDate(getPostsByDate.data.result_data);
     };
     getPostsByDateFun();
-  }, [postDate, sendDate, userId]);
+  }, [postDate, userId]);
 
 
 
@@ -92,6 +84,8 @@ const MyCalendar = () => {
   const viewChange = () => {
     setSendYear(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0, 4))
     setsendMonth(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length - 1))
+    console.log("hi")
+    setRender(true);
   }
 
   /**
@@ -114,7 +108,6 @@ const MyCalendar = () => {
             postDate={postDate}
             formatDay={(locale, date) => moment(date).format('DD')}   // 1'일'에서 일 제외하고 숫자만 보이게
             formatMonthYear={(locale, date) => moment(date).format('YYYY년 MM월')}
-            // formatYear={(locale, date) => moment(date).format('YYYY')}
             minDetail="month"
             maxDetail="month"
             formatShortWeekday={(locale, date) => moment(date).format('ddd')}
