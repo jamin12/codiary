@@ -225,7 +225,7 @@ class manageService {
 				where: {
 					comments_id: getReport.report_target_id,
 				},
-				include: [this.userJoin,this.postJoin],
+				include: [this.userJoin],
 			});
 		}
 		return {
