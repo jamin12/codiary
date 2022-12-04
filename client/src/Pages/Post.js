@@ -173,14 +173,14 @@ const WritePage = () => {
           },
           { withCredentials: true }
         );
-        
+
       } else {
         await axios.delete(personal.deletePersonalLikeRecordByPostId(postId), {
           withCredentials: true,
         });
       }
       const likeCount = await axios(personal.getPersonalLikeCount(postId));
-      setLikeCount(likeCount.data.result_data.like_count);  
+      setLikeCount(likeCount.data.result_data.like_count);
     } else {
       alert("로그인을 해주십시오");
     }
@@ -268,7 +268,6 @@ const WritePage = () => {
   }
 
   const [reportCommentId, setReportCommentId] = useState();
-  console.log(comments)
 
   /**
    * 댓글 신고 버튼 onClick
@@ -282,14 +281,14 @@ const WritePage = () => {
   return (
     <>
 
-<PostReportModal user={uniqueid} 
-              postId={post.getPost?.post_id} 
+      <PostReportModal user={uniqueid}
+        postId={post.getPost?.post_id}
 
-              onClickModalClose={onClickModalClose} 
-              show={show} 
-              reportType={reportType}
-              reportCommentId={reportCommentId}
-              />
+        onClickModalClose={onClickModalClose}
+        show={show}
+        reportType={reportType}
+        reportCommentId={reportCommentId}
+      />
 
       <Header style={{ zIndex: "999" }}>
         <SearchProfile />
@@ -365,7 +364,12 @@ const WritePage = () => {
               </div>
               <div className="like-good">
                 <label for="good">
-                  <ion-icon name="heart-outline"></ion-icon>
+                  {
+                    isCheckingBox === false ? 
+                      <ion-icon name="heart-outline"></ion-icon>
+                    :
+                      <ion-icon name="heart"></ion-icon>
+                  }
                 </label>
                 {/* TODO(경민 -> 이묘): 좋아요 숫자 밑으로 내리고 색 표시 나도록 하세용*/}
                 <input
@@ -442,7 +446,7 @@ const WritePage = () => {
                       {
                         uniqueid !== "" && uniqueid !== comment.users.user_detail?.user_unique_id && (
                           <p className="btn-reply"
-                            onClick={() => { onClickCommentReport(comment?.comments_id);}}>신고</p>
+                            onClick={() => { onClickCommentReport(comment?.comments_id); }}>신고</p>
                         )
                       }
                       <p className="date">{comment.updated_at}</p>
@@ -497,7 +501,7 @@ const WritePage = () => {
                             {
                               uniqueid !== "" && uniqueid !== replyComment.users.user_detail?.user_unique_id && (
                                 <p className="btn-reply"
-                                onClick={() => { setShow(true); setReportType(1) }}>신고</p>
+                                  onClick={() => { setShow(true); setReportType(1) }}>신고</p>
                               )
                             }
                             <p className="date">{replyComment.updated_at}</p>

@@ -25,7 +25,6 @@ const SettingReportModal = (props) => {
   const show = props.show;
   const onClickModalClose = props.onClickModalClose;
   const reportCommentId = props.reportCommentId;
-  console.log(optionRType.indexOf(selectValueRtype))
 
   /**
    * 신고버튼 onClick
