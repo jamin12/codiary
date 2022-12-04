@@ -272,9 +272,6 @@
 
 ## __<span style="color:#9999ff">신고 생성</span>__
 ## __<span style="color:#ff9933">요청</span>__ **[POST] /**
-- |속성|타입|설명|
-    |---|---|---|
-    |reportid *|int|신고 아이디(필수)|
 - ``` json
     {
         "report_user": "1234",
