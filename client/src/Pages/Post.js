@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import PostReply from "../components/PostReply";
 import PostUpdate from "../components/PostUpdate";
 import getImg from "../utils/ImgUtil";
+import SettingReportModal from "../components/SettingReportModal";
 
 
 const WritePage = () => {
@@ -29,7 +30,10 @@ const WritePage = () => {
   const tagh1IdList = [];
   const tagh2IdList = [];
 
+  const [show, setShow] = useState(false);  // 수정 모달 show
+
   const [commentUpdate, setCommentUpdate] = useState([]);
+  const [reportType, setReportType] = useState(0);
 
 
   /**
@@ -45,8 +49,8 @@ const WritePage = () => {
       setIsCheckingBox(getPost.data.result_data.checkLike);
       // 정규식 이용해 h1 h2 태그에 id값 넣어주기
       const p = getPost.data.result_data.getPost.post_body_html
-      .replaceAll("&lt;", "<")
-      .match(/<h(1|2)>(.*?)<\/h(1|2)>/g);
+        .replaceAll("&lt;", "<")
+        .match(/<h(1|2)>(.*?)<\/h(1|2)>/g);
       for (let index = 0; index < p?.length; index++) {
         taglist.push(`${p[index].replaceAll(/<[^>]*>?/g, "")}${index}`);
         if (p[index][2] === "1") {
@@ -86,14 +90,11 @@ const WritePage = () => {
   }, [postId]);
 
 
-	/**
-	 * 포스트에서 h1, h2태그만 가져오는 함수
-	 */
-	useEffect(() => {
-		// console.log(post.getPost?.post_body_html)
-		// console.log(post.getPost.post_body_html)
-		// console.log($('h2').html())
-	})
+  /**
+   * 포스트에서 h1, h2태그만 가져오는 함수
+   */
+  useEffect(() => {
+  })
 
 
   /**
@@ -225,7 +226,6 @@ const WritePage = () => {
    */
   const onClickCommnetModify = async (id, content) => {
     // TODO: 서버에 수정 요청
-    // console.log(comments.findIndex(i => i.comments_id === id))
 
     await axios.patch(
       personal.updateComment(id),
@@ -258,6 +258,13 @@ const WritePage = () => {
     );
     setCheckCommentChange(1);
   };
+
+  /**
+   * modal창 닫는 함수
+   */
+  const onClickModalClose = () => {
+    setShow(false)
+  }
 
 
   return (
@@ -294,16 +301,24 @@ const WritePage = () => {
               >
                 {post.user?.user_detail?.user_unique_id}
               </a>
-              <p className="writeDate">{post.getPost?.updated_at}</p>
+              <p className="writeDate">{post.getPost?.updated_at.split(" ")[0]}</p>
             </span>
-            <h1 className="title">{post.getPost?.post_title}</h1>
+            <h4 className="title">{post.getPost?.post_title}</h4>
             {uniqueid === userId && (
               <span className="cor-del-box">
                 <a href={`/write/${postId}`}>수정</a>/
                 <p onClick={deletePost}>삭제</p>
               </span>
             )}
-            {/* <hr/> */}
+            {/* 신고버튼 */}
+            {
+              uniqueid !== "" && (
+                <span className="btn-report"
+                  onClick={() => { setShow(true); setReportType(0) }}>신고</span>
+              )
+            }
+            <SettingReportModal user={uniqueid} postId={post.getPost?.post_id}
+              onClickModalClose={onClickModalClose} show={show} reportType={reportType} />
           </HeaderBox>
 
           {/* 본문내용 */}
@@ -314,8 +329,8 @@ const WritePage = () => {
           {/* 태그 & 방문자수 */}
           <TagVisiteBox>
             <TagBox>
-              {post.getPost?.tag[0].tag_name.split("/n").map((e) => {
-                return <p>{e}</p>;
+              {post.getPost?.tag[0].tag_name.split("/n").map((item) => {
+                return <p>{item}</p>;
               })}
             </TagBox>
 
@@ -388,17 +403,29 @@ const WritePage = () => {
                       >답글 쓰기
                       </p>
                       {/* TODO: 작성자 본인에게만 수정 삭제 버튼이 보이도록*/}
-                      <p
-                        className="btn-reply"
-                        onClick={() => onClickCommnetUpdateOn(comment.comments_id)}
-                      >
-                        수정
-                      </p>
-                      <p
-                        className="btn-reply"
-                        onClick={(e) => onClickCommnetDelete(comment.comments_id)}
-                      >삭제
-                      </p>
+                      {
+                        uniqueid === comment.users.user_detail?.user_unique_id && (
+                          <>
+                            <p
+                              className="btn-reply"
+                              onClick={() => onClickCommnetUpdateOn(comment.comments_id)}
+                            >
+                              수정
+                            </p>
+                            <p
+                              className="btn-reply"
+                              onClick={(e) => onClickCommnetDelete(comment.comments_id)}
+                            >삭제
+                            </p>
+                          </>
+                        )
+                      }
+                      {
+                        uniqueid !== "" && uniqueid !== comment.users.user_detail?.user_unique_id && (
+                          <p className="btn-reply"
+                            onClick={() => { setShow(true); setReportType(1) }}>신고</p>
+                        )
+                      }
                       <p className="date">{comment.updated_at}</p>
                     </DateBox>
 
@@ -430,18 +457,30 @@ const WritePage = () => {
                           }
 
                           <DateBox>
-                            <p
-                              className="btn-reply"
-                              onClick={() => onClickCommnetUpdateOn(replyComment.comments_id)}
-                            >
-                              수정
-                            </p>
-                            <p
-                              className="btn-reply"
-                              onClick={() => onClickCommnetDelete(replyComment.comments_id)}
-                            >
-                              삭제
-                            </p>
+                            {
+                              uniqueid === replyComment.users.user_detail?.user_unique_id && (
+                                <>
+                                  <p
+                                    className="btn-reply"
+                                    onClick={() => onClickCommnetUpdateOn(replyComment.comments_id)}
+                                  >
+                                    수정
+                                  </p>
+                                  <p
+                                    className="btn-reply"
+                                    onClick={() => onClickCommnetDelete(replyComment.comments_id)}
+                                  >
+                                    삭제
+                                  </p>
+                                </>
+                              )
+                            }
+                            {
+                              uniqueid !== "" && uniqueid !== replyComment.users.user_detail?.user_unique_id && (
+                                <p className="btn-reply"
+                                onClick={() => { setShow(true); setReportType(1) }}>신고</p>
+                              )
+                            }
                             <p className="date">{replyComment.updated_at}</p>
                           </DateBox>
 
@@ -470,7 +509,7 @@ const WritePage = () => {
         </SubTitleBox>
       </Wrap>
       {/* 비슷한 게시물 props로 태그같은거 보내야함 */}
-      <SimilarPost post={associatePost}/>
+      <SimilarPost post={associatePost} />
     </>
   );
 };
@@ -481,16 +520,17 @@ const Header = styled.div`
   position: relative;
   height: 100%;
   padding-bottom: 10px;
-`;
+  `;
 const Wrap = styled.div`
   width: 80vw;
-  @media screen and (max-width: 1600px) {
+  margin-top: 0;
+  /* @media screen and (max-width: 1600px) {
     padding-right: 60px;
     padding-left: 60px;
   }
   @media screen and (max-width: 1024px) {
     width: 90%;
-  }
+  } */
 `;
 // 카테고리박스
 const CategoryBox = styled.div`
@@ -533,57 +573,77 @@ const ContentWrapBox = styled.div`
   }
 `;
 const HeaderBox = styled.div`
+  width: 100%;
   display: flex;
   position: relative;
   border-bottom: 2px solid #c8c8c8;
   .title {
-    width: 100%;
+    width: 70%;
+    height: 100%;
+    word-break: keep-all;
+    margin: 0 auto;
     font-weight: bold;
-    font-size: 60px;
+    font-size: 2.5rem;
     text-align: center;
   }
   span {
     position: absolute;
   }
   .write-data-box {
+    width: 15%;
+    height: 100%;
     left: 0;
     bottom: 0;
+
+    .userName{
+      width: 90%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   .cor-del-box {
     display: flex;
     right: 0;
     bottom: 0;
+    align-items: center;
   }
   .cor-del-box p {
     margin: 2px;
     padding: 0 3px;
     cursor: pointer;
   }
+  .btn-report{
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+    cursor: pointer;
+  }
 
-  @media screen and (max-width: 1600px) {
+  /* @media screen and (max-width: 1600px) {
     .title {
       font-size: 3rem;
     }
     .span {
       font-size: 0.87rem;
     }
-  }
+  } */
 `;
 const ContentBox = styled.div`
-  margin: 0 auto 50px auto;
+  margin: 10px auto 80px auto;
   .sub-title {
     margin-top: 30px;
     margin-bottom: 10px;
   }
 
-  @media screen and (max-width: 1600px) {
+  /* @media screen and (max-width: 1600px) {
     .sub-title {
       font-size: 1.2rem;
     }
     p {
       font-size: 1rem;
     }
-  }
+  } */
 `;
 const TagVisiteBox = styled.div`
   margin: 0 auto 5px auto;
@@ -657,6 +717,7 @@ const VisiteBox = styled.div`
 const InputCommnetBox = styled.div`
   width: 100%;
   height: 150px;
+  margin-top: 20px;
 
   position: relative;
 
