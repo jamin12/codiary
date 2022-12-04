@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import "../css/reset.css";
 import { IoClose } from "react-icons/io5";
-import { auth } from "../api/index";
-import axios from "axios";
 import googleLogo from '../IMG/google-logo.png'
 
 const Login = ({ setLogin }) => {
