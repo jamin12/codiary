@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import styled from "styled-components";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import default_img from '../IMG/codiary_default_img.png';
 import getImg from "../utils/ImgUtil";
 
 
@@ -51,13 +52,6 @@ export default class Carousel extends Component {
   render() {
     const posts = this.props.posts; // props로 post들을 받아옴
     // TODO(이묘): text에서 가장 첫 번째 이미지 태그 갖고와야함
-    /**
-     * text에서 가장 첫 번째 이미지 태그 찾는 함수
-     * @param {String} text 
-     */
-    const ImgSearch = (text) => {
-      return "https://images.unsplash.com/photo-1664575196079-9ac04582854b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
-    }
     const settings = {
       className: "center",
       centerMode: true,
@@ -66,10 +60,23 @@ export default class Carousel extends Component {
       slidesToShow: 3,
       speed: 500,
     };
+    const imageErrorHandler = (e) => {
+      e.target.src = default_img;
+    }
     return (
       <Main>
         <Slider {...settings}>
           {posts.map((post) => {
+            let html = post.post_body_html;
+            const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+            html = html?.replaceAll("&lt;", "<");
+            let imgSrc = "";
+            if (imgSrcRex.exec(html)) {
+              imgSrc = RegExp.$2
+              console.log(imgSrc)
+            } else {
+              imgSrc = default_img
+            }
             return (
               <PostWrap onClick={() => {
                 movePost(post.users.user_detail.user_unique_id, post.post_id);
@@ -79,7 +86,7 @@ export default class Carousel extends Component {
                 </div>
 
                 <div className="thumbnail">
-                  <img src={ImgSearch(post.post_txt)} alt="" />
+                  <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
                 </div>
 
                 <div className="user">
