@@ -333,7 +333,7 @@ const WritePage = () => {
             )}
             {/* 신고버튼 */}
             {
-              uniqueid !== "" && (
+              uniqueid !== "" && uniqueid !== userId && (
                 <span className="btn-report"
                   onClick={() => { setShow(true); setReportType(0) }}>신고</span>
               )
