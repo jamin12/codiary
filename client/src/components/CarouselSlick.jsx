@@ -47,7 +47,6 @@ export default class Carousel extends Component {
               let imgSrc = "";
               if (imgSrcRex.exec(html)) {
                 imgSrc = RegExp.$2
-                console.log(imgSrc)
               } else {
                 imgSrc = default_img
               }
@@ -65,12 +64,8 @@ export default class Carousel extends Component {
                         <p className="post-date">{post.updated_at}</p>
                       </div>
 
-                      {/* TODO(이묘): 대표 이미지가 있는지 없는지 체크하고 대표 이미지가 있으면 이미지를, 없으면 post_body_md가 나타나도록 수정
-                        현재는 그냥 post_body_md만 나타나도록 함.
-                      */}
                       <div className="post-img-wrap">
                         {
-                          // TODO(이묘): post 이미지가 있는지 없는지 확인하는 함수 구현 필요
                           <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
                         }
                       </div>
@@ -85,12 +80,8 @@ export default class Carousel extends Component {
                     <Post34 onClick={() => onClickGoPost(post.post_id, post.posts?.users.user_detail.user_unique_id)} >
                       <h3 className="post-title">{post.posts?.post_title}</h3>
 
-                      {/* TODO(이묘): 대표 이미지가 있는지 없는지 체크하고 대표 이미지가 있으면 이미지를, 없으면 post_body_md가 나타나도록 수정
-                        현재는 그냥 post_body_md만 나타나도록 함.
-                      */}
                       <div className="post-img-wrap">
                         {
-                          // TODO(이묘): post 이미지가 있는지 없는지 확인하는 함수 구현 필요
                           <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
                         }
                       </div>

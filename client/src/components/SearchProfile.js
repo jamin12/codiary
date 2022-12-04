@@ -210,7 +210,6 @@ const BtnSearch = styled.div`
   }
 `
 
-// TODO: 회원 정보를 받아와서 프로필 사진을 불러와야 함
 const SearchProfile = () => {
   const [isOpen, setMenu] = useState(false);
   const [loginOpen, setLogin] = useState(false);
@@ -219,7 +218,6 @@ const SearchProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // TODO(이묘): 쿠키에 authentication에 있는지 확인 후에 로그인이 돼었느냐를 체크해야함
 
   const toggleMenu = () => {
     setMenu((isOpen) => !isOpen);

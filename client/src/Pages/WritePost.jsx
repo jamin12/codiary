@@ -108,7 +108,6 @@ const WritePost = () => {
 		if (!title) {
 			alert("제목을 먼저 입력해주세요");
 		}
-		// TODO: body부분 값 변경
 		await axios.post(
 			personal.createPersonalTmpPost(),
 			{

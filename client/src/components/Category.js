@@ -181,7 +181,6 @@ const MainCategory = (props) => {
  * @param {int} sub_id 
  */
   const updateCategory = async (id, name, sub_id) => {
-    console.log(sub_id)
     if (sub_id !== null) {
       await axios.patch(
         personal.updatePersonalCategory(id),

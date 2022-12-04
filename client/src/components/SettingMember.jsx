@@ -18,7 +18,6 @@ const SettingMember = () => {
    * @param {*} e 
    */
   const onClickSearch = async (e) => {
-    // console.log(e.currentTarget)
     if (searchValue.trim() !== "") {
       const getSearch = await axios.get(manage.getUsersSearch(searchValue),
         {
@@ -58,7 +57,6 @@ useEffect(() => {
   }
   getMemberListFun();
 }, [pageNum, render]);
-console.log(userList)
 
 /**
  * user 삭제 onClick 버튼

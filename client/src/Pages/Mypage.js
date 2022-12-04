@@ -13,7 +13,6 @@ import { ButtonGroup, Button, Dropdown } from "react-bootstrap";
 const Mypage = () => {
   const { userId } = useParams();
 
-  // TODO: 하위 카테고리도 설정 넣어놔야함
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [categoryFolder, setCategoryFolder] = useState([]);
@@ -24,7 +23,6 @@ const Mypage = () => {
    *  사용자 카테고리 목록 조회
    */
   useEffect(() => {
-    // TODO: (경민 -> 이묘) 서브 카테고리 표시 안되도록 드롭 다운 해야 나오도록 설정
     const getCategoryFun = async () => {
       const getCategory = await axios.get(
         personal.getPersonalCategory(userId)
@@ -69,7 +67,6 @@ const Mypage = () => {
       const getPost = await axios.get(
         personal.getPsersonalPosts(userId, categoryId),
         {
-          //TODO(이묘): 급한거 아님 - 리미트 몇 개로 걸어서 페이징 처리해줄 건지 결정해서 처리
           params: { offset: 1, limit: 50 },
         }
       );

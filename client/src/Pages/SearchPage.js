@@ -18,7 +18,6 @@ const Searchpage = () => {
   const location = useLocation();
 
   const path = location.state.type.pathname;
-  console.log(path)
 
   useEffect(() => {
     if (path === undefined) {
@@ -44,9 +43,6 @@ const Searchpage = () => {
       setCheckType(2);
     }
   }, [])
-  console.log("view : " + viewType)
-  console.log("check : " + checkType)
-  console.log("serach : " + searchType)
 
   /**
    * text가 바뀔 때마다 검색을 하게 해주는 함수
@@ -55,7 +51,6 @@ const Searchpage = () => {
     setSearchWord(e.target.value)
     let getSearch;
     if (checkType === 0) {
-      console.log("hi")
       getSearch = await axios.get(main.searchPostInMain(e.target.value), {
         params: {
           offset: 0,
@@ -65,7 +60,6 @@ const Searchpage = () => {
       setSearchResult(getSearch.data.result_data);
     }
     else if (checkType === 1) {
-      console.log("0")
       if (searchType === 1) {
         getSearch = await axios.get(personal.searchPersonalposts(e.target.value, 1), {
           withCredentials: true,
@@ -88,7 +82,6 @@ const Searchpage = () => {
       }
     }
     else if (checkType === 2) {
-      console.log(e.target.value)
       const getPost = await axios.get(personal.searchCommonposts(path.split("/")[1], e.target.value),
       {
         params: {
@@ -98,9 +91,6 @@ const Searchpage = () => {
       })
       setSearchResult(getPost.data.result_data)
     }
-    console.log(searchResult)
-    // TODO: (경민 -> 이묘) 검색 위치에 따라서 검색하는 url달라지는거 구현(axios 써야해요 doc파일 보고 하면 됩니다.)
-    // setSearchResult(getSearch.data.result_data);
   };
 
   /**
@@ -134,13 +124,13 @@ const Searchpage = () => {
                     img={post.users?.user_detail.user_img}
                     date={post.updated_at}
                     text={post.post_txt}
+                    html={post.post_body_html}
                   />
                 );
               }
 
               else if (checkType === 1) { // 개인 페이지 검색
                 if (searchType === 1) { // 임시게시글
-                  console.log(post.post_id)
                   return (
                     <PostRowCard
                       id={post.tmppost_id}
@@ -148,6 +138,7 @@ const Searchpage = () => {
                       date={post.updated_at}
                       img=""
                       type={"presave"}
+                      html={post.tmppost_body_html}
                     />
                   )
                 }
@@ -160,6 +151,7 @@ const Searchpage = () => {
                       img={post.users?.user_detail.user_img}
                       date={post.updated_at}
                       text={post.tmppost_txt}
+                      html={post.post_body_html}
                     />
                   )
                 }
@@ -175,6 +167,7 @@ const Searchpage = () => {
                     img={post.users?.user_detail.user_img}
                     date={post.updated_at}
                     text={post.tmppost_txt}
+                    html={post.post_body_html}
                   />
                 )
               }

@@ -18,7 +18,6 @@ const SettingReportModal = (props) => {
   const onClickModalClose = props.onClickModalClose;
   const data = props.data;
   
-  console.log(data)
   
 
   return (

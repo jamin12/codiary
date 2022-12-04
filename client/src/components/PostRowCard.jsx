@@ -1,24 +1,34 @@
 import React from 'react';
 import styled from 'styled-components';
 import getImg from '../utils/ImgUtil';
+import default_img from '../IMG/codiary_default_img.png';
+
 
 const PostRowCard = (props) => {
 
   const id = props.id
   const title = props.title;
-  const text = props.text;
   const user = props.user;
   const date = props.date;
-  const img = props.img;    // TODO: props로 받은 주소가 없으면 아예 나타나지 않게 처리 해야함
+  const img = props.img;  
   const type = props.type;
+  const html = props.html;
 
-  // TODO(이묘): 가장 처음 이미지 찾는 함수 구현바람.
   /**
    * text에서 가장 첫 번째 이미지 태그 찾는 함수
    * @param {String} text 
    */
   const ImgSearch = (text) => {
-    return "https://images.unsplash.com/photo-1664575196079-9ac04582854b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
+    console.log(text)
+    const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+    text = text?.replaceAll("&lt;", "<");
+    let imgSrc = "";
+    if (imgSrcRex.exec(text)) {
+      imgSrc = RegExp.$2
+    } else {
+      imgSrc = default_img
+    }
+    return imgSrc
   }
 
     /**
@@ -27,7 +37,6 @@ const PostRowCard = (props) => {
   * @param {string} uid 
   * @param {number} pid 
   */
-  console.log(id)
   const onClickGoPost = (pid, uid) => {
     if (type === "presave") {
       document.location.href = `/presave/${pid}`;
@@ -51,8 +60,7 @@ const PostRowCard = (props) => {
         </div>
         <p className='date'>{date}</p>
       </div>
-      {/* TODO: 이미지 썸네일 고쳐야함 캘린더 페이지 참고 */}
-      <ThumbnailIMG img={ImgSearch(text)} alt='썸네일' />
+      <ThumbnailIMG img={ImgSearch(html)} alt='썸네일' />
     </Post>
   )
 }

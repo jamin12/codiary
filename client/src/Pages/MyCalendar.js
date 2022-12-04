@@ -20,8 +20,6 @@ const MyCalendar = () => {
   // 받은 날짜에 대한 포스팅 기록 저장해서 표시
   const [mark, setMark] = useState([]);
 
-  // TODO(이묘): mark에서 text에서 이미지 태그만 뽑아서 가장 첫번째 있는 이미지 태그만 뽑아서 넣기 - 함수구현
-
 
   /**
    * 해당 월에 post가 있으면 mark에 넣어줌

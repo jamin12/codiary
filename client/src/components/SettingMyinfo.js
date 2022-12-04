@@ -357,7 +357,6 @@ const Myinfo = () => {
   return (
     <MainWrap>
       <ImgBox onClick={callFileInput}>
-        {/* TODO(경민 -> 이묘): 이미지랑 글자 css 적용 */}
         <img src={myProfileImgUrl} alt='프로필 이미지'></img>
         <p>클릭 후 이미지 변경</p>
         <input type="file" ref={fileInput} onChange={changeMyImg} style={{ display: "none" }}></input>

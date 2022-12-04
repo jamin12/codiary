@@ -64,8 +64,6 @@ const Home = () => {
   }
 
 
-  console.log(getImg(user_img))
-
   return (
     <MainWrap>
 

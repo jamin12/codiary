@@ -6,37 +6,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import default_img from '../IMG/codiary_default_img.png';
 import getImg from "../utils/ImgUtil";
 
-
-// const MainCanvas = styled.SliderItem`
-//   position: relative;
-//   width: 80%;
-//   height: 400px;
-//   perspective: 1500px;
-//   margin: 0 auto;
-//   background-color: black;
-
-//   @media screen and (max-width:1024px) {
-//     width: 75%;
-//     height: 330px;
-//   }
-// `
-
-// const Carousel = (props) => {
-
-//   const postlist = props.popularList;
-// //   const [currentIndex, setCurrentIndex] = useState(0);
-//   const slideRef = useRef(null);
-
-//     return (
-//       // 보이는 영역
-//       <MainCanvas>
-
-//       </MainCanvas>
-
-//     );
-
-// }
-// export default Carousel;
 /**
  * 해당 포스트로 이동하는 함수
  * 
