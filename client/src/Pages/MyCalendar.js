@@ -24,7 +24,6 @@ const MyCalendar = () => {
   const [postsByDate, setPostByDate] = useState([]);
   // 받은 날짜에 대한 포스팅 기록 저장해서 표시
   const [mark, setMark] = useState([]);
-  const [render, setRender] = useState(false);
 
   // TODO(이묘): mark에서 text에서 이미지 태그만 뽑아서 가장 첫번째 있는 이미지 태그만 뽑아서 넣기 - 함수구현
 
@@ -44,11 +43,9 @@ const MyCalendar = () => {
         }
       );
       setMark(getPostCountByMonth.data.result_data);
-      setRender(false)
     };
     getPostCountByMonthFun()
-  }, [userId, postDate, sendMonth, render])
-  console.log(sendMonth)
+  }, [userId, postDate])
   console.log(mark)
 
 
@@ -82,10 +79,11 @@ const MyCalendar = () => {
    * 현재 보고있는 월과 일을 찾아주는 함수
    */
   const viewChange = () => {
-    setSendYear(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0, 4))
-    setsendMonth(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length - 1))
-    console.log("hi")
-    setRender(true);
+    const year = document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0, 4)
+    const month = document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length - 1)
+    console.log(month)
+    var newD = new Date(`${year}-${month}-01`)
+    changeDate(newD)
   }
 
   /**
