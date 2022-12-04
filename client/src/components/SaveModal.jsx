@@ -69,8 +69,7 @@ function OptionModal(props) {
             category_id: selected,
           },
           tag: {
-            // TODO(경민 -> 이묘): 태그 바꾸세요
-            tag_name: ["테스트 태그", "리스트 테스트2"],
+            tag_name: tags,
           },
         },
         {
@@ -95,8 +94,7 @@ function OptionModal(props) {
             category_id: selected,
           },
           tag: {
-            // TODO(경민 -> 이묘): 태그 바꾸세요
-            tag_name: ["테스트 태그", "리스트 테스트2"],
+            tag_name: tags,
           },
         },
         {
