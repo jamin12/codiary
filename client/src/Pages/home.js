@@ -314,7 +314,7 @@ const BtnLogin = styled.p`
 
 const CarouselWrap = styled.div`
   width: 80%;
-  height: 50%;
+  height: 60%;
   position: absolute;
   top: 55%;
   left: 50%;

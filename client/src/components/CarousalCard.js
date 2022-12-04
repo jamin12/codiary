@@ -51,7 +51,6 @@ const movePost = (userUniqueId, postId) => {
 export default class Carousel extends Component {
   render() {
     const posts = this.props.posts; // props로 post들을 받아옴
-    // TODO(이묘): text에서 가장 첫 번째 이미지 태그 갖고와야함
     const settings = {
       className: "center",
       centerMode: true,
@@ -163,7 +162,7 @@ const PostWrap = styled.button`
     margin-left: 20px;
     display: block;
     width: 85%;
-    bottom: 9%;
+    bottom: 7%;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.2;
@@ -177,8 +176,10 @@ const PostWrap = styled.button`
   }
   .date{
     width: 90%;
-    position: relative;
-    top: 60px;
+    text-align: left;
+    position: absolute;
+    left: 20px;
+    bottom: 15px;
     margin: 0 auto;
     font-size: 0.8rem;
     color: var(--gray500);
@@ -210,6 +211,12 @@ const Main = styled.div`
         height: 100%;
       }
     }
+
+  }
+  .slick-prev:before,
+  .slick-next:before{
+    color: var(--gray700);
+    font-size: 25px;
   }
   
 
