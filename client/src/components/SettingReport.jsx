@@ -6,6 +6,7 @@ import { addDays } from "date-fns"
 import styled from 'styled-components';
 import { IoCalendarOutline, IoGitMerge } from 'react-icons/io5';
 import { Table } from 'react-bootstrap';
+import SettingReportModal from './SettingReportModal';
 
 const SettingReport = () => {
 
@@ -13,6 +14,8 @@ const SettingReport = () => {
   const [reportType, setReportType] = useState(-1);
   const [reportTargetType, setReportTargetType] = useState(-1);
   const [render, setRender] = useState(false);
+  const [modalShow, setModalShow] = useState(false);
+  const [modalData, setModalData] = useState({});
 
   const newdate = new Date();
   const [state, setState] = useState([
@@ -120,10 +123,21 @@ const SettingReport = () => {
     }
   }
 
+  const onClickModalClose = () => {
+    setModalShow(false)
+  }
+
 
 
   return (
     <Main>
+
+      <SettingReportModal
+        modalShow={modalShow}
+        onClickModalClose={onClickModalClose}
+        data={modalData}
+      />
+
       <Option>
         <select onChange={(e) => onChangeSelect(e, 1)} value={selectValueRtype}>
           {
@@ -174,7 +188,7 @@ const SettingReport = () => {
             reportList.map(item => {
               return (
                 <>
-                  <tr key={item.report_id}>
+                  <tr key={item.report_id} onClick={() => {setModalShow(true); setModalData(item);}}>
                     <td>{item.report_user}</td>
                     <td className='center'>{optionRType[item.report_type + 1]}</td>
                     <td className='center'>{optionRTType[item.report_target_type + 1]}</td>

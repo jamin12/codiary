@@ -8,6 +8,8 @@ import axios from "axios";
 import { personal, user, manage } from "../api";
 import SettingMember from "../components/SettingMember";
 import SettingReport from "../components/SettingReport";
+import { useSelector } from "react-redux";
+
 
 // css
 const Header = styled.div`
@@ -98,6 +100,7 @@ const Contents = styled.div`
 
 const Setting = () => {
 	const [content, setContent] = useState("info");
+	const { user_role } = useSelector((state) => state.auth.User);
 
 	const ClickButton = (e) => {
 		const name = e.target.name;
@@ -107,63 +110,9 @@ const Setting = () => {
 	const selectComponent = {
 		info: <Myinfo name="" />,
 		category: <MyCategory />,
-		member: <SettingMember/>,
-		report: <SettingReport/>,
+		member: <SettingMember />,
+		report: <SettingReport />,
 	};
-
-	// const [mySettings, setMySettings] = useState({});
-
-	// const date = new Date().toISOString().split("T");
-	// const today = (date[0] + " " + date[1].split(".")[0])
-
-	/**
-	 * 내 셋팅 페이지
-	 */
-	// useEffect(() => {
-	// 	const getMySettingFun = async () => {
-	// 		let getMySetting;
-	// 		// 내 정보 조회
-	// 		if (content === "info") {
-	// 			getMySetting = await axios.get(
-	// 				user.getMyInfo(),
-	// 				{ withCredentials: true }
-	// 			);
-	// 			setMySettings(getMySetting.data.result_data);
-	// 		}
-	// 		// 내 카테고리 목록 조회
-	// 		else if (content === "category") {
-	// 			getMySetting = await axios.get(
-	// 				personal.getPersonalMyCategory(),
-	// 				{ withCredentials: true }
-	// 			);
-	// 			setMySettings(getMySetting.data.result_data);
-	// 		}
-	// 		// admin 회원 정보 조회
-	// 		else if (content === 'member'){
-	// 			getMySetting = await axios.get(
-	// 				manage.getUsers(),
-	// 				{ offset: 0, limit: 10 },
-	// 				{ withCredentials: true }
-	// 			)
-	// 			setMySettings(getMySetting.data.result_data);
-	// 		} 
-			// 신고목록 조회
-			// else if (content === 'report'){
-			// 	getMySetting = await axios.get(
-			// 		manage.getReport(-1, -1),
-			// 		{ 
-			// 			startdate: today,
-			// 			offset: 0,
-			// 			limit: 10,
-			// 		},
-			// 		{ withCredentials: true }
-			// 	)
-			// 	setMySettings(getMySetting.data.result_data);
-			// }
-	// 	};
-	// 	getMySettingFun();
-	// }, [content]);
-
 
 	return (
 		<>
@@ -185,14 +134,21 @@ const Setting = () => {
 								카테고리 수정
 							</button>
 						</li>
-						<li>
-							<button onClick={ClickButton} name="member">
-								회원정보 관리</button>
-						</li>
-						<li>
-							<button onClick={ClickButton} name="report">
-								신고목록 관리</button>
-						</li>
+						{
+							user_role === 'admin' &&
+							(
+								<>
+									<li>
+										<button onClick={ClickButton} name="member">
+											회원정보 관리</button>
+									</li>
+									<li>
+										<button onClick={ClickButton} name="report">
+											신고목록 관리</button>
+									</li>
+								</>
+							)
+						}
 					</Menu>
 
 					{content && <Contents>{selectComponent[content]}</Contents>}
