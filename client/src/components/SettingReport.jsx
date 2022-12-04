@@ -69,7 +69,6 @@ const SettingReport = () => {
     }
     getReportListFun();
   }, [Edate, Sdate, reportTargetType, reportType, render]);
-  console.log(reportList)
 
 
   /**
@@ -125,6 +124,15 @@ const SettingReport = () => {
 
   const onClickModalClose = () => {
     setModalShow(false)
+  }
+
+  const onClickReportDetail = async(rid) => {
+    const getReportPost = await axios.get(manage.getReport(rid),{
+      withCredentials: true
+    })
+    setModalData(getReportPost.data.result_data)
+    setModalShow(true); 
+    // setModalData(item);
   }
 
 
@@ -188,7 +196,7 @@ const SettingReport = () => {
             reportList.map(item => {
               return (
                 <>
-                  <tr key={item.report_id} onClick={() => {setModalShow(true); setModalData(item);}}>
+                  <tr key={item.report_id} onClick={() => { onClickReportDetail(item.report_id);}}>
                     <td>{item.report_user}</td>
                     <td className='center'>{optionRType[item.report_type + 1]}</td>
                     <td className='center'>{optionRTType[item.report_target_type + 1]}</td>
