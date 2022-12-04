@@ -32,6 +32,11 @@ const output = {
 			uniqueid: joi.string().required(),
 		}),
 	},
+	getPersonalLikeCount: {
+		params: joi.object().keys({
+			postid: joi.number().required(),
+		}),
+	},
 
 	/**
 	 * 임시 게시물

@@ -26,6 +26,7 @@ const WritePage = () => {
   const [associatePost, setAssociatePost] = useState([]);
   const [isCheckingBox, setIsCheckingBox] = useState(false);
   const [commentValue, setCommentValue] = useState("");
+  const [likeCount, setLikeCount] = useState(0);
   const { uniqueid } = useSelector((state) => state.auth.User);
   const tagh1IdList = [];
   const tagh2IdList = [];
@@ -47,6 +48,7 @@ const WritePage = () => {
       );
       setPost(getPost.data.result_data);
       setIsCheckingBox(getPost.data.result_data.checkLike);
+      setLikeCount(getPost.data.result_data.getPost?.like_count);
       // 정규식 이용해 h1 h2 태그에 id값 넣어주기
       const p = getPost.data.result_data.getPost.post_body_html
         .replaceAll("&lt;", "<")
@@ -59,22 +61,19 @@ const WritePage = () => {
           tagh2IdList.push(`${p[index].replaceAll(/<[^>]*>?/g, "")}${index}`);
         }
       }
-      let datahtml = getPost.data.result_data.getPost.post_body_html;
+      let datahtml = getPost.data.result_data.getPost.post_body_html.replaceAll("&lt;", "<");
       tagh1IdList.forEach((tagId) => {
         datahtml = datahtml
-          .replaceAll("&lt;", "<")
           .replace(/<h(1)>/i, `<h1 id= "${tagId}">`);
       });
       tagh2IdList.forEach((tagId) => {
         datahtml = datahtml
-          .replaceAll("&lt;", "<")
           .replace(/<h(2)>/i, `<h2 id= "${tagId}">`);
       });
       setrefindePost(datahtml);
     };
     getPostFun();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [postId, userId, isCheckingBox]);
+  }, [postId, userId]);
   /**
    * 연관 포스트 가져오기
    */
@@ -88,14 +87,6 @@ const WritePage = () => {
 
     getAssociatePostFun();
   }, [postId]);
-
-
-  /**
-   * 포스트에서 h1, h2태그만 가져오는 함수
-   */
-  useEffect(() => {
-  })
-
 
   /**
    * 방문 기록 저장
@@ -169,6 +160,9 @@ const WritePage = () => {
     }
   };
 
+  /**
+   * 좋아요 체크
+   */
   const checkLike = async () => {
     if (uniqueid !== "") {
       if (!isCheckingBox) {
@@ -179,15 +173,22 @@ const WritePage = () => {
           },
           { withCredentials: true }
         );
+        
       } else {
         await axios.delete(personal.deletePersonalLikeRecordByPostId(postId), {
           withCredentials: true,
         });
       }
+      const likeCount = await axios(personal.getPersonalLikeCount(postId));
+      setLikeCount(likeCount.data.result_data.like_count);  
     } else {
       alert("로그인을 해주십시오");
     }
   };
+
+  /**
+   * 게시글 삭제
+   */
   const deletePost = async () => {
     await axios.delete(personal.deletePersonalPost(postId), {
       withCredentials: true,
@@ -356,9 +357,8 @@ const WritePage = () => {
                   checked={isCheckingBox}
                 />
                 {/* <ion-icon name="heart"></ion-icon> */}
-                <p>{post.getPost?.like_count}</p>
+                <p>{likeCount}</p>
               </div>
-              Aban
             </VisiteBox>
           </TagVisiteBox>
 

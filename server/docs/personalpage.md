@@ -476,6 +476,32 @@
     |status|int|상태코드|
     |message|string|메시지|
 
+## __<span style="color:#9999ff">사용자 포스트 좋아요 개수 조회</span>__
+## __<span style="color:#ff9933">요청</span>__ __[GET] /post/l/c/:postid__
+- |속성|타입|설명|
+    |---|---|---|
+    |postid *|int|포스트 아이디 (필수)|
+## __<span style="color:#ff9933">응답</span>__
+- ``` json
+    {
+        "status": 200,
+        "message": "getPersonalLikeCount",
+        "result_data": {
+            "like_count": 0,
+            "created_at": "2022-11-17 13:47",
+            "updated_at": "2022-11-17 13:47"
+        }
+    }
+- |속성|타입|설명|
+    |---|---|---|
+    |status|int|상태코드|
+    |message|string|메시지|
+    |||
+    |**result_data**||
+    |like_count|int|좋아요 개수|
+    |created_at|datetime|생성 날짜|
+    |updated_at|datetime|수정 날짜|
+
 ## __<span style="color:#9999ff">임시 포스트 조회</span>__
 ## __<span style="color:#ff9933">요청</span>__ __[GET] /tmpposts/:tmppostid__
 - |속성|타입|설명|

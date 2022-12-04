@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Slider from "react-slick";
 import styled from "styled-components";
+import default_img from '../IMG/codiary_default_img.png';
+import getImg from "../utils/ImgUtil";
 
 export default class Carousel extends Component {
   render() {
@@ -30,18 +32,25 @@ export default class Carousel extends Component {
     const onClickGoPost = (id, user) => {
       window.location.replace(`/${user}/${id}`)
     }
+    const imageErrorHandler = (e) => {
+      e.target.src = default_img;
+    }
 
     return (
       <Main type={settings.vertical}>
         <Slider {...settings}>
           {
             posts.map((post) => {
-
-              const html = post.posts?.post_body_html
-              const imgStart = html.indexOf('src="')+5
-              const imgEnd = html.indexOf('"', imgStart)
-              const imgSrc = html.slice(imgStart, imgEnd)
-
+              let html = post.posts?.post_body_html;
+              const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+              html = html?.replaceAll("&lt;", "<");
+              let imgSrc = "";
+              if (imgSrcRex.exec(html)) {
+                imgSrc = RegExp.$2
+                console.log(imgSrc)
+              } else {
+                imgSrc = default_img
+              }
               // 세로 캐러셀
               if (settings.vertical === true) {
                 return (
@@ -50,7 +59,7 @@ export default class Carousel extends Component {
                       <div className="text-wrap">
                         <h3 className="post-title">{post.post_title}</h3>
                         <div className="user-info-box">
-                          <img src={post.users.user_detail.user_img} alt="사용자이미지" />
+                          <img src={getImg(post.users.user_detail.user_img)} alt="사용자이미지" />
                           <span>{post.users.user_detail.user_nickname}</span>
                         </div>
                         <p className="post-date">{post.updated_at}</p>
@@ -62,7 +71,7 @@ export default class Carousel extends Component {
                       <div className="post-img-wrap">
                         {
                           // TODO(이묘): post 이미지가 있는지 없는지 확인하는 함수 구현 필요
-                          imgStart !== -1 ? <img src={imgSrc} alt="게시물 대표 이미지" /> : <p>{post.posts?.post_body_md}</p>
+                          <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
                         }
                       </div>
                     </Post43>
@@ -73,26 +82,26 @@ export default class Carousel extends Component {
               else if (settings.vertical === false) {
                 return (
                   <div className="horizon">
-                    <Post34  onClick={() => onClickGoPost(post.post_id, post.posts?.users.user_detail.user_unique_id)} >
-                        <h3 className="post-title">{post.posts?.post_title}</h3>
+                    <Post34 onClick={() => onClickGoPost(post.post_id, post.posts?.users.user_detail.user_unique_id)} >
+                      <h3 className="post-title">{post.posts?.post_title}</h3>
 
-                        {/* TODO(이묘): 대표 이미지가 있는지 없는지 체크하고 대표 이미지가 있으면 이미지를, 없으면 post_body_md가 나타나도록 수정
+                      {/* TODO(이묘): 대표 이미지가 있는지 없는지 체크하고 대표 이미지가 있으면 이미지를, 없으면 post_body_md가 나타나도록 수정
                         현재는 그냥 post_body_md만 나타나도록 함.
                       */}
-                        <div className="post-img-wrap">
-                          {
-                            // TODO(이묘): post 이미지가 있는지 없는지 확인하는 함수 구현 필요
-                            imgStart !== -1 ? <img src={imgSrc} alt="게시물 대표 이미지" /> : <p>{post.posts?.post_body_md}</p>
-                          }
-                        </div>
+                      <div className="post-img-wrap">
+                        {
+                          // TODO(이묘): post 이미지가 있는지 없는지 확인하는 함수 구현 필요
+                          <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
+                        }
+                      </div>
 
-                        <div className="user-info-box">
-                          <div>
-                            <img src={post.posts?.users.user_detail.user_img} alt="사용자이미지" />
-                            <span>{post.posts?.users.user_detail.user_unique_id}</span>
-                          </div>
-                          {/* <p className="post-date">{post.posts.updated_at}</p> */}
+                      <div className="user-info-box">
+                        <div>
+                          <img src={getImg(post.posts?.users.user_detail.user_img)} alt="사용자이미지" />
+                          <span>{post.posts?.users.user_detail.user_unique_id}</span>
                         </div>
+                        {/* <p className="post-date">{post.posts.updated_at}</p> */}
+                      </div>
 
                     </Post34>
                   </div>

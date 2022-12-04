@@ -256,9 +256,9 @@ class manageService {
 	 * @returns
 	 */
 	async createReport(reportBody) {
-		if (reportBody.report_type === 0) {
+		if (reportBody.report_target_type === 0) {
 			await this.pService.checkPostExists(reportBody.report_target_id);
-		} else if (reportBody.report_type === 1) {
+		} else if (reportBody.report_target_type === 1) {
 			await this.pService.checkCommentExists(reportBody.report_target_id);
 		}
 		if (!reportBody.report_user) {
