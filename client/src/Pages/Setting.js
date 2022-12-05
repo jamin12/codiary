@@ -5,14 +5,18 @@ import styled from "styled-components";
 import Myinfo from "../components/SettingMyinfo";
 import MyCategory from "../components/SettingMycategory";
 import axios from "axios";
-import { personal, user } from "../api";
+import { personal, user, manage } from "../api";
+import SettingMember from "../components/SettingMember";
+import SettingReport from "../components/SettingReport";
+import { useSelector } from "react-redux";
+
 
 // css
 const Header = styled.div`
 	position: relative;
 	width: 100%;
 	height: 100%;
-	padding-bottom: 50px;
+	/* padding-bottom: 50px; */
 `;
 const ContentsWrap = styled.div`
 	display: flex;
@@ -23,7 +27,7 @@ const ContentsWrap = styled.div`
 	height: 70vh;
 
 	margin: 0 auto;
-	margin-top: 100px;
+	/* margin-top: 100px; */
 
 	@media screen and (max-width: 1300px) {
 	}
@@ -66,6 +70,8 @@ const Menu = styled.ul`
 		margin: 10px auto;
 		background-color: transparent;
 		cursor: pointer;
+		word-break: break-all;
+		white-space: normal;
 
 		&:hover {
 			background-color: #ececec;
@@ -96,45 +102,19 @@ const Contents = styled.div`
 
 const Setting = () => {
 	const [content, setContent] = useState("info");
+	const { user_role } = useSelector((state) => state.auth.User);
 
 	const ClickButton = (e) => {
-		const { name } = e.target;
+		const name = e.target.name;
 		setContent(name);
 	};
 
 	const selectComponent = {
 		info: <Myinfo name="" />,
-		category: <MyCategory categoryList={undefined} />,
+		category: <MyCategory />,
+		member: <SettingMember />,
+		report: <SettingReport />,
 	};
-
-	const [mySettings, setMySettings] = useState({});
-
-	/**
-	 * 내 셋팅 페이지
-	 */
-	useEffect(() => {
-		const getMySettingFun = async () => {
-			let getMySetting;
-			// 내 정보 조회
-			if (content === "info") {
-				getMySetting = await axios.get(
-					user.getMyInfo(),
-					{ withCredentials: true }
-				);
-				setMySettings(getMySetting.data.result_data);
-			}
-			// 내 카테고리 목록 조회
-			else if (content === "category") {
-				getMySetting = await axios.get(
-					personal.getPersonalMyCategory(),
-					{ withCredentials: true }
-				);
-				setMySettings(getMySetting.data.result_data);
-			}
-		};
-		getMySettingFun();
-	}, [content]);
-
 
 	return (
 		<>
@@ -156,18 +136,24 @@ const Setting = () => {
 								카테고리 수정
 							</button>
 						</li>
-						<li>
-							<button>회원정보 관리</button>
-						</li>
+						{
+							user_role === 'admin' &&
+							(
+								<>
+									<li>
+										<button onClick={ClickButton} name="member">
+											회원정보 관리</button>
+									</li>
+									<li>
+										<button onClick={ClickButton} name="report">
+											신고목록 관리</button>
+									</li>
+								</>
+							)
+						}
 					</Menu>
 
 					{content && <Contents>{selectComponent[content]}</Contents>}
-					{/* <Contents> */}
-					{/* <Link to='/setting/info'></Link> */}
-					{/* <Myinfo name=''/> */}
-					{/* 여기에 서버에서 json타입으로 받아온걸 넣어주면 됨. const로 변수 안에 넣어서. */}
-					{/* <MyCategory categoryList={undefined}/> */}
-					{/* </Contents> */}
 				</div>
 			</ContentsWrap>
 		</>

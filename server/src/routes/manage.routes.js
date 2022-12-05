@@ -19,5 +19,16 @@ router
   .route('/:reporttype/:reporttargettype')
   .get(auth('admin'), validate(manageValidation.output.getReports), manageController.output.getReports);
 
-// TODO: delete user
+router
+  .route("/user/s/:searchword")
+  .get(auth('admin'), validate(manageValidation.output.searchword), manageController.output.searchUsers);
+
+router
+  .route("/user/d/:uniqueid")
+  .delete(auth('admin'), validate(manageValidation.input.deleteUser), manageController.input.deleteUser);
+
+router
+  .route("/target/d/:reporttype/:reporttargetid")
+  .delete(auth('admin'), validate(manageValidation.input.deleteReporTarget), manageController.input.deleteReportTarget);
+
 module.exports = router;

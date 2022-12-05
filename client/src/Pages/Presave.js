@@ -9,7 +9,6 @@ import SearchProfile from "../components/SearchProfile";
 const Presave = () => {
 	const Wrap = styled.div`
 		display: block;
-		margin-top: 150px;
 		text-align: center;
 		
 		font-size: 1.3rem;
@@ -65,6 +64,13 @@ const Presave = () => {
 			position: absolute;
 			left: 30px;
 			font-size: 1.6rem;
+			margin-right: 30px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-wrap: break-word;
+			display: -webkit-box;
+			-webkit-line-clamp: 1;
+			-webkit-box-orient: vertical;
 		}
 		p {
 			position: absolute;
@@ -85,7 +91,7 @@ const Presave = () => {
 			text-overflow: ellipsis;
 		}
 		.date {
-			bottom: 30px;
+			bottom: -5px;
 			right: 40px;
 			font-size: 0.87rem;
 			color: rgba(0, 0, 0, 0.5);
@@ -129,16 +135,15 @@ const Presave = () => {
 			<Wrap>
 				<h1>임시저장한 글</h1>
 
-				{/* Map함수 써서 배열 돌려서 찾아서 넣어야 할 듯? 인자 props처리 */}
 				<PostWrap>
 					{
-						temporaryPosts.map((e) => {
+						temporaryPosts.map((tmpPost) => {
 							return (
-								<a href={`/presave/${e.tmppost_id}`}>
+								<a href={`/presave/${tmpPost.tmppost_id}`}>
 									<Post>
-										<h2>{e.tmppost_title}</h2>
-										<p className="text">{e.tmppost_txt}</p>
-										<p className="date">{e.updated_at}</p>
+										<h2>{tmpPost.tmppost_title}</h2>
+										<p className="text">{tmpPost.tmppost_txt}</p>
+										<p className="date">{tmpPost.updated_at}</p>
 									</Post>
 								</a>
 							)

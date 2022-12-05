@@ -9,6 +9,7 @@ const initalState = {
   User: {
     uniqueid: '',
     user_role: '',
+    user_img: '',
   }
 };
 
@@ -20,7 +21,8 @@ const userChecker = (state = initalState, action) => {
         User: {
           ...state.User,
           uniqueid: action.payload.uniqueid,
-          user_role: action.payload.user_role
+          user_role: action.payload.user_role,
+          user_img: action.payload.user_img
         }
 
       };
@@ -29,7 +31,9 @@ const userChecker = (state = initalState, action) => {
         ...state,
         User: {
           ...state.User,
-          uniqueid: ''
+          uniqueid: '',
+          user_role: '',
+          user_img: ''
         }
       };
 

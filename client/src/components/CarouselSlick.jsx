@@ -1,24 +1,26 @@
 import React, { Component } from "react";
 import Slider from "react-slick";
 import styled from "styled-components";
+import default_img from '../IMG/codiary_default_img.png';
+import getImg from "../utils/ImgUtil";
 
 export default class Carousel extends Component {
   render() {
     const posts = this.props.posts  // props로 post들을 받아옴
 
     const settings = {
-      className: this.props.className,
-      centerMode: this.props.centerMode,
+      // className: this.props.className,
+      // centerMode: this.props.centerMode,
       dots: this.props.dots,
       infinite: true,
       slidesToShow: this.props.slidesToShow,
       slidesToScroll: 1,
       vertical: this.props.vertical,
-      verticalSwiping: this.props.verticalSwiping,
-      centerPadding: this.props.centerPadding,
-      arrows: this.props.arrows,
-      nextArrow: this.props.nextArrows,
-      prevArrow: this.props.prevArrows,
+      // verticalSwiping: this.props.verticalSwiping,
+      // centerPadding: this.props.centerPadding,
+      // arrows: this.props.arrows,
+      // nextArrow: this.props.nextArrows,
+      // prevArrow: this.props.prevArrows,
 
 
       beforeChange: function (currentSlide, nextSlide) {
@@ -27,85 +29,119 @@ export default class Carousel extends Component {
       }
     };
 
-        // console.log(posts[0].posts.post_body_html.slice(608, 663))
-    // console.log((posts[0].posts.post_body_html).indexOf('src'))
-
-
     const onClickGoPost = (id, user) => {
       window.location.replace(`/${user}/${id}`)
+    }
+    const imageErrorHandler = (e) => {
+      e.target.src = default_img;
     }
 
     return (
       <Main type={settings.vertical}>
-        <Slider {...settings}>
-          {
-            posts.map((post) => {
+        {
+          posts.length > 3 ?
+            (<Slider {...settings}>
+              {
+                posts.map((post) => {
+                  let html = post.posts?.post_body_html;
+                  const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+                  html = html?.replaceAll("&lt;", "<");
+                  let imgSrc = "";
+                  if (imgSrcRex.exec(html)) {
+                    imgSrc = RegExp.$2
+                  } else {
+                    imgSrc = default_img
+                  }
+                  // 세로 캐러셀
+                  if (settings.vertical === true) {
+                    return (
+                      <>
+                        <Post43>
+                          <div className="text-wrap">
+                            <h3 className="post-title">{post.post_title}</h3>
+                            <div className="user-info-box">
+                              <img src={getImg(post.users.user_detail.user_img)} alt="사용자이미지" />
+                              <span>{post.users.user_detail.user_nickname}</span>
+                            </div>
+                            <p className="post-date">{post.updated_at}</p>
+                          </div>
 
-              const html = post.posts?.post_body_html
-              const imgStart = html.indexOf('src="')+5
-              const imgEnd = html.indexOf('"', imgStart)
-              const imgSrc = html.slice(imgStart, imgEnd)
+                          <div className="post-img-wrap">
+                            {
+                              <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
+                            }
+                          </div>
+                        </Post43>
+                      </>
+                    )
+                  }
+                  // 가로 캐러셀
+                  else if (settings.vertical === false) {
+                    return (
+                      <div className="horizon">
+                        <Post34 onClick={() => onClickGoPost(post.post_id, post.posts?.users.user_detail.user_unique_id)} >
+                          <h3 className="post-title">{post.posts?.post_title}</h3>
 
-              // 세로 캐러셀
-              if (settings.vertical === true) {
-                return (
-                  <>
-                    <Post43>
-                      <div className="text-wrap">
-                        <h3 className="post-title">{post.post_title}</h3>
-                        <div className="user-info-box">
-                          <img src={post.users.user_detail.user_img} alt="사용자이미지" />
-                          <span>{post.users.user_detail.user_nickname}</span>
-                        </div>
-                        <p className="post-date">{post.updated_at}</p>
+                          <div className="post-img-wrap">
+                            {
+                              <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
+                            }
+                          </div>
+
+                          <div className="user-info-box">
+                            <div>
+                              <img src={getImg(post.posts?.users.user_detail.user_img)} alt="사용자이미지" />
+                              <span>{post.posts?.users.user_detail.user_unique_id}</span>
+                            </div>
+                            {/* <p className="post-date">{post.posts.updated_at}</p> */}
+                          </div>
+
+                        </Post34>
                       </div>
+                    )
+                  }
 
-                      {/* TODO(이묘): 대표 이미지가 있는지 없는지 체크하고 대표 이미지가 있으면 이미지를, 없으면 post_body_md가 나타나도록 수정
-                        현재는 그냥 post_body_md만 나타나도록 함.
-                      */}
-                      <div className="post-img-wrap">
-                        {
-                          // TODO(이묘): post 이미지가 있는지 없는지 확인하는 함수 구현 필요
-                          imgStart !== -1 ? <img src={imgSrc} alt="게시물 대표 이미지" /> : <p>{post.posts?.post_body_md}</p>
-                        }
-                      </div>
-                    </Post43>
-                  </>
-                )
+                })
               }
-              // 가로 캐러셀
-              else if (settings.vertical === false) {
-                return (
-                  <div className="horizon">
-                    <Post34  onClick={() => onClickGoPost(post.post_id, post.posts?.users.user_detail.user_unique_id)} >
+            </Slider>)
+            :
+            <div className="under3">
+              {
+                posts.map(post => {
+
+                  let html = post.posts?.post_body_html;
+                  const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+                  html = html?.replaceAll("&lt;", "<");
+                  let imgSrc = "";
+                  if (imgSrcRex.exec(html)) {
+                    imgSrc = RegExp.$2
+                  } else {
+                    imgSrc = default_img
+                  }
+                  return (
+                      <Post34 onClick={() => onClickGoPost(post.post_id, post.posts?.users.user_detail.user_unique_id)} >
                         <h3 className="post-title">{post.posts?.post_title}</h3>
 
-                        {/* TODO(이묘): 대표 이미지가 있는지 없는지 체크하고 대표 이미지가 있으면 이미지를, 없으면 post_body_md가 나타나도록 수정
-                        현재는 그냥 post_body_md만 나타나도록 함.
-                      */}
                         <div className="post-img-wrap">
                           {
-                            // TODO(이묘): post 이미지가 있는지 없는지 확인하는 함수 구현 필요
-                            imgStart !== -1 ? <img src={imgSrc} alt="게시물 대표 이미지" /> : <p>{post.posts?.post_body_md}</p>
+                            <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
                           }
                         </div>
 
                         <div className="user-info-box">
                           <div>
-                            <img src={post.posts?.users.user_detail.user_img} alt="사용자이미지" />
+                            <img src={getImg(post.posts?.users.user_detail.user_img)} alt="사용자이미지" />
                             <span>{post.posts?.users.user_detail.user_unique_id}</span>
                           </div>
                           {/* <p className="post-date">{post.posts.updated_at}</p> */}
                         </div>
-
-                    </Post34>
-                  </div>
-                )
+                      </Post34>
+                  )
+                })
               }
+            </div>
 
-            })
-          }
-        </Slider>
+        }
       </Main>
     );
   }
@@ -113,6 +149,28 @@ export default class Carousel extends Component {
 
 // 메인
 const Main = styled.div`
+
+  .slick-prev:before,
+  .slick-next:before{
+    color: var(--gray700);
+    font-size: 25px;
+  }
+  .slick-list{
+    /* display: flex; */
+  }
+
+  .slick-slider{
+    /* overflow-y: hidden; */
+  }
+
+  .under3{
+    display: flex;
+
+    >div{
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  }
 `
 
 // 가로가 긴 카드

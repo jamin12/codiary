@@ -16,7 +16,8 @@ const output = {
 
 		res.send(resultDto(httpStatus.OK, "login success", {
 			uniqueid: getUser?.user_detail?.user_unique_id,
-			user_role: getUser?.user_role
+			user_role: getUser?.user_role,
+			user_img: getUser?.user_detail?.user_img
 		}))
 	}),
 

@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { baseUrl } from "../api";
 import { logout } from "../reducers/Action";
+import getImg from "../utils/ImgUtil";
 
 // 스타일 설정
 // 1680*900 기준 작성
@@ -58,9 +59,6 @@ const Profile = styled.div`
       position: relative;
       min-width: 40px;
       height: 40px;
-      /* background-image: url(${(props) =>
-    props.img || "../IMG/KAKAO.png.png"}); */
-      background-color: orange;
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
@@ -212,15 +210,14 @@ const BtnSearch = styled.div`
   }
 `
 
-// TODO: 회원 정보를 받아와서 프로필 사진을 불러와야 함
 const SearchProfile = () => {
   const [isOpen, setMenu] = useState(false);
   const [loginOpen, setLogin] = useState(false);
   const { uniqueid } = useSelector((state) => state.auth.User);
+  const { user_img } = useSelector((state) => state.auth.User);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // TODO(이묘): 쿠키에 authentication에 있는지 확인 후에 로그인이 돼었느냐를 체크해야함
 
   const toggleMenu = () => {
     setMenu((isOpen) => !isOpen);
@@ -269,58 +266,75 @@ const SearchProfile = () => {
             ></ion-icon>
           </BtnSearch>
 
-          <Profile>
-            <div className="userBox">
-              <div className="imgBox" img="../IMG/profile_test.png"></div>
-            </div>
-            <div
-              className={isOpen ? "menuToggleON" : "menuToggleOFF"}
-              onClick={toggleMenu}
-            ></div>
-          </Profile>
 
-          <Menu>
-            {uniqueid !== '' &&
-              <div className={isOpen ? "menuON" : "menuOFF"}>
-                <Link className="tagP" to="/write">
-                  새 글쓰기
-                </Link>
-                <Link className="tagP" to={`/${uniqueid}`}>
-                  내 글 목록
-                </Link>
-                <Link className="tagP" to={`/${uniqueid}/calender`}>
-                  내 코디어리
-                </Link>
-                <Link className="tagP" to="/presave">
-                  임시글 목록
-                </Link>
-                <Link className="tagP" to="/visite-like">
-                  방문&좋아요 목록
-                </Link>
-                <Link className="tagP" to="/setting">
-                  설정
-                </Link>
-                <Link className="tagP" to="/visiterstat">
-                  방문자 통계
-                </Link>
+          {
+            uniqueid !== "" ?
+            <>
+              <Profile>
+                <div className="userBox">
+                  <img className="imgBox" src={getImg(user_img)} alt="사용자 프로필 이미지"></img>
+                </div>
+                <div
+                  className={isOpen ? "menuToggleON" : "menuToggleOFF"}
+                  onClick={toggleMenu}
+                ></div>
+              </Profile>
+              <Menu>
+                  <div className={isOpen ? "menuON" : "menuOFF"}>
+                    <Link className="tagP" to="/write">
+                      새 글쓰기
+                    </Link>
+                    <Link className="tagP" to={`/${uniqueid}`}>
+                      내 글 목록
+                    </Link>
+                    <Link className="tagP" to={`/${uniqueid}/calender`}>
+                      내 코디어리
+                    </Link>
+                    <Link className="tagP" to="/presave">
+                      임시글 목록
+                    </Link>
+                    <Link className="tagP" to="/visite-like">
+                      방문&좋아요 목록
+                    </Link>
+                    <Link className="tagP" to="/setting">
+                      설정
+                    </Link>
+                    <Link className="tagP" to="/visiterstat">
+                      방문자 통계
+                    </Link>
 
-                <p className="logout tagP" onClick={logoutClick}>
-                  로그아웃
-                </p>
-              </div>
-            }
-            {uniqueid === '' &&
-              <div className={isOpen ? "menuON" : "menuOFF"}>
-
-                <p className="logout tagP" onClick={loginModal}>
-                  로그인
-                </p>
-              </div>
-            }
-          </Menu>
+                    <p className="logout tagP" onClick={logoutClick}>
+                      로그아웃
+                    </p>
+                  </div>
+              </Menu>
+            </>
+            :
+            <BtnLogin onClick={loginModal}>로그인</BtnLogin>
+          }
         </SearchWrap>
       </Wrap>
     </Main>
   );
 };
 export default SearchProfile;
+
+const BtnLogin = styled.p`
+  /* position: absolute; */
+  margin: auto;
+  margin-left: 10px;
+  top: 20px;
+  right: 20px;
+  padding: 5px 18px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  background-color: var(--gray800);
+  border-radius: 50px;
+  cursor: pointer;
+  color: var(--gray50);
+  transition: 0.3s;
+
+  :hover{
+    background-color: var(--gray700);
+  }
+`

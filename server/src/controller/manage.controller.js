@@ -20,6 +20,11 @@ const output = {
     const result_contents = await mService.getReport(req.params.reportid);
     res.send(resultDto(httpStatus.OK, "getReport", result_contents));
   }),
+  searchUsers: catchAsync(async (req, res) => {
+    const result_contents = await mService.searchUsers(req.params.searchword, req.query.offset, req.query.limit);
+    res.send(resultDto(httpStatus.OK, "searchUsers", result_contents));
+  }),
+
 };
 
 const input = {
@@ -30,6 +35,14 @@ const input = {
   createReport: catchAsync(async (req, res) => {
     const result_contents = await mService.createReport(req.body);
     res.send(resultDto(httpStatus.OK, "createReport", result_contents));
+  }),
+  deleteUser: catchAsync(async (req, res) => {
+    const result_contents = await mService.deletehUser(req.params.uniqueid);
+    res.send(resultDto(httpStatus.OK, "deleteUser", result_contents));
+  }),
+  deleteReportTarget: catchAsync(async (req, res) => {
+    const result_contents = await mService.deleteReportTarget(req.params.reporttype,req.params.reporttargetid);
+    res.send(resultDto(httpStatus.OK, "deleteReportTarget", result_contents));
   }),
 };
 

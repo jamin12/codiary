@@ -11,98 +11,6 @@ import Chart from "../components/VisiterStatChart";
 import axios from "axios";
 import { measurement } from "../api";
 
-const ChartWrap = styled.div`
-	width: 100%;
-	height: 460px;
-
-	.chart-header {
-		width: 100%;
-		height: 60px;
-		display: flex;
-		justify-content: space-between;
-
-		.buttons {
-			height: 40px;
-			background-color: var(--gray100);
-			color: var(--gray400);
-			:focus {
-				background-color: var(--gray500);
-				color: var(--gray100);
-			}
-		}
-		.buttons.active {
-			background-color: var(--gray500);
-			color: var(--gray100);
-		}
-	}
-	.chart-box {
-		height: 400px;
-	}
-`;
-const TopWrap = styled.div`
-	width: 100%;
-	height: 240px;
-	display: flex;
-	justify-content: space-between;
-	margin-top: 30px;
-	cursor: pointer;
-`;
-const PostWrap = styled.div`
-	position: relative;
-	width: 100%;
-	height: 690px;
-
-	margin: 55px 0px;
-
-	.search-box {
-		width: 350px;
-		height: 42px;
-		display: flex;
-		justify-content: space-between;
-
-		.selectBox {
-			width: 70%;
-			height: 100%;
-			border-radius: 10px;
-		}
-
-		button {
-			width: 80px;
-			border-radius: 10px;
-			border: none;
-			transition: 0.2s;
-			background-color: var(--gray200);
-
-			:hover {
-				background-color: var(--gray400);
-				color: var(--gray50);
-			}
-		}
-	}
-
-	.post-box {
-		width: 100%;
-		/* height: calc(100%-55px); */
-		height: 85%;
-		margin-top: 15px;
-
-		align-items: center;
-		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
-	}
-
-	.pagination-box {
-		width: 200px;
-		height: 30px;
-		position: absolute;
-		bottom: 10px;
-		left: 50%;
-		transform: translateX(-50%);
-
-		background-color: orange;
-	}
-`;
-
 const VisiterStats = () => {
 	// 서버에서 받아와야하는 top 게시글 이름 useState
 	const [topTotalVisiter, setTopTotalVisiter] = useState({});
@@ -111,7 +19,7 @@ const VisiterStats = () => {
 	const [graphInfo, setgraphInfo] = useState([]); // 그래프에 들어가는 데이터
 	const [myPosts, setMyPosts] = useState([]);
 	const [graphtype, setgraphtype] = useState(0);
-	const [viewMoreOffset, setViewMoreOffset] = useState(1);
+
 
 	// 차트에 표시되는 게시물id useState
 	const [chartPostId, setChartPostId] = useState("");
@@ -123,6 +31,15 @@ const VisiterStats = () => {
 	// 검색시에 사용되는 porttype, criterion
 	const [searchPorttype, setSearchPorttype] = useState(0);
 	const [searchCriterion, setSearchCriterion] = useState(0);
+
+	// postcount
+	const [postCount, setPostCount] = useState(0);
+	const [page, setPage] = useState(1);
+	const [paginationArr, setPaginationArr] = useState([]);
+	const [pBtnActive, setpBtnActive] = useState(1);
+
+	const [BtnPrev,setBtnPrev] = useState(false)
+	const [BtnNext, setBtnNext] = useState(false);
 
 	const [selected, setSelected] = useState("방문자 오름차순");
 	const porttype = {
@@ -168,13 +85,27 @@ const VisiterStats = () => {
 			);
 			setgraphInfo(getInitMesurementData.data.result_data.graphData);
 			setMyPosts(getInitMesurementData.data.result_data.myPosts);
+			setChartPostId(getInitMesurementData.data.result_data.bestPosts
+				.getBestTotalVisit.posts.post_id);
 			setChartPostTitle(
 				getInitMesurementData.data.result_data.bestPosts
 					.getBestTotalVisit.posts?.post_title
 			);
+			setPostCount(
+				getInitMesurementData.data.result_data.postCount
+			)
 		};
 		getInitMesurementDataFun();
+		// console.log(postCount)
 	}, []);
+	// 페이지네이션 배열 받아오는 함수
+	useEffect(() => {
+		const arr = []
+		for(var i=1; i<=postCount; i++){
+			arr.push(i)
+		}
+		setPaginationArr(arr)
+	}, [postCount])
 
 	/**
 	 * 그래프 가져오기
@@ -202,14 +133,31 @@ const VisiterStats = () => {
 				measurement.getMyPosts(searchPorttype, searchCriterion),
 				{
 					withCredentials: true,
-					params: { offset: viewMoreOffset, limit: 9 },
+					params: { offset: page, limit: 9 },
 				}
 			);
 
 			setMyPosts(getMyPosts.data.result_data);
 		};
 		getMyPostsFun();
-	}, [searchPorttype, searchCriterion, viewMoreOffset]);
+	}, [searchPorttype, searchCriterion, page]);
+
+	/**
+	 * 페이지네이션 버튼 관리
+	 */
+	 console.log(page)
+	useEffect(() => {
+		if(page < 1){
+			setBtnPrev(true)
+		}
+		else if(page <= postCount){
+			setBtnNext(true)
+		}
+		else{
+			setBtnNext(false)
+			setBtnPrev(false)
+		}
+	},[page, postCount])
 
 	/**
 	 * select box의 value onChange 함수
@@ -225,9 +173,6 @@ const VisiterStats = () => {
 		const word = selected.split(" ");
 		setSearchPorttype(porttype[word[0]]);
 		setSearchCriterion(criterion[word[1]]);
-		// setMyPosts([]);
-		// 검색 버튼을 다시 누르면 더보기 눌렀던거 초기화
-		setViewMoreOffset(1);
 	};
 
 	/**
@@ -239,12 +184,11 @@ const VisiterStats = () => {
 		setgraphtype(e.target.id);
 	};
 
-	/**
-	 * 게시물 더보기 onClick 함수
-	 */
-	const onClickViewMore = () => {
-		setViewMoreOffset(viewMoreOffset + 9);
-	};
+	const onClickPaginationBtn = (e) => {
+		setPage(e.target.value)
+		setpBtnActive(e.target.value-1)
+	}
+
 
 	return (
 		<MainWrap>
@@ -264,7 +208,6 @@ const VisiterStats = () => {
 							aria-label="Basic example"
 							className="button-box"
 						>
-							{/* TODO(이묘): 버튼 클릭하면 색 유지되는거 시간나면 넣으셈 */}
 							{btnValue.map((item, idx) => {
 								return (
 									<Button
@@ -376,15 +319,22 @@ const VisiterStats = () => {
 							}
 						})}
 					</div>
-				</PostWrap>
 
-				<div
-					className="btn-postview-more"
-					onClick={onClickViewMore}
-					postLength={myPosts.length}
-				>
-					<IoChevronDownOutline />
-				</div>
+					<div className="pagination-box">
+						<span> - </span>
+						{
+							paginationArr.map((num, index) => (
+								<button
+									value={num}
+									className={'pagination-btn' + (index === pBtnActive ? " active" : "")}
+									onClick={onClickPaginationBtn}
+								>{num}</button>
+							)
+							)
+						}
+						<span> - </span>
+					</div>
+				</PostWrap>
 			</div>
 		</MainWrap>
 	);
@@ -416,6 +366,113 @@ const MainWrap = styled.div`
 			:hover {
 				color: var(--gray600);
 				background-color: var(--gray50);
+			}
+		}
+	}
+`;
+
+
+const ChartWrap = styled.div`
+	width: 100%;
+	height: 460px;
+
+	.chart-header {
+		width: 100%;
+		height: 60px;
+		display: flex;
+		justify-content: space-between;
+
+		.buttons {
+			height: 40px;
+			background-color: var(--gray100);
+			color: var(--gray400);
+			:focus {
+				background-color: var(--gray500);
+				color: var(--gray100);
+			}
+		}
+		.buttons.active {
+			background-color: var(--gray500);
+			color: var(--gray100);
+		}
+	}
+	.chart-box {
+		height: 400px;
+	}
+`;
+const TopWrap = styled.div`
+	width: 100%;
+	height: 240px;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 30px;
+	cursor: pointer;
+`;
+const PostWrap = styled.div`
+	position: relative;
+	width: 100%;
+	height: 700px;
+	/* height: 100%; */
+
+	margin: 55px 0px;
+
+	.search-box {
+		margin-top: 40px;
+		width: 350px;
+		height: 42px;
+		display: flex;
+		justify-content: space-between;
+
+		.selectBox {
+			width: 70%;
+			height: 100%;
+			border-radius: 10px;
+		}
+
+		button {
+			width: 80px;
+			border-radius: 10px;
+			border: none;
+			transition: 0.2s;
+			background-color: var(--gray200);
+
+			:hover {
+				background-color: var(--gray400);
+				color: var(--gray50);
+			}
+		}
+	}
+
+	.post-box {
+		width: 95%;
+		/* height: calc(100%-55px); */
+		height: 85%;
+		margin: 15px auto 0 auto;
+
+		align-items: center;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 20px;
+	}
+
+	.pagination-box {
+		height: 1.5rem;
+		position: absolute;
+		bottom: 0px;
+		left: 50%;
+		transform: translateX(-50%);
+
+
+		button{
+			width: 1.5rem;
+			height: 1.5rem;
+			margin: 0 5px;
+			border: none;
+			border-radius: 50%;
+			transition: 0.3s;
+			background-color: white;
+			&.active{
+				background-color: var(--gray200);
 			}
 		}
 	}

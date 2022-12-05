@@ -89,7 +89,8 @@
                     "updated_at": "2022-10-15T05:15:37.000Z",
                     "sum_visit_count": "15"
                 }
-            ]
+            ],
+            "postCount": 1
         }
     }
 - |속성|타입|설명|
@@ -110,6 +111,7 @@
     |total_visit_count|int|총 방문 숫자|
     |measurement_date_id|int|날짜 별 통계 아이디|
     |sum_visit_count|int|단위의 따른 방문자수 합계|
+    |postCount|int|페이징 처리를 위한 post/limit한 개수|
 
 
 
@@ -203,6 +205,7 @@
                     "updated_at": "2022-10-15 13:14"
                 }
             }
+            
         }
     }
 - |속성|타입|설명|

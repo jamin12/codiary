@@ -8,60 +8,38 @@ import moment from 'moment';
 import { personal } from '../api';
 import axios from 'axios';
 import default_img from '../IMG/codiary_default_img.png';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { addDays, addMonths, format } from "date-fns"
+import getImg from '../utils/ImgUtil'
 
 const MyCalendar = () => {
-  const [userUniqueId, setUserUniqueId] = useState("Emyo");
-
+  const { userId } = useParams();
   const date = new Date();
   const [postDate, changeDate] = useState(date);
-  const sendDate = new Date(+postDate + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '').substring(0, 10) + " 00:00:00"
-
-  const [sendYear, setSendYear] = useState(sendDate.substring(0, 4));
-  const [sendMonth, setsendMonth] = useState(sendDate.substring(5, 7));
 
   const [postsByDate, setPostByDate] = useState([]);
   // 받은 날짜에 대한 포스팅 기록 저장해서 표시
   const [mark, setMark] = useState([]);
 
-  // TODO(이묘): mark에서 text에서 이미지 태그만 뽑아서 가장 첫번째 있는 이미지 태그만 뽑아서 넣기 - 함수구현
-  /**
-   * 가장 첫번째 이미지 태그 안에 주소를 postImg에 저장하는 함수
-   */
-  // const setPostImg = (htmlCode) => {
 
-  // }
-  // const postImg = setPostImg(mark.post_body_html)
-
-
-
-
-  const nextMonth = (sendMonth) => {
-    if (parseInt(sendMonth) < 9) {
-      return "0" + (parseInt(sendMonth) + 1)
-    } else {
-      return (parseInt(sendMonth) + 1)
-    }
-  }
   /**
    * 해당 월에 post가 있으면 mark에 넣어줌
    */
   useEffect(() => {
     const getPostCountByMonthFun = async () => {
       const getPostCountByMonth = await axios.get(
-        personal.getPersonalPostCountByDate("test"),
+        personal.getPersonalPostCountByDate(userId),
         {
           params: {
-            startdate: `${sendYear}-${sendMonth}-01 00:00:00`,
-            enddate: `${sendYear}-${nextMonth(sendMonth)}-01 00:00:00`
+            startdate: `${format(postDate, "yyyy-MM")}-01 00:00:00`,
+            enddate:`${format(addMonths(postDate, 1), "yyyy-MM")}-01 00:00:00`
           }
         }
       );
       setMark(getPostCountByMonth.data.result_data);
     };
     getPostCountByMonthFun()
-  }, [sendYear, sendMonth])
-
+  }, [userId, postDate])
 
 
   /**
@@ -70,13 +48,15 @@ const MyCalendar = () => {
   useEffect(() => {
     const getPostsByDateFun = async () => {
       const getPostsByDate = await axios.get(
-        personal.getPersonalPostsByDate(userUniqueId),
-        { params: { startdate: sendDate/** postDate */, enddate: sendDate.substring(0, 8) + (postDate.getDate() + 1) + " " + sendDate.substring(11,)/** postDate에서 하루 뒤 */ } }
+        personal.getPersonalPostsByDate(userId),
+        { params: { 
+          startdate: postDate.toISOString().split("T")[0] + " 00:00:00", 
+          enddate: format(addDays(postDate, 1), "yyyy-MM-dd") + " 00:00:00"/** postDate에서 하루 뒤 */ } }
       );
       setPostByDate(getPostsByDate.data.result_data);
     };
     getPostsByDateFun();
-  }, [postDate, sendDate, userUniqueId]);
+  }, [postDate, userId]);
 
 
 
@@ -91,8 +71,10 @@ const MyCalendar = () => {
    * 현재 보고있는 월과 일을 찾아주는 함수
    */
   const viewChange = () => {
-    setSendYear(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0, 4))
-    setsendMonth(document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length - 1))
+    const year = document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(0, 4)
+    const month = document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).slice(0, document.querySelector('span.react-calendar__navigation__label__labelText.react-calendar__navigation__label__labelText--from').innerText.substr(6).length - 1)
+    var newD = new Date(`${year}-${month}-01`)
+    changeDate(newD)
   }
 
   /**
@@ -102,15 +84,6 @@ const MyCalendar = () => {
   const onErrorImg = (e) => {
     e.target.src = default_img;
   }
-  console.log(mark)
-
-  /**
- * 현재 url
- */
-  const location = useLocation();
-  useEffect(() => {
-    setUserUniqueId(location.pathname.split("/")[1])
-  }, [location.pathname])
 
   return (
     <Main>
@@ -124,7 +97,6 @@ const MyCalendar = () => {
             postDate={postDate}
             formatDay={(locale, date) => moment(date).format('DD')}   // 1'일'에서 일 제외하고 숫자만 보이게
             formatMonthYear={(locale, date) => moment(date).format('YYYY년 MM월')}
-            // formatYear={(locale, date) => moment(date).format('YYYY')}
             minDetail="month"
             maxDetail="month"
             formatShortWeekday={(locale, date) => moment(date).format('ddd')}
@@ -154,25 +126,28 @@ const MyCalendar = () => {
         <PostWrap>
           <div className='menu'>
             <h2>{postDate.getDate()}일</h2>
-            <Link className='link' to={`/${userUniqueId}`}><ion-icon name="library-outline"></ion-icon></Link>
+            <Link className='link' to={`/${userId}`}><ion-icon name="library-outline"></ion-icon></Link>
           </div>
 
           {
             postsByDate.map(post => {
 
-              const html = post.posts?.post_body_html
-              const imgStart = html.indexOf('src="') + 5
-              const imgEnd = html.indexOf('"', imgStart)
-              const imgSrc = html.slice(imgStart, imgEnd)
-
-              console.log(post)
+              let html = post.posts?.post_body_html;
+              const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+              html = html?.replaceAll("&lt;", "<");
+              let imgSrc = "";
+              if (imgSrcRex.exec(html)) {
+                imgSrc = RegExp.$2
+              } else {
+                imgSrc = default_img
+              }
 
               return (
                 <Post onClick={() => onClickPost(post.post_id, post.posts?.users?.user_detail.user_unique_id)}>
                   <div className='text-box'>
                     <h1 className="title">{post.posts?.post_title}</h1>
                     <div className='user-info'>
-                      <img src={post.posts?.users?.user_detail.user_img} alt="사용자 이미지" />
+                      <img src={getImg(post.posts?.users?.user_detail.user_img)} alt="사용자 이미지" />
                       <span className='user'>{post.posts?.users?.user_detail.user_unique_id}</span>
                     </div>
                   </div>

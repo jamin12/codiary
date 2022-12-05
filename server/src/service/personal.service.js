@@ -199,11 +199,11 @@ class PersonalService {
 			);
 		}
 		if (categoryBody.sub_category_id) {
-			await this.checkCategoryExists(
+			const checkSubCategory = await this.checkCategoryExists(
 				userId,
 				categoryBody.sub_category_id
 			);
-			if (checkedCategory.sub_category_id) {
+			if (checkSubCategory.sub_category_id) {
 				throw new CustomError(
 					httpStatus.BAD_REQUEST,
 					"sub category already exists"
@@ -524,6 +524,35 @@ class PersonalService {
 			},
 		});
 		return;
+	}
+
+	/**
+	 * 임시 포스트 조회
+	 * @param {string} postid
+	 * @returns {Object}
+	 */
+	async getPersonalLikeCount(postid) {
+		const getPostLikeCount = await posts.findOne({
+			attributes: postsDto.filter((data) => {
+				const excludeColumn = [
+					"post_id",
+					"category_id",
+					"user_id",
+					"post_title",
+					"post_body_md",
+					"post_body_html",
+					"post_txt",
+				];
+				if (!excludeColumn.includes(data)) return data;
+			}),
+			where: {
+				post_id: postid,
+			},
+		});
+		if (!getPostLikeCount) {
+			throw new CustomError(httpStatus.BAD_REQUEST, "post not found");
+		}
+		return getPostLikeCount;
 	}
 
 	/**

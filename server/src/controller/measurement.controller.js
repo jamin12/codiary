@@ -48,13 +48,15 @@ const output = {
       0,
       0,
       0,
-      10
+      9
     );
     const graphData = await meaService.getGraphData(0, bestPosts.getBestTotalVisit.post_id);
+    const postCount = await meaService.getMyPostsCount(req.user.user_id);
     res.send(resultDto(httpStatus.OK, "getMyPosts", {
       bestPosts,
       myPosts,
-      graphData
+      graphData,
+      postCount
     }));
   }),
 };

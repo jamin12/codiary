@@ -23,10 +23,13 @@ function OptionModal(props) {
   const keyEventEnter = (e) => {
     if (e.key === 'Enter') {
       // 배열에 input의 value 저장
-      alert(tagInput);
-      setTagInput(tagInput);
-      setTags(tags => [...tags, tagInput]);
-      setTagInput('');
+      if(tagInput.trim() === ""){
+        alert("태그를 입력하고 엔터키를 눌러주세요")
+      }else{
+        setTagInput(tagInput);
+        setTags(tags => [...tags, tagInput]);
+        setTagInput('');
+      }
     }
   }
 
@@ -45,7 +48,12 @@ function OptionModal(props) {
   // 태그를 클릭하면 없어지는 클릭 이벤트
   const deleteList = (e) => {
     // tags 배열에서 클릭한 요소 삭제
-    alert('삭제시킵니다.');
+    if(window.confirm("정말 태그를 삭제할까요?")){
+      const index = tags.findIndex(el => el === e.target.id)
+      const arr = tags.map(item => item);
+      arr.splice(index, 1)
+      setTags(arr)
+    }
   }
 
   const onChangeSelect = (e) => {
@@ -69,8 +77,7 @@ function OptionModal(props) {
             category_id: selected,
           },
           tag: {
-            // TODO(경민 -> 이묘): 태그 바꾸세요
-            tag_name: ["테스트 태그", "리스트 테스트2"],
+            tag_name: tags,
           },
         },
         {
@@ -95,8 +102,7 @@ function OptionModal(props) {
             category_id: selected,
           },
           tag: {
-            // TODO(경민 -> 이묘): 태그 바꾸세요
-            tag_name: ["테스트 태그", "리스트 테스트2"],
+            tag_name: tags,
           },
         },
         {
@@ -107,23 +113,8 @@ function OptionModal(props) {
       document.location.href = `/${uniqueid}/${createdPost.data.result_data.post_id}`
 
     }
-    // 서버에 toHTML과 toMARKDOWN 전송
   };
   return (
-    // <Modal.Dialog>
-    //   <Modal.Header closeButton>
-    //     <Modal.Title>Modal title</Modal.Title>
-    //   </Modal.Header>
-
-    //   <Modal.Body>
-    //     <p>Modal body text goes here.</p>
-    //   </Modal.Body>
-
-    //   <Modal.Footer>
-    //     <Button variant="secondary">Close</Button>
-    //     <Button variant="primary">Save changes</Button>
-    //   </Modal.Footer>
-    // </Modal.Dialog>
     <Modal
       {...props}
       size="lg"
@@ -142,7 +133,7 @@ function OptionModal(props) {
           <input className="tag-input" type='text' value={tagInput} onChange={onChangeTags} onKeyPress={keyEventEnter} />
           <div>
             {
-              tags.map(tag => (<p className="tag-item" onClick={deleteList}>{tag}</p>))
+              tags.map(tag => (<p className="tag-item" id={tag} onClick={deleteList}>{tag}</p>))
             }
           </div>
         </TagWrap>
@@ -151,7 +142,6 @@ function OptionModal(props) {
           <h4>카테고리</h4>
           <select className='selectBox' onChange={onChangeSelect} value={selected}>
             {
-              // TODO: testList 서버에서 받아온 카테고리 리스트로 변경
               category.map(list => (
                 <option value={list.category_id} key={list.category_id}>
                   {list.category_name}
@@ -178,9 +168,8 @@ const TagWrap = styled.div`
     border: 1px solid var(--gray500);
     width: 100%;
     border-radius: 50px;
-    height: 30px;
     box-sizing: border-box;
-    padding: 0 10px;
+    padding: 5px 15px;
   }
 
   > div{

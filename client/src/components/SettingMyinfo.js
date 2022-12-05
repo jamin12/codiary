@@ -3,13 +3,12 @@ import styled from 'styled-components';
 import { IoClose } from "react-icons/io5";
 import '../App.css'
 import axios from 'axios';
-import { personal, user, img } from '../api';
+import { user, img } from '../api';
+import getImg from '../utils/ImgUtil'
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../reducers/Action";
 
-
-// 글자를 입력하면 하나씩 밖에 입력되는 현상 해결해야함.
 
 const InputField = styled.input`
   width: 100%;
@@ -46,6 +45,15 @@ const ImgBox = styled.div`
     width: 201px;
     height: 184px;
   }
+
+  p{
+    position: absolute;
+    font-weight: 600;
+    color: var(--gray200);
+    background-color: rgba(10, 10, 20, 0.3);
+    padding: 5px 10px;
+    border-radius: 20px;
+  }
 `
 const InputGroup = styled.div`
   div{
@@ -67,12 +75,13 @@ const InputGroup = styled.div`
     }
 
     p{
+      width: 10%;
+      height: 100%;
       background-color: var(--gray200);
       color: var(--gray600);
       display: flex;
       align-items: center;
-      
-      padding: 10px 20px;
+      justify-content: center;
       font-size: 1rem;
     }
   }
@@ -201,13 +210,18 @@ const Myinfo = () => {
   const [nameValue, setName] = useState('');
   // 기본 정보
   const [myName, setMyName] = useState({})
-  const [myUniqueName, setMyUniqueName] = useState({})
+  const [myUniqueName, setMyUniqueName] = useState("")
+  const [myInitUniqueName, setmyInitUniqueName] = useState("")
   const [myIntro, setMyIntro] = useState({})
+  const [myInitIntro, setMyInitIntro] = useState({})
   const [myProfileImg, setMyProfileImg] = useState("")
+  const [myInitProfileImg, setMyInitProfileImg] = useState("")
   const [myProfileImgUrl, setMyProfileImgrul] = useState("")
   const dispatch = useDispatch();
   const nevigate = useNavigate();
   const fileInput = React.createRef();
+  const { user_role } = useSelector((state) => state.auth.User);
+
   // 회원탈퇴(setting에서) 버튼 클릭
   const clickWithdraw = () => {
     setLoad((prev) => !prev)
@@ -226,8 +240,10 @@ const Myinfo = () => {
       setMyUniqueName(getMyInfo.data.result_data.user_detail.user_unique_id);
       setMyIntro(getMyInfo.data.result_data.user_detail.user_introduce);
       setMyProfileImg(getMyInfo.data.result_data.user_detail.user_img);
-      setMyProfileImgrul(img.getImg(getMyInfo.data.result_data.user_detail.user_img));
-
+      setMyProfileImgrul(getImg(getMyInfo.data.result_data.user_detail.user_img));
+      setmyInitUniqueName(getMyInfo.data.result_data.user_detail.user_unique_id)
+      setMyInitIntro(getMyInfo.data.result_data.user_detail.user_introduce)
+      setMyInitProfileImg(getMyInfo.data.result_data.user_detail.user_img)
     };
     getMyInfoFun();
   }, []);
@@ -249,12 +265,22 @@ const Myinfo = () => {
       if (myUniqueName === '' || myIntro === '') {
         alert('빈칸을 모두 채운 후에 적용 버튼을 눌러주세요.');
       } else {
+        const myInfoUpdateData = {
+        };
+        if (myUniqueName !== myInitUniqueName) {
+          myInfoUpdateData.user_unique_id = myUniqueName;
+          setmyInitUniqueName(myUniqueName)
+        }
+        if (myIntro !== myInitIntro) {
+          myInfoUpdateData.user_introduce = myIntro;
+          setMyInitIntro(myIntro)
+        }
+        if (myProfileImg !== myInitProfileImg) {
+          myInfoUpdateData.user_img = myProfileImg;
+          setMyInitProfileImg(myProfileImg)
+        }
         const changeMyInfo = await axios.patch(user.updateUser(),
-          {
-            user_unique_id: myUniqueName,
-            user_introduce: myIntro,
-            user_img: myProfileImg
-          },
+          myInfoUpdateData,
           {
             withCredentials: true
           })
@@ -262,11 +288,12 @@ const Myinfo = () => {
         setMyUniqueName(changeMyInfo.data.result_data.user_detail.user_unique_id)
         setMyIntro(changeMyInfo.data.result_data.user_detail.user_introduce)
         setMyProfileImg(changeMyInfo.data.result_data.user_detail.user_img)
-        setMyProfileImgrul(img.getImg(changeMyInfo.data.result_data.user_detail.user_img));
+        setMyProfileImgrul(getImg(changeMyInfo.data.result_data.user_detail.user_img));
 
-        dispatch(login({  
+        dispatch(login({
           uniqueid: changeMyInfo.data.result_data.user_detail.user_unique_id,
-          user_role: changeMyInfo.data.result_data.user_detail.user_role,
+          user_role: user_role,
+          user_img: changeMyInfo.data.result_data.user_detail.user_img
         }));
 
       }
@@ -341,16 +368,15 @@ const Myinfo = () => {
       }
     );
     setMyProfileImg(imgFile.data.result_data.fid);
-    setMyProfileImgrul(img.getImg(imgFile.data.result_data.fid));
+    setMyProfileImgrul(getImg(imgFile.data.result_data.fid));
   }
 
 
   return (
     <MainWrap>
       <ImgBox onClick={callFileInput}>
-        {/* TODO(경민 -> 이묘): 이미지랑 글자 css 적용 */}
-        클릭 후 이미지 변경
-        <img src={myProfileImgUrl} alt='asdf'></img>
+        <img src={myProfileImgUrl} alt='프로필 이미지'></img>
+        <p>클릭 후 이미지 변경</p>
         <input type="file" ref={fileInput} onChange={changeMyImg} style={{ display: "none" }}></input>
       </ImgBox>
 

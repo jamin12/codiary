@@ -57,6 +57,13 @@ router
 		personalController.input.deletePersonalPost
 	);
 
+router
+	.route("/post/l/c/:postid")
+	.get(
+		validate(personalValidation.output.getPersonalLikeCount),
+		personalController.output.getPersonalLikeCount
+	);
+
 /**
  * category
  */

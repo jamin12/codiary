@@ -1,25 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "../css/reset.css";
 import styled from "styled-components";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import SearchProfile from "../components/SearchProfile";
 import { personal } from "../api/index";
 import axios from "axios";
+
 import default_img from '../IMG/codiary_default_img.png'
+import { ButtonGroup, Button, Dropdown } from "react-bootstrap";
 
 const Mypage = () => {
   const { userId } = useParams();
 
-  const [userUniqueId, setUserUniqueId] = useState("Emyo");
-  // TODO: 하위 카테고리도 설정 넣어놔야함
-  const [category, setCategory] = useState([
-    // {
-    //   "category_id": 1,
-    //   "sub_category_id": null,
-    //   "category_name": "알고리즘"
-    // },
-  ]);
+  const [category, setCategory] = useState([]);
+  const [subCategory, setSubCategory] = useState([]);
+  const [categoryFolder, setCategoryFolder] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
   const [posts, setPosts] = useState([]);
 
@@ -27,7 +23,6 @@ const Mypage = () => {
    *  사용자 카테고리 목록 조회
    */
   useEffect(() => {
-    // TODO: (경민 -> 이묘) 서브 카테고리 표시 안되도록 드롭 다운 해야 나오도록 설정
     const getCategoryFun = async () => {
       const getCategory = await axios.get(
         personal.getPersonalCategory(userId)
@@ -37,6 +32,33 @@ const Mypage = () => {
     getCategoryFun();
   }, [userId]);
 
+  useEffect(() => {
+    const subArr = []
+    category.map(findSubCate => {
+      if (findSubCate.sub_category_id !== null) {
+        subArr.push(findSubCate)
+      }
+      setSubCategory(subArr)
+    })
+  }, [category])
+  useEffect(() => {
+    const Total = [];
+
+    category.map(categorys => {
+      const arr = [];
+      if (categorys.sub_category_id === null) {
+        arr.push(categorys)
+        subCategory.map(subCategorys => {
+          if (categorys.category_id === subCategorys.sub_category_id) {
+            arr.push(subCategorys)
+          }
+        })
+        Total.push(arr)
+      }
+      setCategoryFolder(Total)
+    })
+  }, [category, subCategory])
+
   /**
    *  사용자 카테고리별 포스트 목록 조회
    */
@@ -45,7 +67,6 @@ const Mypage = () => {
       const getPost = await axios.get(
         personal.getPsersonalPosts(userId, categoryId),
         {
-          //TODO(이묘): 급한거 아님 - 리미트 몇 개로 걸어서 페이징 처리해줄 건지 결정해서 처리
           params: { offset: 1, limit: 50 },
         }
       );
@@ -55,7 +76,7 @@ const Mypage = () => {
   }, [userId, categoryId]);
 
   const clickFolder = (e) => {
-    setCategoryId(e.target.id)
+    setCategoryId(e.currentTarget.id)
   }
   const openAllPost = () => {
     setCategoryId(0)
@@ -76,15 +97,6 @@ const Mypage = () => {
     e.target.src = default_img;
   }
 
-  /**
-   * 현재 url
-   */
-  const location = useLocation();
-  useEffect(() => {
-    console.log(location.pathname.substring(1))
-    setUserUniqueId(location.pathname.substring(1))
-  })
-
 
   return (
     <MainWrap>
@@ -93,33 +105,61 @@ const Mypage = () => {
       <Contents>
         {/* 가운데 홈 글씨 */}
         <div className="mypage-main-txt">
-          <h3>{userUniqueId}'s</h3>
+          <h3><span>{userId}</span>'s</h3>
           <h1>CODIARY</h1>
         </div>
 
         <Folders>
           <div className="folder link-wrap">
-            <Link className='link' to={`/${userUniqueId}/calender`}><ion-icon name="calendar-outline"></ion-icon></Link>
+            <Link className='link' to={`/${userId}/calender`}><ion-icon name="calendar-outline"></ion-icon></Link>
           </div>
 
           <div className="folder full-view"
             onClick={openAllPost}
+            id="test"
           >
             전체보기
           </div>
 
           <div className="category-folder-box">
             {
-              category.map((category) => {
-                return (
-                  <div className="folder"
-                    id={category.category_id}
-                    onClick={clickFolder}
-                  >
-                    <span>{category.category_name}</span>
-                    <ion-icon name="chevron-down-outline"></ion-icon>
-                  </div>
-                )
+              categoryFolder.map(categoryArr => {
+                if (categoryArr.length === 1) {
+                  return (
+                    <div className="folder"
+                      id={categoryArr[0].category_id}
+                      onClick={clickFolder}
+                    >
+                      <span>{categoryArr[0].category_name}</span>
+                    </div>
+                  )
+                }
+                else {
+                  return (
+                    <Dropdown as={ButtonGroup}>
+                      <Button variant="success"
+                        onClick={() => setCategoryId(categoryArr[0].category_id)}>
+                        <span>{categoryArr[0].category_name}</span>
+                      </Button>
+
+                      <Dropdown.Toggle split
+                        variant="success"
+                        id="dropdown-split-basic" />
+
+                      <Dropdown.Menu>
+                        {
+                          categoryArr.map((category, index) => {
+                            if (categoryArr[index] !== categoryArr[0]) {
+                              return (
+                                <Dropdown.Item onClick={() => setCategoryId(category.category_id)}>{category.category_name}</Dropdown.Item>
+                              )
+                            }
+                          })
+                        }
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  )
+                }
               })
             }
           </div>
@@ -129,11 +169,15 @@ const Mypage = () => {
           {
             posts.map(post => {
 
-              const html = post.post_body_html
-              console.log(html)
-              const imgStart = html.indexOf('src="')+5
-              const imgEnd = html.indexOf('"', imgStart)
-              const imgSrc = html.slice(imgStart, imgEnd)
+              let html = post.post_body_html;
+              const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+              html = html?.replaceAll("&lt;", "<");
+              let imgSrc = "";
+              if (imgSrcRex.exec(html)) {
+                imgSrc = RegExp.$2
+              } else {
+                imgSrc = default_img
+              }
 
               return (
                 <Post onClick={() => onClickPost(post.post_id, post.users.user_detail.user_unique_id)}>
@@ -148,16 +192,6 @@ const Mypage = () => {
             })
           }
 
-          {/* <Carousel
-            posts={posts}
-            dots={false}
-            slidesToShow={3}
-            vertical={true}
-            verticalSwiping={true}
-            centerMode={true}
-            centerPadding={'60px'}
-            className={'center'}
-          /> */}
         </CarouselWrap>
       </Contents>
     </MainWrap>
@@ -179,6 +213,13 @@ const MainWrap = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;
+    max-width: 250px;
+    word-break: break-all;
+    h3{
+      span{
+        
+      }
+    }
   }
 `
 const Contents = styled.div`
@@ -245,13 +286,16 @@ const Folders = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-
+    margin-top: 10px;
+    
     .folder{
       background-color: var(--gray100);
       height: 40px;
       box-sizing: border-box;
-      padding: 0 0 0 10px;
-      /* margin: 5px 0; */
+      padding: 0 10px;
+      display: flex;
+      justify-content: space-between;
+      position: relative;
       :hover{
         background-color: var(--gray200);
       }
@@ -260,8 +304,36 @@ const Folders = styled.div`
         font-weight: 500;
       }
 
-      :first-child, :nth-child(2){
+    }
+
+    .dropdown.btn-group{
+      :first-child{
         margin-top: 10px;
+      }
+      
+      button{
+        background-color: var(--gray100);
+        height: 40px;
+        color: black;
+        border: none;
+        padding: 0 10px;
+        text-align: left;
+        border-radius: 13px;
+        span{
+        font-size: 1.1rem;
+        font-weight: 500;
+        }
+        :hover{
+          background-color: var(--gray300);
+        }
+      }
+      .btn{
+        border-radius: 13px 0 0 13px;
+      }
+      .btn.dropdown-toggle{
+        border-radius: 0 13px 13px 0;
+        text-align: center;
+        width: 0%;
       }
     }
   }

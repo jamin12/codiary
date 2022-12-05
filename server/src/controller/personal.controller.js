@@ -46,7 +46,13 @@ const output = {
 		);
 		res.send(resultDto(httpStatus.OK, "getPersonalPostsByDate", result_contents));
 	}),
-
+	// 사용자 게시물 좋아요 개수 조회
+	getPersonalLikeCount: catchAsync(async (req, res) => {
+		const result_contents = await pService.getPersonalLikeCount(
+			req.params.postid,
+		);
+		res.send(resultDto(httpStatus.OK, "getPersonalLikeCount", result_contents));
+	}),
 	/**
 	 * 카테고리
 	 */

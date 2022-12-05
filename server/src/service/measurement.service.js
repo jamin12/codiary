@@ -210,6 +210,23 @@ class measurementService {
 			limit: pageResult.limit,
 		});
 	}
+
+	/**
+ * 내 게시물 총 수
+ * @param {string} userId
+ * @returns {object}
+ */
+	async getMyPostsCount(userId) {
+		const post_count = await posts.findOne({
+			attributes: [[sequelize.fn('COUNT', sequelize.col('post_id')), 'post_cnt'],],
+			where: {
+				user_id: userId,
+			},
+		});
+		return Math.ceil(post_count.dataValues.post_cnt/9);
+	}
 }
+
+
 
 module.exports = measurementService;

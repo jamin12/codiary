@@ -3,39 +3,9 @@ import Slider from "react-slick";
 import styled from "styled-components";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { img } from '../api';
+import default_img from '../IMG/codiary_default_img.png';
+import getImg from "../utils/ImgUtil";
 
-
-// const MainCanvas = styled.SliderItem`
-//   position: relative;
-//   width: 80%;
-//   height: 400px;
-//   perspective: 1500px;
-//   margin: 0 auto;
-//   background-color: black;
-
-//   @media screen and (max-width:1024px) {
-//     width: 75%;
-//     height: 330px;
-//   }
-// `
-
-// const Carousel = (props) => {
-
-//   const postlist = props.popularList;
-// //   const [currentIndex, setCurrentIndex] = useState(0);
-//   const slideRef = useRef(null);
-
-//     return (
-//       // 보이는 영역
-//       <MainCanvas>
-
-//       </MainCanvas>
-
-//     );
-
-// }
-// export default Carousel;
 /**
  * 해당 포스트로 이동하는 함수
  * 
@@ -50,14 +20,6 @@ const movePost = (userUniqueId, postId) => {
 export default class Carousel extends Component {
   render() {
     const posts = this.props.posts; // props로 post들을 받아옴
-    // TODO(이묘): text에서 가장 첫 번째 이미지 태그 갖고와야함
-    /**
-     * text에서 가장 첫 번째 이미지 태그 찾는 함수
-     * @param {String} text 
-     */
-    const ImgSearch = (text) => {
-      return "https://images.unsplash.com/photo-1664575196079-9ac04582854b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
-    }
     const settings = {
       className: "center",
       centerMode: true,
@@ -66,10 +28,22 @@ export default class Carousel extends Component {
       slidesToShow: 3,
       speed: 500,
     };
+    const imageErrorHandler = (e) => {
+      e.target.src = default_img;
+    }
     return (
       <Main>
         <Slider {...settings}>
           {posts.map((post) => {
+            let html = post.post_body_html;
+            const imgSrcRex = /(<img[^>]+src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/g;
+            html = html?.replaceAll("&lt;", "<");
+            let imgSrc = "";
+            if (imgSrcRex.exec(html)) {
+              imgSrc = RegExp.$2
+            } else {
+              imgSrc = default_img
+            }
             return (
               <PostWrap onClick={() => {
                 movePost(post.users.user_detail.user_unique_id, post.post_id);
@@ -79,13 +53,13 @@ export default class Carousel extends Component {
                 </div>
 
                 <div className="thumbnail">
-                  <img src={ImgSearch(post.post_txt)} alt="" />
+                  <img src={imgSrc} alt="게시물 대표 이미지" onError={imageErrorHandler} />
                 </div>
 
                 <div className="user">
                   <img
                     className="user-profile"
-                    src={img.getImg(post.users?.user_detail.user_img)}
+                    src={getImg(post.users?.user_detail.user_img)}
                     alt=""
                   ></img>
                   <span>{post.users?.user_detail.user_unique_id}</span>
@@ -125,7 +99,7 @@ const PostWrap = styled.button`
   }
   .popul-title{
     position: relative;
-    bottom: 60px;
+    bottom: 13.5%;
   }
   .thumbnail{
     position: relative;
@@ -156,7 +130,7 @@ const PostWrap = styled.button`
     margin-left: 20px;
     display: block;
     width: 85%;
-    bottom: 12%;
+    bottom: 7%;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.2;
@@ -164,14 +138,16 @@ const PostWrap = styled.button`
     word-wrap : break-word;
     text-align : left;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 
   }
   .date{
     width: 90%;
-    position: relative;
-    top: 60px;
+    text-align: left;
+    position: absolute;
+    left: 20px;
+    bottom: 15px;
     margin: 0 auto;
     font-size: 0.8rem;
     color: var(--gray500);
@@ -203,6 +179,12 @@ const Main = styled.div`
         height: 100%;
       }
     }
+
+  }
+  .slick-prev:before,
+  .slick-next:before{
+    color: var(--gray700);
+    font-size: 25px;
   }
   
 

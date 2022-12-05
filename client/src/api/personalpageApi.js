@@ -59,6 +59,12 @@ const personal = {
 	 * @returns {String}
 	 */
 	deletePersonalPost: (...params) => createUrl("/post", params),
+	/**
+ * 유저 포스트 삭제 URL [DELETE]
+ * @param  {...String} params Path Variables 값들
+ * @returns {String}
+ */
+	getPersonalLikeCount: (...params) => createUrl("/post/l/c", params),
 	/**********************************************
 	 * category
 	 ***********************************************/

@@ -88,7 +88,6 @@ const VisitLike = () => {
 			// 방문 목록 조회
 			if (visitLikeSelected === 0) {
 				getVisitLikeRecord = await axios.get(
-					// TODO: params 바꾸기
 					personal.getPersonalVisitRecord(),
 					{ withCredentials: true, params: { offset: 1, limit: 50 } }
 				);
@@ -97,7 +96,6 @@ const VisitLike = () => {
 			// 좋아요 목록 조회
 			else {
 				getVisitLikeRecord = await axios.get(
-					// TODO: params 바꾸기
 					personal.getPersonalLikeRecord(),
 					{ withCredentials: true, params: { offset: 1, limit: 50 } }
 				);
@@ -125,8 +123,6 @@ const VisitLike = () => {
 				<SearchProfile />
 			</Header>
 
-			{/* TODO(이묘): 버튼을 누르면 각각 요청을 보내야함 */}
-			{/* 파라미터를 바꿔주는게 */}
 			<Wrap>
 				<div className="title-box">
 					<h3 id="visitList" onClick={onClickType} visitLikeSelected={visitLikeSelected}>방문 목록</h3>
@@ -137,7 +133,7 @@ const VisitLike = () => {
 						posts={visitLikeRecords}
 						centerMode={false}
 						dots={true}
-						slidesToShow={3}
+						slidesToShow={4}
 						vertical={false}
 						verticalSwiping={false}
 						// arrows={true}

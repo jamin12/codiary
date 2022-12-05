@@ -15,12 +15,10 @@ const Searchpage = () => {
   const [searchType, setSearchType] = useState(0); // 개인페이지의 검색 타입
   const [checkType, setCheckType] = useState(0);
 
-  const [viewMoreOffset, setViewMoreOffset] = useState(1);
-
   const location = useLocation();
 
   const path = location.state.type.pathname;
-  console.log(path)
+
   useEffect(() => {
     if (path === undefined) {
       setViewType(0)
@@ -45,9 +43,6 @@ const Searchpage = () => {
       setCheckType(2);
     }
   }, [])
-  console.log("view : " + viewType)
-  console.log("check : " + checkType)
-  console.log("serach : " + searchType)
 
   /**
    * text가 바뀔 때마다 검색을 하게 해주는 함수
@@ -56,64 +51,52 @@ const Searchpage = () => {
     setSearchWord(e.target.value)
     let getSearch;
     if (checkType === 0) {
-      console.log("hi")
       getSearch = await axios.get(main.searchPostInMain(e.target.value), {
         params: {
-          offset: viewMoreOffset,
-          limit: 10
+          offset: 0,
+          limit: 100
         }
       })
       setSearchResult(getSearch.data.result_data);
     }
     else if (checkType === 1) {
-      console.log("0")
       if (searchType === 1) {
         getSearch = await axios.get(personal.searchPersonalposts(e.target.value, 1), {
           withCredentials: true,
           params: {
-            offset: viewMoreOffset,
-            limit: 11
+            offset: 0,
+            limit: 100
           }
         })
         setSearchResult(getSearch.data.result_data);
       }
-      else{ // 방문 좋아요 목록
-        let getVisite = await axios.get(personal.searchPersonalposts(e.target.value, 2), {
+      else { // 방문 좋아요 목록
+        const getVisiteGood = await axios.get(personal.searchPersonalposts(e.target.value, 2), {
           withCredentials: true,
           params: {
-            offset: viewMoreOffset,
-            limit: 11
+            offset: 0,
+            limit: 100
           }
         })
-        let getGood = await axios.get(personal.searchPersonalposts(e.target.value, 3), {
-          withCredentials: true,
-          params: {
-            offset: viewMoreOffset,
-            limit: 11
-          }
-        })
-        // getSearch = getVisite.data.result_data.map((ele) => {
-        //   return ele.post_id === getGood.data.result_data
-        // });
-        // getSearch = VisiteGood.filter(item => !)
-        console.log(getSearch)
+        setSearchResult(getVisiteGood.data.result_data)
       }
-      // setSearchResult(Visite/Good)
     }
     else if (checkType === 2) {
-
+      const getPost = await axios.get(personal.searchCommonposts(path.split("/")[1], e.target.value),
+      {
+        params: {
+          offset: 0,
+          limit: 100
+        }
+      })
+      setSearchResult(getPost.data.result_data)
     }
-    // TODO: (경민 -> 이묘) 검색 위치에 따라서 검색하는 url달라지는거 구현(axios 써야해요 doc파일 보고 하면 됩니다.)
-    // setSearchResult(getSearch.data.result_data);
   };
-  console.log(searchResult)
 
   /**
   * 게시물 더보기 onClick 함수
   */
-  const onClickViewMore = () => {
-    setViewMoreOffset(viewMoreOffset + 9)
-  }
+
 
   return (
     <Main>
@@ -132,62 +115,69 @@ const Searchpage = () => {
             // if(checkType === 0){
             // }
             searchResult.map((post) => {
-              console.log(post)
-              if (checkType === 0) {
+              if (checkType === 0) {  // 전체검색
                 return (
                   <PostRowCard
+                    id={post.post_id}
                     title={post.post_title}
-                    user={post.users?.user_detail.user_nickname}
+                    user={post.users?.user_detail.user_unique_id}
                     img={post.users?.user_detail.user_img}
                     date={post.updated_at}
                     text={post.post_txt}
+                    html={post.post_body_html}
                   />
                 );
               }
 
-              else if (checkType === 1) {
-                if (searchType === 1) {
-                  return(
+              else if (checkType === 1) { // 개인 페이지 검색
+                if (searchType === 1) { // 임시게시글
+                  return (
                     <PostRowCard
+                      id={post.tmppost_id}
                       title={post.tmppost_title}
-                      // user = {post.users?.user_detail.user_nickname}
-                      // img = {post.users?.user_detail.user_img}
                       date={post.updated_at}
-                      text={post.tmppost_txt}
+                      img=""
+                      type={"presave"}
+                      html={post.tmppost_body_html}
                     />
                   )
                 }
-                else{
-                  return(
+                else {                  // 방문 좋아요
+                  return (
                     <PostRowCard
-                    title={post.tmppost_title}
-                    // user = {post.users?.user_detail.user_nickname}
-                    // img = {post.users?.user_detail.user_img}
-                    date={post.updated_at}
-                    text={post.tmppost_txt}
-                  />
+                      id={post.post_id}
+                      title={post.post_title}
+                      user={post.users?.user_detail.user_unique_id}
+                      img={post.users?.user_detail.user_img}
+                      date={post.updated_at}
+                      text={post.tmppost_txt}
+                      html={post.post_body_html}
+                    />
                   )
                 }
               }
 
-              else if(checkType === 2){
-                return(
+              else if (checkType === 2) {   // 특정사용자 게시글 검색
+                console.log(post)
+                return (
                   <PostRowCard
-                  title={post.tmppost_title}
-                  user = {post.users?.user_detail.user_nickname}
-                  img = {post.users?.user_detail.user_img}
-                  date={post.updated_at}
-                  text={post.tmppost_txt}
-                />
+                    id={post.post_id}
+                    title={post.post_title}
+                    user={post.users?.user_detail.user_unique_id}
+                    img={post.users?.user_detail.user_img}
+                    date={post.updated_at}
+                    text={post.tmppost_txt}
+                    html={post.post_body_html}
+                  />
                 )
               }
             })}
         </PostWrap>
 
 
-        <div className="btn-postview-more" onClick={onClickViewMore} postLength={searchResult.length}>
+        {/* <div className="btn-postview-more" onClick={onClickViewMore} postLength={searchResult.length}>
           <IoChevronDownOutline />
-        </div>
+        </div> */}
       </Wrap>
     </Main>
   );
@@ -196,17 +186,18 @@ export default Searchpage;
 
 const Main = styled.div`
   width: 100%;
-  min-height: 100vh;
+  /* min-height: 100vh; */
 `
 const Wrap = styled.div`
   display: block;
   text-align: center;
   font-size: 1.3rem;
+  margin-bottom: 50px;
 
-  > .btn-postview-more{
+  /* > .btn-postview-more{
     bottom: 20px;
     width: 100%;
-		display: ${props => props.postLength > 9 ? "flex" : "none"};
+		display: "flex";
 		justify-content: center;
 		align-items: center;
 		height: 40px;
@@ -220,19 +211,18 @@ const Wrap = styled.div`
 				color: var(--gray600);
 				background-color: var(--gray50);
 			}
-		}
+		} */
 `;
 
 const PostWrap = styled.div`
   width: 1433px;
-  height: auto;
-  /* display: flex; */
+  /* height: 100%; */
   flex-wrap: wrap;
   margin: 0px auto;
 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: minmax(200px, 200px);
+  grid-auto-rows: 200px;
   column-gap: 20px;
   row-gap: 20px;
 

@@ -17,6 +17,12 @@
     --gray700: #33383d;
     --gray800: #26282b;
     --gray900: #1b1d1f;
+
+    --red: #E43333;
+    --hover-red: #C52B2B;
+
+    --blue: #0078FF;
+    --hover-blue: #005FCA;
 }
 
 img{

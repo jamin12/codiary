@@ -8,7 +8,7 @@ const httpStatus = require("http-status"),
 		sns_info,
 	} = require("../models/index"),
 	CustomError = require("../utils/Error/customError"),
-	{ personalService } = require("./index"),
+	{ personalService, userService } = require("./index"),
 	{ Op } = require("sequelize"),
 	reportDto = require("../dto/reportDto"),
 	commentsDto = require("../dto/commentsDto"),
@@ -20,6 +20,7 @@ class manageService {
 	constructor() {
 		this.paging = new Paging();
 		this.pService = new personalService();
+		this.uService = new userService();
 
 		this.userJoin = {
 			model: users,
@@ -41,7 +42,7 @@ class manageService {
 		this.postJoin = {
 			model: posts,
 			as: "posts",
-			attributes: ["post_title"],
+			attributes: ["post_title","post_id"],
 		};
 
 		this.commentJoin = {
@@ -94,6 +95,68 @@ class manageService {
 		if (!user)
 			throw new CustomError(httpStatus.BAD_REQUEST, "User not found");
 		return user;
+	}
+	/**
+ * 신고 있는지 체크
+ * @param {number} reportId
+ * @return {object}
+ */
+	async checkReportExists(reportId) {
+		const getreport = await report.findOne({
+			where: {
+				report_id: reportId,
+			},
+		});
+		if (!getreport) {
+			throw new CustomError(httpStatus.BAD_REQUEST, "Report not found");
+		}
+	}
+
+	/**
+	 * 유져 검색
+	 * 
+	 * @param  {string} searchWord 유저 검색 문자열
+	 * @param  {...any} paging
+	 * @returns {object}
+	 */
+	async searchUsers(searchWord, ...paging) {
+		const pageResult = this.paging.pageResult(paging[0], paging[1]);
+		const user = await users.findAll({
+			attributes: ["user_email"],
+			include: [
+				{
+					model: user_detail,
+					as: "user_detail",
+					attributes: [
+						"user_name",
+						"user_unique_id",
+						"user_introduce",
+						"user_img",
+					],
+					where: {
+						user_unique_id: {
+							[Op.substring]: searchWord,
+						}
+					}
+				},
+				{ model: sns_info, as: "sns_info", attributes: ["sns_name"] },
+			],
+			offset: pageResult.offset,
+			limit: pageResult.limit,
+		});
+		return user;
+	}
+
+	/**
+ * 유져 검색
+ * 
+ * @param  {string} uniqueid 유저 검색 문자열
+ * @returns {object}
+ */
+	async deletehUser(uniqueid) {
+		const findedUser = await this.uService.getUserByUniqueId(uniqueid);
+		await this.uService.deleteUser(findedUser.user_id);
+		return;
 	}
 
 	/**
@@ -193,9 +256,9 @@ class manageService {
 	 * @returns
 	 */
 	async createReport(reportBody) {
-		if (reportBody.report_type === 0) {
+		if (reportBody.report_target_type === 0) {
 			await this.pService.checkPostExists(reportBody.report_target_id);
-		} else if (reportBody.report_type === 1) {
+		} else if (reportBody.report_target_type === 1) {
 			await this.pService.checkCommentExists(reportBody.report_target_id);
 		}
 		if (!reportBody.report_user) {
@@ -212,6 +275,29 @@ class manageService {
 			);
 		}
 		await report.create(reportBody);
+		return;
+	}
+
+	/**
+ * 신고 대상(게시글/ 댓글)삭제
+ * @param {number} report_type
+ * @param {number} report_target_id
+ * @returns
+ */
+	async deleteReportTarget(report_type, report_target_id) {
+		if (report_type === 0) {
+			await posts.destroy({
+				where: {
+					post_id: report_target_id,
+				},
+			});
+		} else {
+			await comments.destroy({
+				where: {
+					comments_id: report_target_id,
+				},
+			});
+		}
 		return;
 	}
 }
