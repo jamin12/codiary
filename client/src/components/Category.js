@@ -84,7 +84,7 @@ const Category = styled.div`
   .category-subfolder{
     /* display: none; */
     position: relative;
-    z-index: 999;
+    z-index: 800;
     background-color: var(--gray200);
     padding: 0px 0 50px 0;
     // margin-top: -50px;
