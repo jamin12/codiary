@@ -6,7 +6,7 @@ import axios from 'axios';
 import { user, img } from '../api';
 import getImg from '../utils/ImgUtil'
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../reducers/Action";
 
 
@@ -220,6 +220,8 @@ const Myinfo = () => {
   const dispatch = useDispatch();
   const nevigate = useNavigate();
   const fileInput = React.createRef();
+  const { user_role } = useSelector((state) => state.auth.User);
+
   // 회원탈퇴(setting에서) 버튼 클릭
   const clickWithdraw = () => {
     setLoad((prev) => !prev)
@@ -290,7 +292,7 @@ const Myinfo = () => {
 
         dispatch(login({
           uniqueid: changeMyInfo.data.result_data.user_detail.user_unique_id,
-          user_role: changeMyInfo.data.result_data.user_detail.user_role,
+          user_role: user_role,
           user_img: changeMyInfo.data.result_data.user_detail.user_img
         }));
 
