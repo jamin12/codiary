@@ -97,28 +97,6 @@ const Mypage = () => {
     e.target.src = default_img;
   }
 
-  // const test = (categorys) => {
-  //   for(let i=0; i<categorys.length; i++){
-  //     if(categorys[i].sub_category_id === null){
-  //       return(
-  //       <div className="folder"
-  //       id={categorys[i].category_id}
-  //       onClick={clickFolder}
-  //     >
-  //       <span>{categorys[i].category_name}</span>
-  //     </div>
-  //       )
-  //     }
-  //     else{
-
-  //     }
-  //   }
-  // }
-
-  const btnCategory = {
-
-  }
-
 
   return (
     <MainWrap>
@@ -308,6 +286,7 @@ const Folders = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+    margin-top: 10px;
     
     .folder{
       background-color: var(--gray100);
@@ -325,9 +304,6 @@ const Folders = styled.div`
         font-weight: 500;
       }
 
-      :first-child, :nth-child(2){
-        margin-top: 10px;
-      }
     }
 
     .dropdown.btn-group{
