@@ -30,6 +30,8 @@ const SettingReportModal = (props) => {
    * 신고버튼 onClick
    */
   const onClickReport = async (reportUserID,) => {
+    setReportValue("")
+    setselectValueRtype("")
     const reportBody = {
       report_user: reportUserID,
       report_target_type: reportType,
