@@ -38,33 +38,34 @@ const HeaderNoSearchBar = () => {
           </Link>
         </GotoHome>
 
-        <Profile>
-          <div className='userBox'>
-            <img className='imgBox' src={getImg(user_img)} alt="사용자 이미지"/>
-          </div>
-          <div className={isOpen ? 'menuToggleON' : 'menuToggleOFF'} onClick={toggleMenu}></div>
-        </Profile>
+        {
+            uniqueid !== "" ?
+            <>
+              <Profile>
+                <div className='userBox'>
+                  <img className='imgBox' src={getImg(user_img)} alt="사용자 이미지"/>
+                </div>
+                <div className={isOpen ? 'menuToggleON' : 'menuToggleOFF'} onClick={toggleMenu}></div>
+              </Profile>
 
-        <Menu>
-          {uniqueid !== '' &&
-            <div className={isOpen ? 'menuON' : 'menuOFF'}>
-              <Link className='tagP' to={`/${uniqueid}`}>내 글 목록</Link>
-              <Link className='tagP' to='/write'>글쓰기</Link>
-              <Link className='tagP' to={`/${uniqueid}/calender`}>내 코디어리</Link>
-              <Link className='tagP' to='/presave'>임시글 목록</Link>
-              <Link className='tagP' to='/visite-like'>방문&좋아요 목록</Link>
-              <Link className='tagP' to='/setting'>설정</Link>
-              <Link className='tagP' to='/visiterstat'>방문자통계</Link>
-              <p className='logout tagP' onClick={loginModal}>로그아웃</p>
-            </div>
-          }
-          {uniqueid === '' &&
-            <div className={isOpen ? 'menuON' : 'menuOFF'}>
-              <p className='logout tagP' onClick={loginModal}>로그인</p>
-            </div>
-          }
-
-        </Menu>
+              <Menu>
+                {uniqueid !== '' &&
+                  <div className={isOpen ? 'menuON' : 'menuOFF'}>
+                    <Link className='tagP' to={`/${uniqueid}`}>내 글 목록</Link>
+                    <Link className='tagP' to='/write'>글쓰기</Link>
+                    <Link className='tagP' to={`/${uniqueid}/calender`}>내 코디어리</Link>
+                    <Link className='tagP' to='/presave'>임시글 목록</Link>
+                    <Link className='tagP' to='/visite-like'>방문&좋아요 목록</Link>
+                    <Link className='tagP' to='/setting'>설정</Link>
+                    <Link className='tagP' to='/visiterstat'>방문자통계</Link>
+                    <p className='logout tagP' onClick={loginModal}>로그아웃</p>
+                  </div>
+                }
+              </Menu>
+            </>
+            :
+            <BtnLogin onClick={loginModal}>로그인</BtnLogin>
+        }
       </Wrap>
 
     </Main>
@@ -258,5 +259,23 @@ const GotoHome = styled.h1`
 
   @media ${devices.laptopL}{
     font-size: 2rem;
+  }
+`
+
+const BtnLogin = styled.p`
+  margin-left: 10px;
+  top: 20px;
+  right: 20px;
+  padding: 5px 18px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  background-color: var(--gray800);
+  border-radius: 50px;
+  cursor: pointer;
+  color: var(--gray50);
+  transition: 0.3s;
+
+  :hover{
+    background-color: var(--gray700);
   }
 `
