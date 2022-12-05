@@ -190,10 +190,12 @@ const WritePage = () => {
    * 게시글 삭제
    */
   const deletePost = async () => {
-    await axios.delete(personal.deletePersonalPost(postId), {
-      withCredentials: true,
-    });
-    document.location.href = `/${userId}`;
+    if(window.confirm("삭제하면 복구할 수 없습니다. 삭제하시겠습니까?")){
+      await axios.delete(personal.deletePersonalPost(postId), {
+        withCredentials: true,
+      });
+      document.location.href = `/${userId}`;
+    }
   };
 
   // 답글쓰기 버튼 onClick
