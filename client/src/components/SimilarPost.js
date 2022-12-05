@@ -100,6 +100,8 @@ export default SimilarPost;
 const Main = styled.div`
   width: 100%;
   margin-bottom: 50px;
+  padding-top: 30px;
+  box-shadow: 0px -10px 10px var(--gray100);
   
   h1{
     text-align: center;
