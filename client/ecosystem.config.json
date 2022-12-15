@@ -1,0 +1,20 @@
+{
+  "apps": [
+    {
+      "name": "codiary",
+      "script": "npm",
+      "args": "set GENERATE_SOURCEMAP=false && react-scripts start",
+      "instances": 1,
+      "autorestart": true,
+      "watch": false,
+      "time": true,
+      "max_memory_restart": "2G",
+      "exec_mode" : "cluster",
+      "env": {
+        "PORT": 3010,
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}
+

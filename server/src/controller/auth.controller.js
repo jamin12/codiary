@@ -9,7 +9,7 @@ const uService = new userService();
 
 const output = {
 	index: catchAsync(async (req, res) => {
-		res.redirect("http://127.0.0.1:4000/authenti/login");
+		res.redirect("https://www.codiary.shop/authenti/login");
 	}),
 	loginSuccess: catchAsync(async (req, res) => {
 		const getUser = await uService.getUserByUserId(req.user?.user_id);
@@ -35,7 +35,7 @@ const input = {
 	login: passport.authenticate('google', { scope: ['email', 'profile'] }),
 
 	oauth2callback: passport.authenticate('google', {
-		successRedirect: 'http://127.0.0.1:3000/',
+		successRedirect: 'https://www.codiary.shop/',
 		failureRedirect: '/fail',
 	}),
 };

@@ -62,7 +62,7 @@ app.use(xss());
 // enable cors
 app.use(
 	cors({
-		origin: ["http://127.0.0.1:4000", "http://localhost:4000", "http://39.120.8.109:4000", "http://jamin2.shop"], // 출처 허용 옵션
+		origin: ["http://127.0.0.1:4000", "http://localhost:4000", "https://www.codiary.shop"], // 출처 허용 옵션
 		credential: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
 		methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
 		preflightContinue: false,

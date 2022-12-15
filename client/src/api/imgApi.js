@@ -6,7 +6,7 @@
  * @returns
  */
 const createUrl = (startUrl, params) => {
-	let mainUrl = "http://39.120.8.109:3551/file";
+	let mainUrl = "https://www.jaminimg.shop/file";
 	mainUrl += startUrl;
 	for (let index = 0; index < params.length; index++) {
 		mainUrl = mainUrl + "/" + params[index];

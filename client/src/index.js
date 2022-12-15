@@ -10,3 +10,4 @@ ReactDOM.render(
 
 // If you want to start measuring performance in your app, pass a function
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// pm2 start --name codiary node_modules/react-scripts/scripts/start.js -i 1 --no-daemon,

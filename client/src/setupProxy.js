@@ -4,7 +4,7 @@ module.exports = (app) => {
   app.use(
     '/auth',
     createProxyMiddleware({
-      target: 'http://127.0.0.1:3000',
+      target: 'https://www.codiary-s.shop',
       changeOrigin: true,
       pathRewrite: {
         '^/auth': '',
