@@ -28,7 +28,6 @@ const routes = require("./src/routes");
 // Access-Control-Allow-Credentials에러 해결
 app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Credentials", true);
-	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 	next();
 });
 
@@ -51,9 +50,11 @@ app.use(
 		name: "authentication", // 쿠키 이름 설정
 		resave: false, // 세션을 항상 저장할지 여부를 정하는 값(false 권장)
 		saveUninitialized: true, // 초기화 되지 않은 채 스토어에 저장되는 세션
+		proxy: true,
 		cookie: {
 			httpOnly: true,
-			secure: false,
+			secure: true,
+			sameSite: "none",
 		},
 		store: new mysqlstore(config.session),
 	})
