@@ -40,7 +40,7 @@ const Login = ({ setLogin }) => {
 
 				<LoginBtn>
                     
-					<a href="https://www.codiary-s.shop/login">
+					<a href="/auth/login">
                         <img src={googleLogo} alt="구글 로그인" />
                     </a>
 					

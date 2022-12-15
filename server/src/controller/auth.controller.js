@@ -35,7 +35,8 @@ const input = {
 	login: passport.authenticate('google', { scope: ['email', 'profile'] }),
 
 	oauth2callback: passport.authenticate('google', {
-		successRedirect: 'https://www.codiary.shop/',
+		// 로그인 정보를 가져가기 위해 https://www.codiary-s.shop/ 리다이렉트
+		successRedirect: 'https://www.codiary-s.shop',
 		failureRedirect: '/fail',
 	}),
 };
