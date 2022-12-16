@@ -55,6 +55,7 @@ app.use(
 			httpOnly: true,
 			secure: true,
 			sameSite: "none",
+			maxAge: 1000 * 60 * 30
 		},
 		store: new mysqlstore(config.session),
 	})
